@@ -1,8 +1,11 @@
+mod xml_lineno;
+
 extern crate xml;
 
+use std::io::Read;
 use std::fs::File;
-use std::io::{self, Read};
-use xml::reader::{EventReader, XmlEvent};
+use xml_lineno::{LineReader};
+use xml::EventReader;
 
 #[derive(Clone, Debug)]
 struct Parameter {
@@ -25,17 +28,21 @@ fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Err
     };
 
     let file = File::open(file_path)?;
-    let file = io::BufReader::new(file);
-    let parser = EventReader::new(file);
+    let reader= LineReader::new(file);
+println!("reader.line() {}", reader.line());
+    let parser = EventReader::new(reader);
     
-    let mut parameters = Vec::new();
+    let mut parameters: Vec<Parameter> = Vec::new();
     let mut current_name = String::new();
     let mut current_type = String::new();
     
     // Parsing logic...
     
     for event in parser {
+//let s = reader.source();
+//println!("event.line() {}: ", s.line());
 println!("event: {:?}", event);
+/*
         match event? {
             XmlEvent::StartElement { name, attributes, .. } if name.local_name == "container" => {
                 // Handle container start...
@@ -71,13 +78,14 @@ println!("event: {:?}", event);
             }
             _ => {}
         }
+*/
     }
     
     Ok(containers)
 } 
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let parameters = parse_xtce("test/test1.xtce")?;
+    let parameters = parse_xtce("test/test5.xtce")?;
     
     for param in parameters {
         println!("{:?}", param);
