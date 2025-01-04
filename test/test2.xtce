@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<XTCE xmlns="http://www.omg.org/spec/XTCE/">
+    <ContainerSet name="ExampleContainerSet">
+        <Container name="EnvironmentalData">
+            <Parameter name="Humidity" dataType="Float">
+                <Description>Current humidity percentage</Description>
+            </Parameter>
+            <Parameter name="Altitude" dataType="Integer">
+                <Description>Current altitude in meters</Description>
+            </Parameter>
+        </Container>
+    </ContainerSet>
+</XTCE>

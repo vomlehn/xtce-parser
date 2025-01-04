@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<XTCE xmlns="http://www.omg.org/spec/XTCE/">
+    <ParameterSet name="ExampleParameterSet">
+        <Parameter name="Temperature" dataType="Float">
+            <Description>Current temperature in Celsius</Description>
+        </Parameter>
+        <Parameter name="Pressure" dataType="Float">
+            <Description>Current pressure in Pascals</Description>
+        </Parameter>
+    </ParameterSet>
+</XTCE>
