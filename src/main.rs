@@ -1,4 +1,10 @@
+/*
+ * Options:
+ * --prefix Adds SpaceSystem-derived names to everything
+ */
+
 mod xml_lineno;
+mod SpaceSystem;
 
 extern crate xml;
 
@@ -40,39 +46,72 @@ fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Err
     for event in parser {
         let line = *line_ref.borrow();
 
-println!("{}: event: {:?}", line, event);
+print!("Line {}: ", line);
+/*
+if event.is_ok() {
+    println!("Line {}: event: {:?}", event.clone().unwrap());
+} else {
+    println!("Line {}: Is not okay");
+}
+*/
         match event? {
-            XmlEvent::StartElement { name, attributes, .. } if name.local_name == "container" => {
-                // Handle container start...
-                for attr in attributes {
-                    match attr.name.local_name.as_str() {
-                        "name" => current_name = attr.value,
-                        "dataType" => current_type = attr.value,
-                        _ => {}
+            XmlEvent::StartDocument {version, encoding, standalone} => {
+println!("StartDocument");
+            }
+            XmlEvent::EndDocument => {
+println!("EndDocument");
+            }
+            XmlEvent::ProcessingInstruction {name, data} => {
+println!("ProcessingInstruction");
+            }
+            XmlEvent::StartElement { name, attributes, .. } => {
+    println!("StartElement name: {}", name.local_name);
+//println!("    {:?}", attributes);
+                if name.local_name == "container" {
+                    // Handle container start...
+                    for attr in attributes {
+                        match attr.name.local_name.as_str() {
+                            "name" => current_name = attr.value,
+                            "dataType" => current_type = attr.value,
+                            _ => {}
+                        }
                     }
+                } else if name.local_name == "parameter" {
+                    // Handle parameter...
+                    parameters.push(Parameter {
+                        name: current_name.clone(),
+                        data_type: current_type.clone(),
+                    });
+                    for attr in attributes {
+                        match attr.name.local_name.as_str() {
+                            "name" => current_name = attr.value,
+                            "dataType" => current_type = attr.value,
+                            _ => {}
+                        }
+                    }
+                    current_name.clear();
+                    current_type.clear();
                 }
             }
-            XmlEvent::EndElement { name } if name.local_name == "container" => {
-                containers.push(current_container.clone());
-                current_container.parameters.clear();
-            }
-            XmlEvent::StartElement { name, attributes, .. } if name.local_name == "parameter" => {
-                // Handle parameter...
-                parameters.push(Parameter {
-                    name: current_name.clone(),
-                    data_type: current_type.clone(),
-                });
-                for attr in attributes {
-                    match attr.name.local_name.as_str() {
-                        "name" => current_name = attr.value,
-                        "dataType" => current_type = attr.value,
-                        _ => {}
-                    }
+            XmlEvent::EndElement { name } => {
+println!("EndElement {:?}", name.local_name);
+                if name.local_name == "container" {
+                    containers.push(current_container.clone());
+                    current_container.parameters.clear();
+                } else if name.local_name == "parameter" {
                 }
-                current_name.clear();
-                current_type.clear();
             }
-            XmlEvent::StartElement { name, attributes, .. } if name.local_name == "parameter" => {
+            XmlEvent::CData(_string) => {
+println!("CData");
+            }
+            XmlEvent::Comment(_string) => {
+println!("Comment");
+            }
+            XmlEvent::Characters(_string) => {
+println!("Characters");
+            }
+            XmlEvent::Whitespace(_string) => {
+println!("Whitespace");
             }
             _ => {}
         }
@@ -82,7 +121,7 @@ println!("{}: event: {:?}", line, event);
 } 
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let parameters = parse_xtce("test/test5.xtce")?;
+    let parameters = parse_xtce("test/test1.xtce")?;
     
     for param in parameters {
         println!("{:?}", param);
