@@ -2,10 +2,9 @@ mod xml_lineno;
 
 extern crate xml;
 
-use std::io::Read;
 use std::fs::File;
 use xml_lineno::{LineReader};
-use xml::EventReader;
+use xml::reader::{EventReader, XmlEvent};
 
 #[derive(Clone, Debug)]
 struct Parameter {
@@ -29,7 +28,7 @@ fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Err
 
     let file = File::open(file_path)?;
     let reader= LineReader::new(file);
-println!("reader.line() {}", reader.line());
+    let line_ref = reader.line_ref();
     let parser = EventReader::new(reader);
     
     let mut parameters: Vec<Parameter> = Vec::new();
@@ -39,10 +38,9 @@ println!("reader.line() {}", reader.line());
     // Parsing logic...
     
     for event in parser {
-//let s = reader.source();
-//println!("event.line() {}: ", s.line());
-println!("event: {:?}", event);
-/*
+        let line = *line_ref.borrow();
+
+println!("{}: event: {:?}", line, event);
         match event? {
             XmlEvent::StartElement { name, attributes, .. } if name.local_name == "container" => {
                 // Handle container start...
@@ -78,7 +76,6 @@ println!("event: {:?}", event);
             }
             _ => {}
         }
-*/
     }
     
     Ok(containers)
