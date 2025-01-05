@@ -4,7 +4,7 @@
  */
 
 mod xml_lineno;
-mod SpaceSystem;
+mod space_system;
 
 extern crate xml;
 
@@ -54,9 +54,10 @@ if event.is_ok() {
     println!("Line {}: Is not okay");
 }
 */
-        match event? {
+        match event.clone()? {
             XmlEvent::StartDocument {version, encoding, standalone} => {
-println!("StartDocument");
+println!("StartDocument ({:?}", event);
+println!("    version {:?} encoding {:?} standalone {:?}", version, encoding, standalone);
             }
             XmlEvent::EndDocument => {
 println!("EndDocument");
@@ -64,9 +65,15 @@ println!("EndDocument");
             XmlEvent::ProcessingInstruction {name, data} => {
 println!("ProcessingInstruction");
             }
-            XmlEvent::StartElement { name, attributes, .. } => {
-    println!("StartElement name: {}", name.local_name);
-//println!("    {:?}", attributes);
+            XmlEvent::StartElement { name, attributes, namespace } => {
+    println!("StartElement name: {} {:?}", name.local_name, event);
+    println!("    attributes:");
+    let a = attributes.clone();
+for attr in a {
+    println!("        {:?}", attr);
+}
+println!("    {:?}", attributes);
+println!("    namespace: {:?}", namespace);
                 if name.local_name == "container" {
                     // Handle container start...
                     for attr in attributes {
@@ -113,7 +120,7 @@ println!("Characters");
             XmlEvent::Whitespace(_string) => {
 println!("Whitespace");
             }
-            _ => {}
+//            _ => {}
         }
     }
     
