@@ -2,6 +2,10 @@
  * XTCE types
  */
 
+use crate::basic::*;
+use crate::space_system::*;
+use crate::telemetry_meta_data::*;
+
 struct SpaceSystemType {
     header:                 Option<HeaderType>,
     telemetry_meta_data:    Option<TelemetryMetaDataType>,
@@ -39,85 +43,7 @@ struct HistorySetType {
 struct ValidationStatusType {
 }
 
-struct TelemetryMetaDataType {
-    parameter_type_set:     Option<ParameterTypeSetType>,
-    parameter_set:          Option<ParameterSetType>,
-    container_set:          Option<ContainerSetType>,
-    message_set:            Option<MessageSetType>,
-    stream_set:             Option<StreamSetType>,
-    algorithm_set:          Option<AlgorithmSetType>,
-}
-
-struct ParameterTypeSetType {
-    string_parameter_type:          StringParameterType,
-    enumerated_parameter_type:      EnumeratedParameterType,
-    integer_parameter_type:         IntegerParameterType,
-    binary_parameter_type:          BinaryParameterType,
-    float_parameter_type:           FloatParameterType,
-    boolean_parameter_type:         BooleanParameterType,
-    relative_time_parameter_type:   RelativeTimeParameterType,
-    absolute_time_parameter_type:   AbsoluteTimeParameterType,
-    array_parameter_type:           ArrayParameterType,
-    aggregate_parameter_type:       AggregateParameterType,
-}
-
-struct StringParameterType {
-}
-
-struct EnumeratedParameterType {
-}
-
-struct IntegerParameterType {
-}
-
-struct BinaryParameterType {
-}
-
-struct FloatParameterType {
-}
-
-struct BooleanParameterType {
-}
-
-struct RelativeTimeParameterType {
-}
-
-struct AbsoluteTimeParameterType {
-}
-
-struct ArrayParameterType {
-}
-
-struct AggregateParameterType {
-}
-
-struct ParameterSetType {
-    parameter:      ParameterType,
-    parameter_ref:  ParameterRefType,
-}
-
-struct ParameterType {
-}
-
-struct ParameterRefType {
-}
-
-struct ContainerSetType {
-    sequence_countainer:    SequenceContainerType,
-}
-
-struct SequenceContainerType {
-}
-
-struct MessageSetType {
-    message:    Vec<MessageType>,
-    name:       String,
-}
-
-struct MessageType {
-}
-
-struct StreamSetType {
+pub struct StreamSetType {
     fixed_frame_stream:     FixedFrameStreamType,
     variable_frame_stream:  VariableFrameStreamType,
     custom_stream:          CustomStreamType,
@@ -130,17 +56,6 @@ struct VariableFrameStreamType {
 }
 
 struct CustomStreamType {
-}
-
-struct AlgorithmSetType {
-    custom_algorithm:   InputOutputTriggerAlgorithmType,
-    math_algorithm:     MathAlgorithmType,
-}
-
-struct InputOutputTriggerAlgorithmType {
-}
-
-struct MathAlgorithmType {
 }
 
 struct CommandMetaDataType {
