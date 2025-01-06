@@ -75,7 +75,7 @@ struct SequenceContainerType {
 
 struct MessageSetType {
     message:    Vec<MessageType>,
-    name:       String,
+    name:       r#String,
 }
 
 struct MessageType {

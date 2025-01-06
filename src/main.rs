@@ -3,32 +3,30 @@
  * --prefix Adds SpaceSystem-derived names to everything
  */
 
-mod xml_lineno;
+extern crate xml;
+
+use std::fs::File;
+
 mod basic;
 mod parameter_type_set;
 mod sequence_container;
 mod space_system;
 mod stream_set;
 mod telemetry_meta_data;
+mod xml_lineno;
 
-extern crate xml;
-use std::fs::File;
 use xml_lineno::{LineReader};
 use xml::reader::{EventReader, XmlEvent};
 
-use crate::basic::*;
-use crate::telemetry_meta_data::*;
-use crate::stream_set::*;
-
 #[derive(Clone, Debug)]
 struct Parameter {
-    name: String,
-    data_type: String,
+    _name: r#String,
+    _data_type: r#String,
 }
 
 #[derive(Clone, Debug)]
 struct Container {
-    name: String,
+    _name: r#String,
     parameters: Vec<Parameter>,
 }
 
@@ -36,7 +34,7 @@ fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Err
     // Similar setup as before...
     let mut containers = Vec::new();
     let mut current_container = Container {
-        name: String::new(),
+        _name: r#String::new(),
         parameters: Vec::new(),
     };
 
@@ -46,8 +44,8 @@ fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Err
     let parser = EventReader::new(reader);
     
     let mut parameters: Vec<Parameter> = Vec::new();
-    let mut current_name = String::new();
-    let mut current_type = String::new();
+    let mut current_name = r#String::new();
+    let mut current_type = r#String::new();
     
     // Parsing logic...
     
@@ -70,10 +68,10 @@ println!("    version {:?} encoding {:?} standalone {:?}", version, encoding, st
             XmlEvent::EndDocument => {
 println!("EndDocument");
             }
-            XmlEvent::ProcessingInstruction {name, data} => {
+            XmlEvent::ProcessingInstruction {..} => {
 println!("ProcessingInstruction");
             }
-            XmlEvent::StartElement { name, attributes, namespace } => {
+            XmlEvent::StartElement {name, attributes, namespace } => {
     println!("StartElement name: {} {:?}", name.local_name, event);
     println!("    attributes:");
     let a = attributes.clone();
@@ -94,8 +92,8 @@ println!("    namespace: {:?}", namespace);
                 } else if name.local_name == "parameter" {
                     // Handle parameter...
                     parameters.push(Parameter {
-                        name: current_name.clone(),
-                        data_type: current_type.clone(),
+                        _name: current_name.clone(),
+                        _data_type: current_type.clone(),
                     });
                     for attr in attributes {
                         match attr.name.local_name.as_str() {

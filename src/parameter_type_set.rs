@@ -2,15 +2,15 @@ use crate::basic::*;
 
 struct StringDataType {
     character_width:        CharacterWidth,
-    initial_value:          String,
-    restriction_pattern:    String,
+    initial_value:          r#String,
+    restriction_pattern:    r#String,
 }
 
 struct CharacterWidth {
 }
 
 struct EnumeratedDataType {
-    initial_value:  String,
+    initial_value:  r#String,
 }
 
 struct IntegerDataType {
@@ -41,9 +41,9 @@ struct Double {
 }
 
 struct BooleanDataType {
-    initial_value:      String,
-    one_string_value:   String,
-    zero_string_value:  String,
+    initial_value:      r#String,
+    one_string_value:   r#String,
+    zero_string_value:  r#String,
 }
 
 struct RelativeTimeDataType {

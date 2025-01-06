@@ -61,5 +61,5 @@ struct ContainerSegmentRefEntryType {
 }
 
 struct IndirectParameterRefEntryType {
-    alias_name_space:   String,
+    alias_name_space:   r#String,
 }

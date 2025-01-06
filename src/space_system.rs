@@ -2,8 +2,6 @@
  * XTCE types
  */
 
-use crate::basic::*;
-use crate::space_system::*;
 use crate::telemetry_meta_data::*;
 
 struct SpaceSystemType {
@@ -18,17 +16,17 @@ struct NameDescriptionType {
     name:   NameType
 }
 
-type NameType = String;
+type NameType = r#String;
 
 struct HeaderType {
     author_set:                     Option<AuthorSetType>,
     note_set:                       Option<NoteSetType>,
     history_set:                    Option<HistorySetType>,
     validation_status:              ValidationStatusType,
-    version:                        String,
-    date:                           String,
-    classification:                 String,
-    classification_instructions:    String,
+    version:                        r#String,
+    date:                           r#String,
+    classification:                 r#String,
+    classification_instructions:    r#String,
 }
 
 struct AuthorSetType {
