@@ -5,9 +5,13 @@
 
 extern crate xml;
 
+use std::error::Error;
 use std::fs::File;
+use std::io::Read;
 
 mod basic;
+mod document;
+mod error;
 mod parameter_type_set;
 mod sequence_container;
 mod space_system;
@@ -15,6 +19,9 @@ mod stream_set;
 mod telemetry_meta_data;
 mod xml_lineno;
 
+
+use document::{Document};
+use error::{XtceParserError};
 use xml_lineno::{LineReader};
 use xml::reader::{EventReader, XmlEvent};
 
@@ -30,6 +37,22 @@ struct Container {
     parameters: Vec<Parameter>,
 }
 
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    let x = XtceParserError::Unknown;
+    println!("x: {}", x);
+
+    let parameters = parse_xtce("test/test1.xtce")?;
+/*
+    
+    for param in parameters {
+        println!("{:?}", param);
+    }
+*/
+    
+    Ok(())
+}
+
 fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Error>> {
     // Similar setup as before...
     let mut containers = Vec::new();
@@ -41,14 +64,18 @@ fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Err
     let file = File::open(file_path)?;
     let reader= LineReader::new(file);
     let line_ref = reader.line_ref();
-    let parser = EventReader::new(reader);
+    let mut parser = EventReader::new(reader);
     
     let mut parameters: Vec<Parameter> = Vec::new();
     let mut current_name = r#String::new();
     let mut current_type = r#String::new();
     
     // Parsing logic...
+println!("calling parse_document");
+    let document = parse_document(&mut parser);
+println!("called parse_document");
     
+/*
     for event in parser {
         let line = *line_ref.borrow();
 
@@ -129,16 +156,25 @@ println!("Whitespace");
 //            _ => {}
         }
     }
+*/
     
     Ok(containers)
 } 
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let parameters = parse_xtce("test/test1.xtce")?;
-    
-    for param in parameters {
-        println!("{:?}", param);
-    }
-    
-    Ok(())
+fn parse_document<R: Read>(event_reader: &mut EventReader<R>) ->
+    Result<Document, XtceParserError> {
+    let ev = event_reader.next();
+    let document = match ev {
+        Err(e) => return Err(XtceParserError::GeneralError(Box::new(e))),
+        Ok(d) => {
+            match d {
+                XmlEvent::StartDocument {version, encoding, standalone} => {
+                    Document::new(version, encoding, standalone)
+                },
+                _ => return Err(XtceParserError::Unknown),
+            }
+        }
+    };
+    println!("document: {:?}", document);
+    Ok(document)
 }
