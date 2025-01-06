@@ -42,7 +42,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let x = XtceParserError::Unknown;
     println!("x: {}", x);
 
-    let parameters = parse_xtce("test/test1.xtce")?;
+    let parameters = parse_file("test/test1.xtce")?;
 /*
     
     for param in parameters {
@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn parse_xtce(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Error>> {
+fn parse_file(file_path: &str) -> Result<Vec<Container>, Box<dyn std::error::Error>> {
     // Similar setup as before...
     let mut containers = Vec::new();
     let mut current_container = Container {
@@ -174,7 +174,36 @@ fn parse_document<R: Read>(event_reader: &mut EventReader<R>) ->
                 _ => return Err(XtceParserError::Unknown),
             }
         }
+        Err(e) => return Err(XtceParserError::GeneralError(Box::new(e))),
+        Ok(d) => {
+            match d {
+                XmlEvent::StartDocument {version, encoding, standalone} => {
+                    Document::new(version, encoding, standalone)
+                },
+                _ => return Err(XtceParserError::Unknown),
+            }
+        }
     };
     println!("document: {:?}", document);
+
+    parse_xtce(event_reader);
+
+    let ev = event_reader.next();
+    match ev {
+        Err(e) => return Err(XtceParserError::GeneralError(Box::new(e))),
+        Ok(d) => {
+            match d {
+                XmlEvent::EndDocument => {
+                },
+                _ => return Err(XtceParserError::Unknown),
+            }
+        }
+    }
+
     Ok(document)
+}
+
+fn parse_xtce<R: Read>(event_reader: &mut EventReader<R>) ->
+    Result<Document, XtceParserError> {
+    return Err(XtceParserError::Unknown);
 }
