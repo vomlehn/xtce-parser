@@ -45,9 +45,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let x = XtceParserError::Unknown(12345);
     println!("x: {}", x);
 
-    let parameters = parse_file("test/test1.xtce");
+    let xtce = parse_file("test/test5.xtce");
 
-    println!("parameters: {:?}", parameters);
+    println!("xtce: {:?}", xtce);
 /*
     
     for param in parameters {

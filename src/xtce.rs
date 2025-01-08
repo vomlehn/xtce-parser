@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::fmt;
 use std::fs::File;
-use std::io::Read;
+use std::io::{BufReader, Read};
 use std::rc::Rc;
 use xml::common::XmlVersion;
 use xml::reader::{EventReader, XmlEvent};
@@ -21,16 +21,18 @@ pub struct Xtce {
 
 impl Xtce {
     pub fn new(file: File) -> Result<Xtce, XtceParserError> {
-        let reader = LineReader::new(file);
-        let line_ref = reader.line_ref();
-        let mut parser = EventReader::new(reader);
+        let mut buf_reader = BufReader::new(file);
+        let line_reader = LineReader::new(buf_reader);
+        let line_ref = line_reader.line_ref();
+        let mut parser = EventReader::new(line_reader);
         
-        let ev = parser.next();
-        let mut xtce = match ev {
+        let start_ev = parser.next();
+        let mut xtce = match start_ev {
             Err(e) => return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e))),
             Ok(x) => {
-                match x {
+                match x.clone() {
                     XmlEvent::StartDocument {version, encoding, standalone} => {
+println!("Start document is {:?}", x);
                         Xtce {
                             version:    version,
                             encoding:   encoding,
@@ -43,10 +45,9 @@ impl Xtce {
         };
         println!("xtce: {:?}", xtce);
 
-        parse_space_system(&mut xtce, line_ref.clone(), &mut parser)?;
+        let end_ev = parse_xtce_elements(&mut xtce, line_ref.clone(), &mut parser);
 
-        let ev = parser.next();
-        match ev {
+        match end_ev {
             Err(e) => return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e))),
             Ok(d) => {
                 match d {
@@ -61,8 +62,8 @@ impl Xtce {
     }
 }
 
-fn parse_space_system<R: Read>(xtce: &mut Xtce, line_ref: Rc<RefCell<usize>>, parser: &mut EventReader<R>) ->
-   Result<SpaceSystemType, XtceParserError> {
+fn parse_xtce_elements<R: Read>(xtce: &mut Xtce, line_ref: Rc<RefCell<usize>>, parser: &mut EventReader<R>) ->
+   Result<XmlEvent, XtceParserError> {
     
     let mut containers = Vec::new();
     let mut current_container = Container {
@@ -83,8 +84,7 @@ fn parse_space_system<R: Read>(xtce: &mut Xtce, line_ref: Rc<RefCell<usize>>, pa
 
         match ev.unwrap() {
             XmlEvent::StartDocument {version, encoding, standalone} => {
-println!("StartDocument ({:?}", event);
-println!("    version {:?} encoding {:?} standalone {:?}", version, encoding, standalone);
+                return Err(XtceParserError::MultipleSpaceSystems(*line_ref.borrow()));
             }
             XmlEvent::EndDocument => {
 println!("EndDocument");
@@ -94,7 +94,8 @@ println!("EndDocument");
 println!("ProcessingInstruction");
             }
             XmlEvent::StartElement {name, attributes, namespace } => {
-    println!("StartElement name: {}", name.local_name);
+    println!("Line {}: StartElement name: {}", *line_ref.borrow(), name.local_name);
+/*
     println!("    attributes:");
     let a = attributes.clone();
 for attr in a {
@@ -127,9 +128,10 @@ println!("    namespace: {:?}", namespace);
                     current_name.clear();
                     current_type.clear();
                 }
+*/
             }
             XmlEvent::EndElement { name } => {
-println!("EndElement {:?}", name.local_name);
+println!("Line {}: EndElement {:?}", *line_ref.borrow(), name.local_name);
                 if name.local_name == "container" {
                     containers.push(current_container.clone());
                     current_container.parameters.clear();
@@ -146,7 +148,7 @@ println!("Comment");
 println!("Characters");
             }
             XmlEvent::Whitespace(_string) => {
-println!("Whitespace");
+//println!("Whitespace");
             }
 //            _ => {}
         };

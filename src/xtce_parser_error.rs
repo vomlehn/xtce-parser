@@ -13,6 +13,8 @@ pub enum XtceParserError {
         found: String,
     },
 */
+    #[error("line {0}: Multiple SpaceSystem XTCE elements")]
+    MultipleSpaceSystems(usize), 
     #[error("Line {0}: General error: {1}")]
     GeneralError(usize, Box<dyn std::error::Error>),
     #[error("Line {0}: Unknown XTCE parsing error")]
