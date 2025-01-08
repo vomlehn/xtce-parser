@@ -1,5 +1,6 @@
 use crate::basic::*;
 
+#[derive(Debug)]
 pub MetaCommandSet {
     block_meta_command: BlockMetaCommand,
     meta_command:       MetaCommandType,
@@ -8,6 +9,7 @@ pub MetaCommandSet {
     meta_command_ref:   NameReferenceType,
 }
 
+#[derive(Debug)]
 struct AlgorithmSetType {
     /* FIXME: figure this out */
     mixed = false,
@@ -17,6 +19,7 @@ struct AlgorithmSetType {
     math_algorithm:     MathAlgorithmType,
 }
 
+#[derive(Debug)]
 struct ArgumentTypeSetType {
     integer_argument_type:          IntegerArgumentType,
     float_argument_type:            FloatArgumentType,
@@ -30,6 +33,7 @@ struct ArgumentTypeSetType {
     aggregate_argument_type:        AggregateDataType,
 }
 
+#[derive(Debug)]
 struct struct ParameterSetType {
     /* FIXME: figure this out */
     max_occurs = unbounded,
@@ -38,16 +42,19 @@ struct struct ParameterSetType {
     parameter_ref:  ParameterRefType,
 }
 
+#[derive(Debug)]
 struct StreamSetType {
     fixed_frame_stream:     FixedFrameStreamType,
     variable_frame_stream:  VariableFrameStreamType,
     custom_stream:          CustomStreamType,
 }
 
+#[derive(Debug)]
 struct CommandContainerSetType {
     command_container:  Vec<SequenceContainerType>,
 }
 
+#[derive(Debug)]
 struct ParameterTypeSetType {
     integer_parameter_type:         IntegerParameterType,
     float_parameter_type:           FloatParameterType,
