@@ -12,6 +12,7 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 mod basic;
+mod gen_c;
 mod parameter_type_set;
 mod sequence_container;
 mod space_system;
@@ -22,6 +23,7 @@ mod xtce;
 mod xtce_parser_error;
 
 
+use gen_c::generate_c;
 use space_system::{SpaceSystemType};
 use xtce_parser_error::{XtceParserError};
 use xml_lineno::{LineReader};
@@ -66,5 +68,11 @@ fn parse_file(file_path: &str) -> Result<Xtce, XtceParserError> {
         Ok(file) => file,
     };
 
-    Xtce::new(file)
+    match Xtce::new(file) {
+        Err(e) => Err(e),
+        Ok(xtce) => {
+            generate_c(&xtce);
+            Ok(xtce)
+        }
+    }
 }

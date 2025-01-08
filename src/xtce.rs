@@ -45,7 +45,7 @@ println!("Start document is {:?}", x);
         };
         println!("xtce: {:?}", xtce);
 
-        let end_ev = parse_xtce_elements(&mut xtce, line_ref.clone(), &mut parser);
+        let end_ev = xtce.parse_xtce_elements(line_ref.clone(), &mut parser);
 
         match end_ev {
             Err(e) => return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e))),
@@ -60,101 +60,101 @@ println!("Start document is {:?}", x);
 
         Ok(xtce)
     }
-}
 
-fn parse_xtce_elements<R: Read>(xtce: &mut Xtce, line_ref: Rc<RefCell<usize>>, parser: &mut EventReader<R>) ->
-   Result<XmlEvent, XtceParserError> {
-    
-    let mut containers = Vec::new();
-    let mut current_container = Container {
-        _name: r#String::new(),
-        parameters: Vec::new(),
-    };
-    let mut parameters: Vec<Parameter> = Vec::new();
-    let mut current_name = r#String::new();
-    let mut current_type = r#String::new();
+    fn parse_xtce_elements<R: Read>(&mut self, line_ref: Rc<RefCell<usize>>, parser: &mut EventReader<R>) ->
+       Result<XmlEvent, XtceParserError> {
+        
+        let mut containers = Vec::new();
+        let mut current_container = Container {
+            _name: r#String::new(),
+            parameters: Vec::new(),
+        };
+        let mut parameters: Vec<Parameter> = Vec::new();
+        let mut current_name = r#String::new();
+        let mut current_type = r#String::new();
 
-    loop {
-        let event = parser.next();
-        let ev = event.clone();
+        loop {
+            let event = parser.next();
+            let ev = event.clone();
 
-        if let Err(e) = ev {
-            return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e)));
+            if let Err(e) = ev {
+                return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e)));
+            }
+
+            match ev.unwrap() {
+                XmlEvent::StartDocument {version, encoding, standalone} => {
+                    return Err(XtceParserError::MultipleSpaceSystems(*line_ref.borrow()));
+                }
+                XmlEvent::EndDocument => {
+    println!("EndDocument");
+                    return Err(XtceParserError::Unknown(*line_ref.borrow()));
+                }
+                XmlEvent::ProcessingInstruction {..} => {
+    println!("ProcessingInstruction");
+                }
+                XmlEvent::StartElement {name, attributes, namespace } => {
+        println!("Line {}: StartElement name: {}", *line_ref.borrow(), name.local_name);
+    /*
+        println!("    attributes:");
+        let a = attributes.clone();
+    for attr in a {
+        println!("        {:?}", attr);
+    }
+    println!("    {:?}", attributes);
+    println!("    namespace: {:?}", namespace);
+                    if name.local_name == "container" {
+                        // Handle container start...
+                        for attr in attributes {
+                            match attr.name.local_name.as_str() {
+                                "name" => current_name = attr.value,
+                                "dataType" => current_type = attr.value,
+                                _ => {}
+                            }
+                        }
+                    } else if name.local_name == "parameter" {
+                        // Handle parameter...
+                        parameters.push(Parameter {
+                            _name: current_name.clone(),
+                            _data_type: current_type.clone(),
+                        });
+                        for attr in attributes {
+                            match attr.name.local_name.as_str() {
+                                "name" => current_name = attr.value,
+                                "dataType" => current_type = attr.value,
+                                _ => {}
+                            }
+                        }
+                        current_name.clear();
+                        current_type.clear();
+                    }
+    */
+                }
+                XmlEvent::EndElement { name } => {
+    println!("Line {}: EndElement {:?}", *line_ref.borrow(), name.local_name);
+                    if name.local_name == "container" {
+                        containers.push(current_container.clone());
+                        current_container.parameters.clear();
+                    } else if name.local_name == "parameter" {
+                    }
+                }
+                XmlEvent::CData(_string) => {
+    println!("CData");
+                }
+                XmlEvent::Comment(_string) => {
+    println!("Comment");
+                }
+                XmlEvent::Characters(_string) => {
+    println!("Characters");
+                }
+                XmlEvent::Whitespace(_string) => {
+    //println!("Whitespace");
+                }
+    //            _ => {}
+            };
         }
 
-        match ev.unwrap() {
-            XmlEvent::StartDocument {version, encoding, standalone} => {
-                return Err(XtceParserError::MultipleSpaceSystems(*line_ref.borrow()));
-            }
-            XmlEvent::EndDocument => {
-println!("EndDocument");
-                return Err(XtceParserError::Unknown(*line_ref.borrow()));
-            }
-            XmlEvent::ProcessingInstruction {..} => {
-println!("ProcessingInstruction");
-            }
-            XmlEvent::StartElement {name, attributes, namespace } => {
-    println!("Line {}: StartElement name: {}", *line_ref.borrow(), name.local_name);
-/*
-    println!("    attributes:");
-    let a = attributes.clone();
-for attr in a {
-    println!("        {:?}", attr);
-}
-println!("    {:?}", attributes);
-println!("    namespace: {:?}", namespace);
-                if name.local_name == "container" {
-                    // Handle container start...
-                    for attr in attributes {
-                        match attr.name.local_name.as_str() {
-                            "name" => current_name = attr.value,
-                            "dataType" => current_type = attr.value,
-                            _ => {}
-                        }
-                    }
-                } else if name.local_name == "parameter" {
-                    // Handle parameter...
-                    parameters.push(Parameter {
-                        _name: current_name.clone(),
-                        _data_type: current_type.clone(),
-                    });
-                    for attr in attributes {
-                        match attr.name.local_name.as_str() {
-                            "name" => current_name = attr.value,
-                            "dataType" => current_type = attr.value,
-                            _ => {}
-                        }
-                    }
-                    current_name.clear();
-                    current_type.clear();
-                }
-*/
-            }
-            XmlEvent::EndElement { name } => {
-println!("Line {}: EndElement {:?}", *line_ref.borrow(), name.local_name);
-                if name.local_name == "container" {
-                    containers.push(current_container.clone());
-                    current_container.parameters.clear();
-                } else if name.local_name == "parameter" {
-                }
-            }
-            XmlEvent::CData(_string) => {
-println!("CData");
-            }
-            XmlEvent::Comment(_string) => {
-println!("Comment");
-            }
-            XmlEvent::Characters(_string) => {
-println!("Characters");
-            }
-            XmlEvent::Whitespace(_string) => {
-//println!("Whitespace");
-            }
-//            _ => {}
-        };
+        return Err(XtceParserError::Unknown(*line_ref.borrow()));
     }
-
-    return Err(XtceParserError::Unknown(*line_ref.borrow()));
 }
 
 impl fmt::Display for Xtce {
