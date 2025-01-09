@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <XTCE xmlns="http://www.omg.org/spec/XTCE/">
-    <ParameterSet name="ExampleParameterSet">
-        <Parameter name="Temperature" dataType="Float">
-            <Description>Current temperature in Celsius</Description>
-        </Parameter>
-        <Parameter name="Pressure" dataType="Float">
-            <Description>Current pressure in Pascals</Description>
-        </Parameter>
-    </ParameterSet>
+    <SpaceSystem xmlns="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/space/xtce ../SpaceSystemV1.0.xsd" name="TrivialSat">
+        <TelemetryMetaData>
+            <ParameterSet name="ExampleParameterSet">
+                <Parameter name="Temperature" dataType="Float">
+                    <Description>Current temperature in Celsius</Description>
+                </Parameter>
+                <Parameter name="Pressure" dataType="Float">
+                    <Description>Current pressure in Pascals</Description>
+                </Parameter>
+            </ParameterSet>
+        </TelemetryMetaData>
+    </SpaceSystem>
 </XTCE>
