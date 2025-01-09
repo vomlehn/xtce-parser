@@ -1,6 +1,8 @@
 use std::cell::RefCell;
+use std::collections::{HashSet, HashMap};
 use std::fmt;
 use std::fs::File;
+use std::hash::{Hash, Hasher};
 use std::io::{BufReader, Read};
 use std::rc::Rc;
 use xml::common::XmlVersion;
@@ -11,6 +13,48 @@ use crate::xtce_parser_error::{XtceParserError};
 use crate::LineReader;
 use crate::Parameter;
 use crate::SpaceSystemType;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct Item {
+    name: String,
+    dependencies: Vec<Item>,
+}
+
+impl Item {
+    fn new(name: &str) -> Self {
+        Item {
+            name: name.to_string(),
+            dependencies: Vec::new(),
+        }
+    }
+
+    fn add_dependency(&mut self, item: Item) {
+        self.dependencies.push(item);
+    }
+}
+
+impl Hash for Item {
+    fn hash<H>(&self, _: &mut H)
+    where H: Hasher
+    {
+        todo!();
+    }
+}
+
+#[derive(Eq, Hash, PartialEq, Clone)]
+struct TSortItem {
+    value:  String,
+    deps:   [String; 2],
+}
+
+impl TSortItem {
+    fn new(v: &str, deps: [&str; 2]) -> TSortItem{
+        TSortItem {
+            value:  v.to_string(),
+            deps:   [deps[0].to_string(), deps[1].to_string()],
+        }
+    }
+}
 
 #[derive(Debug)]
 pub struct Xtce {
@@ -155,6 +199,69 @@ println!("Start document is {:?}", x);
 
         return Err(XtceParserError::Unknown(*line_ref.borrow()));
     }
+
+    // Thanks to ChapGPT for this
+    fn resolve_dependencies<'a>(
+        item: &'a Item,
+        resolved: &mut Vec<&'a Item>,
+        unresolved: &mut HashSet<&'a Item>,
+    ) -> Result<(), String> {
+        if unresolved.contains(item) {
+            return Err(format!("Circular dependency detected: {}", item.name));
+        }
+
+        if resolved.contains(&item) {
+            return Ok(()); // Already resolved
+        }
+
+        unresolved.insert(item);
+
+        // Resolve all dependencies recursively
+        for dep in &item.dependencies {
+            Self::resolve_dependencies(dep, resolved, unresolved)?;
+        }
+
+        // Mark the item as resolved
+        resolved.push(item);
+        unresolved.remove(item);
+
+        Ok(())
+    }
+
+    fn generate_output(items: &Vec<Item>) -> Result<Vec<&Item>, String> {
+        let mut resolved: Vec<&Item> = Vec::new();
+        let mut unresolved: HashSet<&Item> = HashSet::new();
+
+        for item in items {
+            Self::resolve_dependencies(item, &mut resolved, &mut unresolved)?;
+        }
+
+        Ok(resolved)
+    }
+
+/* FIXME: remove this
+    fn main() {
+        let mut item1 = Item::new("item1");
+        let mut item2 = Item::new("item2");
+        let mut item3 = Item::new("item3");
+
+        // Defining dependencies
+        item1.add_dependency(item2);
+        item2.add_dependency(item3);
+
+        let items = vec![item1, item2, item3];
+
+        match generate_output(items) {
+            Ok(output) => {
+                for item in output {
+                    println!("{}", item.name);
+                }
+            }
+            Err(e) => println!("Error: {}", e),
+        }
+    }
+*/
+
 }
 
 impl fmt::Display for Xtce {
