@@ -5,7 +5,10 @@ use std::fs::File;
 use std::hash::{Hash, Hasher};
 use std::io::{BufReader, Read};
 use std::rc::Rc;
+use xml::attribute::OwnedAttribute;
 use xml::common::XmlVersion;
+use xml::name::OwnedName;
+use xml::namespace::Namespace;
 use xml::reader::{EventReader, XmlEvent};
 
 use crate::Container;
@@ -72,7 +75,7 @@ impl Xtce {
         
         let start_ev = parser.next();
         let mut xtce = match start_ev {
-            Err(e) => return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e))),
+            Err(e) => return Err(XtceParserError::XmlError(*line_ref.borrow(), Box::new(e))),
             Ok(x) => {
                 match x.clone() {
                     XmlEvent::StartDocument {version, encoding, standalone} => {
@@ -92,7 +95,7 @@ println!("Start document is {:?}", x);
         let end_ev = xtce.parse_xtce_elements(line_ref.clone(), &mut parser);
 
         match end_ev {
-            Err(e) => return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e))),
+            Err(e) => return Err(XtceParserError::XmlError(*line_ref.borrow(), Box::new(e))),
             Ok(d) => {
                 match d {
                     XmlEvent::EndDocument => {
@@ -116,13 +119,14 @@ println!("Start document is {:?}", x);
         let mut parameters: Vec<Parameter> = Vec::new();
         let mut current_name = r#String::new();
         let mut current_type = r#String::new();
+        let mut event: Result<XmlEvent, xml::reader::Error>;
 
         loop {
             let event = parser.next();
             let ev = event.clone();
 
             if let Err(e) = ev {
-                return Err(XtceParserError::GeneralError(*line_ref.borrow(), Box::new(e)));
+                return Err(XtceParserError::XmlError(*line_ref.borrow(), Box::new(e)));
             }
 
             match ev.unwrap() {
@@ -131,13 +135,13 @@ println!("Start document is {:?}", x);
                 }
                 XmlEvent::EndDocument => {
     println!("EndDocument");
-                    return Err(XtceParserError::Unknown(*line_ref.borrow()));
+                    return Ok(event.unwrap());
                 }
                 XmlEvent::ProcessingInstruction {..} => {
     println!("ProcessingInstruction");
                 }
                 XmlEvent::StartElement {name, attributes, namespace } => {
-        println!("Line {}: StartElement name: {}", *line_ref.borrow(), name.local_name);
+                    Self::start_element(*line_ref.borrow(), name, attributes, namespace);
     /*
         println!("    attributes:");
         let a = attributes.clone();
@@ -197,7 +201,11 @@ println!("Start document is {:?}", x);
             };
         }
 
-        return Err(XtceParserError::Unknown(*line_ref.borrow()));
+        return Err(XtceParserError::UnexpectedTermination(*line_ref.borrow(), "FIXME TBD"));
+    }
+
+    fn start_element(lineno: usize, name: OwnedName, attributes: Vec<OwnedAttribute>, namespace: Namespace) {
+        println!("Line {}: StartElement name: {}", lineno, name.local_name);
     }
 
     // Thanks to ChapGPT for this
