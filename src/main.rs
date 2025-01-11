@@ -7,28 +7,29 @@ extern crate xml;
 
 use std::error::Error;
 use std::fs::File;
-use std::io::Read;
+use std::io::{BufReader, Read};
 use std::rc::Rc;
 use std::cell::RefCell;
 
 mod basic;
 mod gen_c;
 mod parameter_type_set;
+mod parser;
 mod sequence_container;
 mod space_system;
 mod stream_set;
 mod telemetry_meta_data;
 mod xml_lineno;
 mod xtce;
+mod xtce_document;
 mod xtce_parser_error;
-
 
 use gen_c::generate_c;
 use space_system::{SpaceSystemType};
-use xtce_parser_error::{XtceParserError};
-use xml_lineno::{LineReader};
-use xml::reader::{EventReader, XmlEvent};
+use xml::reader::{XmlEvent};
 use xtce::Xtce;
+use xtce_document::XtceDocument;
+use xtce_parser_error::{XtceParserError};
 
 #[derive(Clone, Debug)]
 struct Parameter {
@@ -47,9 +48,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let x = XtceParserError::Unknown(12345);
     println!("x: {}", x);
 
-    let xtce = parse_file("test/test1.xtce");
+    let document = parse_file("test/test1.xtce");
 
-    println!("xtce: {:?}", xtce);
+    println!("document: {:?}", document);
 /*
     
     for param in parameters {
@@ -60,7 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn parse_file(file_path: &str) -> Result<Xtce, XtceParserError> {
+fn parse_file(file_path: &str) -> Result<XtceDocument, XtceParserError> {
     // Similar setup as before...
 
     let file = match File::open(file_path) {
@@ -68,11 +69,13 @@ fn parse_file(file_path: &str) -> Result<Xtce, XtceParserError> {
         Ok(file) => file,
     };
 
-    match Xtce::new(file) {
+    let mut buf_reader = BufReader::new(file);
+
+    match XtceDocument::new(buf_reader) {
         Err(e) => Err(e),
-        Ok(xtce) => {
-            generate_c(&xtce);
-            Ok(xtce)
+        Ok(document) => {
+            generate_c(&document);
+            Ok(document)
         }
     }
 }

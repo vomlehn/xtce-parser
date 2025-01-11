@@ -13,7 +13,6 @@ use xml::reader::{EventReader, XmlEvent};
 
 use crate::Container;
 use crate::xtce_parser_error::{XtceParserError};
-use crate::LineReader;
 use crate::Parameter;
 use crate::SpaceSystemType;
 
@@ -61,54 +60,15 @@ impl TSortItem {
 
 #[derive(Debug)]
 pub struct Xtce {
-    version:    XmlVersion,
-    encoding:   String,
-    standalone: Option<bool>,
 }
 
 impl Xtce {
-    pub fn new(file: File) -> Result<Xtce, XtceParserError> {
-        let mut buf_reader = BufReader::new(file);
-        let line_reader = LineReader::new(buf_reader);
-        let line_ref = line_reader.line_ref();
-        let mut parser = EventReader::new(line_reader);
-        
-        let start_ev = parser.next();
-        let mut xtce = match start_ev {
-            Err(e) => return Err(XtceParserError::XmlError(*line_ref.borrow(), Box::new(e))),
-            Ok(x) => {
-                match x.clone() {
-                    XmlEvent::StartDocument {version, encoding, standalone} => {
-println!("Start document is {:?}", x);
-                        Xtce {
-                            version:    version,
-                            encoding:   encoding,
-                            standalone: standalone,
-                        }
-                    },
-                    _ => return Err(XtceParserError::Unknown(*line_ref.borrow())),
-                }
-            }
-        };
-        println!("xtce: {:?}", xtce);
-
-        let end_ev = xtce.parse_xtce_elements(line_ref.clone(), &mut parser);
-
-        match end_ev {
-            Err(e) => return Err(XtceParserError::XmlError(*line_ref.borrow(), Box::new(e))),
-            Ok(d) => {
-                match d {
-                    XmlEvent::EndDocument => {
-                    },
-                    _ => return Err(XtceParserError::Unknown(*line_ref.borrow())),
-                }
-            }
-        }
-
-        Ok(xtce)
+    pub fn new(file: File) -> Result<(XmlEvent, Xtce), XtceParserError> {
+        Err(XtceParserError::Unknown(0))
     }
 
-    fn parse_xtce_elements<R: Read>(&mut self, line_ref: Rc<RefCell<usize>>, parser: &mut EventReader<R>) ->
+/*
+    fn parse_document_elements<R: Read>(&mut self, lineno: Rc<RefCell<usize>>, parser: &mut EventReader<R>) ->
        Result<XmlEvent, XtceParserError> {
         
         let mut containers = Vec::new();
@@ -126,12 +86,12 @@ println!("Start document is {:?}", x);
             let ev = event.clone();
 
             if let Err(e) = ev {
-                return Err(XtceParserError::XmlError(*line_ref.borrow(), Box::new(e)));
+                return Err(XtceParserError::XmlError(*lineno.borrow(), Box::new(e)));
             }
 
             match ev.unwrap() {
                 XmlEvent::StartDocument {version, encoding, standalone} => {
-                    return Err(XtceParserError::MultipleSpaceSystems(*line_ref.borrow()));
+                    return Err(XtceParserError::MultipleSpaceSystems(*lineno.borrow()));
                 }
                 XmlEvent::EndDocument => {
     println!("EndDocument");
@@ -141,7 +101,7 @@ println!("Start document is {:?}", x);
     println!("ProcessingInstruction");
                 }
                 XmlEvent::StartElement {name, attributes, namespace } => {
-                    Self::start_element(*line_ref.borrow(), name, attributes, namespace);
+                    Self::start_element(lineno.clone(), parser, name, attributes, namespace);
     /*
         println!("    attributes:");
         let a = attributes.clone();
@@ -178,7 +138,7 @@ println!("Start document is {:?}", x);
     */
                 }
                 XmlEvent::EndElement { name } => {
-    println!("Line {}: EndElement {:?}", *line_ref.borrow(), name.local_name);
+    println!("Line {}: EndElement {:?}", *lineno.borrow(), name.local_name);
                     if name.local_name == "container" {
                         containers.push(current_container.clone());
                         current_container.parameters.clear();
@@ -201,11 +161,76 @@ println!("Start document is {:?}", x);
             };
         }
 
-        return Err(XtceParserError::UnexpectedTermination(*line_ref.borrow(), "FIXME TBD"));
+        return Err(XtceParserError::UnexpectedTermination(*lineno.borrow(), "FIXME TBD"));
     }
 
-    fn start_element(lineno: usize, name: OwnedName, attributes: Vec<OwnedAttribute>, namespace: Namespace) {
-        println!("Line {}: StartElement name: {}", lineno, name.local_name);
+    fn start_element<R: Read>(lineno: Rc<RefCell<usize>>, parser: &mut EventReader<R>, name: OwnedName, attributes: Vec<OwnedAttribute>, namespace: Namespace) ->
+       Result<XmlEvent, XtceParserError> {
+        let mut containers = Vec::new();
+        let mut current_container = Container {
+            _name: r#String::new(),
+            parameters: Vec::new(),
+        };
+        println!("Line {}: StartElement name: {:?} [start_element]", *lineno.borrow(), name.local_name);
+        let mut parameters: Vec<Parameter> = Vec::new();
+        let mut current_name = r#String::new();
+        let mut current_type = r#String::new();
+        let mut event: Result<XmlEvent, xml::reader::Error>;
+
+        match current_name.as_str() {
+            "SpaceSystem" => {},
+            "TelemetryMetaData" => {},
+            "ParameterSet" => {},
+            "Parameter" => {},
+            "Description" => {}, // FIXME: verify this is right
+            "Parameter" => {},
+            _ => { return Err(XtceParserError::UnknownElement(*lineno.borrow(), current_name)); }
+        };
+
+        loop {
+            let event = parser.next();
+            let ev = event.clone();
+
+            if let Err(e) = ev {
+                return Err(XtceParserError::XmlError(*lineno.borrow(), Box::new(e)));
+            }
+
+            match ev.unwrap() {
+                XmlEvent::StartDocument {version, encoding, standalone} => {
+                    return Err(XtceParserError::MultipleSpaceSystems(*lineno.borrow()));
+                }
+                XmlEvent::EndDocument => {
+                    return Err(XtceParserError::MultipleSpaceSystems(*lineno.borrow()));
+                }
+                XmlEvent::ProcessingInstruction {..} => {
+    println!("ProcessingInstruction");
+                }
+                XmlEvent::StartElement {name, attributes, namespace } => {
+                    Self::start_element(lineno.clone().clone(), parser, name, attributes, namespace);
+                }
+                XmlEvent::EndElement { name } => {
+    println!("Line {}: EndElement {:?}", *lineno.borrow(), name.local_name);
+                    if name.local_name == "container" {
+                        containers.push(current_container.clone());
+                    }
+                }
+                XmlEvent::CData(_string) => {
+    println!("CData");
+                }
+                XmlEvent::Comment(_string) => {
+    println!("Comment");
+                }
+                XmlEvent::Characters(_string) => {
+    println!("Characters");
+                }
+                XmlEvent::Whitespace(_string) => {
+    //println!("Whitespace");
+                }
+    //            _ => {}
+            };
+        }
+
+        return Err(XtceParserError::UnexpectedTermination(*lineno.borrow(), "FIXME TBD"));
     }
 
     // Thanks to ChapGPT for this
@@ -246,6 +271,7 @@ println!("Start document is {:?}", x);
 
         Ok(resolved)
     }
+*/
 
 /* FIXME: remove this
     fn main() {
@@ -270,12 +296,6 @@ println!("Start document is {:?}", x);
     }
 */
 
-}
-
-impl fmt::Display for Xtce {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "(version {}, encoding {} standalone {:?})", self.version, self.encoding, self.standalone)
-    }
 }
 
 /*
