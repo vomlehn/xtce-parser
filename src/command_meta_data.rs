@@ -10,10 +10,30 @@ pub struct CommandMetaDataType {
     parameter_set:          Option<ParameterSetType>,
 */
     argument_type_set:      Option<ArgumentTypeSetType>,
+    /* FIXME: resolve this
     meta_command_set:       MetaCommandSetType,
+    */
     command_container_set:  Option<CommandContainerSetType>,
     stream_set:             Option<StreamSetType>,
     algorithm_set:          Option<AlgorithmSetType>,
+}
+
+impl CommandMetaDataType {
+    pub fn new() -> CommandMetaDataType {
+        CommandMetaDataType {
+            parameter_type_set:     None,
+        /* FIXME: resolve this
+            parameter_set:          None,
+        */
+            argument_type_set:      None,
+        /* FIXME: resolve this
+            meta_command_set:       MetaCommandSetType,
+        */
+            command_container_set:  None,
+            stream_set:             None,
+            algorithm_set:          None,
+        }
+    }
 }
 
 #[derive(Debug)]

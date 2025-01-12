@@ -14,6 +14,12 @@ pub enum XtceParserError {
         found: String,
     },
 */
+    #[error("Line {0}: unexpected XML CDATA in input")]
+    UnexpectedCData(usize),
+
+    #[error("Line {0}: unexpected character data in input")]
+    UnexpectedCharacters(usize),
+
     #[error("No XTCE elements in input")]
     NoXTCE(),
 
@@ -29,8 +35,8 @@ pub enum XtceParserError {
     #[error("line {0}: Expected </SpaceSystem>, not: <{1}>")]
     BadXtceEnd(usize, String),
 
-    #[error("line {0}: Unexpected element termination {1}:")]
-    UnexpectedTermination(usize, &'static str),
+    #[error("line {0}: Unexpected element termination")]
+    UnexpectedTermination(usize),
 
     #[error("line {0}: Multiple SpaceSystem XTCE elements")]
     MultipleSpaceSystems(usize), 
@@ -41,6 +47,7 @@ pub enum XtceParserError {
     #[error("Unexpected XML: {0:?}")]
     UnexpectedXml(XmlEvent),
 
+    // FIXME: get line number from the XmlEvent
     #[error("Line {0}: XML error: {1}")]
     XmlError(usize, Box<dyn std::error::Error>),
 

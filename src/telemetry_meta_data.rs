@@ -11,6 +11,20 @@ pub struct TelemetryMetaDataType {
     algorithm_set:          Option<AlgorithmSetType>,
 }
 
+impl TelemetryMetaDataType {
+    pub fn new() -> TelemetryMetaDataType {
+        TelemetryMetaDataType {
+            parameter_type_set:     None,
+            parameter_set:          None,
+            container_set:          None,
+            message_set:            None,
+            stream_set:             None,
+            algorithm_set:          None,
+        }
+    }
+}
+    
+
 #[derive(Debug)]
 pub struct ParameterTypeSetType {
     string_parameter_type:          StringParameterType,

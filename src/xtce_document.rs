@@ -150,7 +150,7 @@ println!("Expecting SpaceSystem: {:?}", element);
 //println!("Next element: {:?}", element);
 
             match element {
-                Err(e) => return Err(XtceParserError::Unknown(0)),
+                Err(e) => return Err(XtceParserError::XmlError(0, Box::new(e))),
                 Ok(el) => {
                     let lineno = el.lineno;
 
@@ -168,12 +168,12 @@ println!("EndDocument");
                         }
                         XmlEvent::StartElement {name, attributes, namespace } => {
 //                            Self::start_element(lineno, parser, name, attributes, namespace);
-                println!("Line {}: StartElement name: {:?} [start_element]", lineno, name.local_name);
+                println!("Line {}: StartElement name: {:?} [xtce_document_new]", lineno, name.local_name);
 
                             match name.local_name.as_str() {
                                 "SpaceSystem" => {
 
-                                    match Self::parse_space_system_body(parser) {
+                                    match Self::space_system_new(parser) {
                                         Err(e) => return Err(e),
                                         Ok((header, telemetry_meta_data, command_meta_data, service_set,
                                             space_system_ref)) => {
@@ -189,7 +189,7 @@ println!("EndDocument");
                             }
                         }
                         XmlEvent::EndElement { name } => {
-            println!("Line {}: EndElement {:?}", lineno, name.local_name);
+            println!("Line {}: EndElement {:?} [xtce_document_new]", lineno, name.local_name);
                             match name.local_name.as_str() {
                                 "SpaceSystem" => {
                                 },
@@ -199,13 +199,13 @@ println!("EndDocument");
                             }
                         }
                         XmlEvent::CData(_string) => {
-            println!("CData");
+                            return Err(XtceParserError::UnexpectedCData(lineno))
                         }
                         XmlEvent::Comment(_string) => {
             println!("Comment");
                         }
                         XmlEvent::Characters(_string) => {
-            println!("Characters");
+                            return Err(XtceParserError::UnexpectedCharacters(lineno))
                         }
                         XmlEvent::Whitespace(_string) => {
             //println!("Whitespace");
@@ -216,13 +216,122 @@ println!("EndDocument");
             }
         }
 
-        return Err(XtceParserError::UnexpectedTermination(0, "FIXME TBD"));
+        return Err(XtceParserError::UnexpectedTermination(0));
     }
 
-    fn parse_space_system_body<R: Read>(parser: &mut Parser<R>) ->
+    fn space_system_new<R: Read>(parser: &mut Parser<R>) ->
         Result<(Option<HeaderType>, Option<TelemetryMetaDataType>, Option<Box<CommandMetaDataType>>,
             Option<ServiceSetType>, Vec<SpaceSystemV1_1>), XtceParserError> {
+
+        /* Look for top-level StartElements:
+            CommandMetaData
+            TelemetryMetaData
+        */
+
+        let mut name = OwnedName::qualified("FIXME_do_this_right", "a", std::option::Option::<String>::None);
+        let mut attributes = Vec::<OwnedAttribute>::new();
+        let mut namespace = HashMap::<String, String>::new();
+
+        loop {
+            let element = parser.next();
+println!("*: {:?} [space_system_new]", element);
+
+            match element {
+                Err(e) => return Err(XtceParserError::XmlError(0, Box::new(e))),
+                Ok(el) => {
+                    let lineno = el.lineno;
+
+                    match el.event {
+                        XmlEvent::StartDocument {version, encoding, standalone} => {
+println!("StartDocument");
+                            return Err(XtceParserError::MultipleSpaceSystems(lineno));
+                        },
+                        XmlEvent::EndDocument => {
+println!("EndDocument");
+                            return Err(XtceParserError::UnexpectedTermination(lineno));
+                        },
+                        XmlEvent::ProcessingInstruction {..} => {
+            println!("ProcessingInstruction");
+                        },
+                        XmlEvent::StartElement {name, attributes, namespace } => {
+                            match name.local_name.as_str() {
+                                "TelemetryMetaData" => {
+println!("TelemetryMetaData");
+                                    Self::telemetry_meta_data_new(parser);
+                                },
+                                "CommandMetaData" => {
+println!("CommandMetaData");
+                                    Self::command_meta_data_new(parser);
+                                }
+                                _ => {
+                                    return Err(XtceParserError::UnknownElement(lineno, name.local_name));
+                                }
+                            }
+                        },
+                        XmlEvent::EndElement { name } => {
+                            match name.local_name.as_str() {
+                                "SpaceSystem" => {
+                                    println!("Line {}: EndElement {:?} [space_system_new]", lineno, name.local_name);
+                                },
+                                _ => {
+                                    return Err(XtceParserError::BadXtceEnd(lineno, name.local_name));
+                                }
+                            }
+                        },
+                        XmlEvent::CData(_string) => {
+                            return Err(XtceParserError::UnexpectedCData(lineno))
+                        },
+                        XmlEvent::Comment(_string) => {
+            println!("Comment");
+                        },
+                        XmlEvent::Characters(_string) => {
+                            return Err(XtceParserError::UnexpectedCharacters(lineno))
+                        },
+                        XmlEvent::Whitespace(_string) => {
+            //println!("Whitespace");
+                        },
+                    }
+                }
+            }
+        }
+
         Ok((None, None, None, None, Vec::<SpaceSystemV1_1>::new()))
+    }
+
+    fn telemetry_meta_data_new<R: Read>(parser: &mut Parser<R>) ->
+        Result<TelemetryMetaDataType, XtceParserError> {
+        loop {
+            let element = parser.next()?;
+println!("*: {:?} [telemetry_meta_data_new]", element);
+            match (element.event) {
+                XmlEvent::EndElement{name} => {
+                        if name.local_name == "TelemetryMetaData" {
+                            return Ok(TelemetryMetaDataType::new());
+                        }
+                    },
+                _ => {},
+            }
+        }
+
+        Err(XtceParserError::Unknown(0))
+    }
+
+    fn command_meta_data_new<R: Read>(parser: &mut Parser<R>) ->
+        Result<CommandMetaDataType, XtceParserError> {
+        loop {
+            let element = parser.next()?;
+println!("*: {:?} [command_meta_data_new]", element);
+            match (element.event) {
+                XmlEvent::EndElement{name} => {
+                        if name.local_name == "CommandMetaData" {
+                            return Ok(CommandMetaDataType::new());
+                        }
+                    },
+                _ => {},
+            }
+        }
+
+        Err(XtceParserError::Unknown(0))
     }
 }
 
