@@ -44,10 +44,6 @@ struct Container {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-
-    let x = XtceParserError::Unknown(12345);
-    println!("x: {}", x);
-
     let document = parse_file("test/test1.xtce");
 
     println!("document: {:?}", document);

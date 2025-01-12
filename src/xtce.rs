@@ -14,7 +14,7 @@ use xml::reader::{EventReader, XmlEvent};
 use crate::Container;
 use crate::xtce_parser_error::{XtceParserError};
 use crate::Parameter;
-use crate::SpaceSystemType;
+use crate::space_system::SpaceSystemType;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct Item {

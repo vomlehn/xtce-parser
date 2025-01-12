@@ -8,10 +8,6 @@ use crate::telemetry_meta_data::*;
 
 #[derive(Debug)]
 pub struct SpaceSystemType {
-    version:    XmlVersion,
-    encoding:   String,
-    standalone: Option<bool>,
-
     header:                 Option<HeaderType>,
     telemetry_meta_data:    Option<TelemetryMetaDataType>,
     command_meta_data:      Option<Box<CommandMetaDataType>>,
@@ -20,12 +16,8 @@ pub struct SpaceSystemType {
 }
 
 impl SpaceSystemType {
-    pub fn new(version: XmlVersion, encoding: String, standalone: Option<bool>) -> SpaceSystemType {
+    pub fn new() -> SpaceSystemType {
         SpaceSystemType {
-            version:                version,
-            encoding:               encoding,
-            standalone:             standalone,
-
             header:                 None,
             telemetry_meta_data:    None,
             command_meta_data:      None,
