@@ -12,7 +12,7 @@ pub struct TelemetryMetaDataType {
 }
 
 #[derive(Debug)]
-struct ParameterTypeSetType {
+pub struct ParameterTypeSetType {
     string_parameter_type:          StringParameterType,
     enumerated_parameter_type:      EnumeratedParameterType,
     integer_parameter_type:         IntegerParameterType,
@@ -26,43 +26,43 @@ struct ParameterTypeSetType {
 }
 
 #[derive(Debug)]
-struct StringParameterType {
+pub struct StringParameterType {
 }
 
 #[derive(Debug)]
-struct EnumeratedParameterType {
+pub struct EnumeratedParameterType {
 }
 
 #[derive(Debug)]
-struct IntegerParameterType {
+pub struct IntegerParameterType {
 }
 
 #[derive(Debug)]
-struct BinaryParameterType {
+pub struct BinaryParameterType {
 }
 
 #[derive(Debug)]
-struct FloatParameterType {
+pub struct FloatParameterType {
 }
 
 #[derive(Debug)]
-struct BooleanParameterType {
+pub struct BooleanParameterType {
 }
 
 #[derive(Debug)]
-struct RelativeTimeParameterType {
+pub struct RelativeTimeParameterType {
 }
 
 #[derive(Debug)]
-struct AbsoluteTimeParameterType {
+pub struct AbsoluteTimeParameterType {
 }
 
 #[derive(Debug)]
-struct ArrayParameterType {
+pub struct ArrayParameterType {
 }
 
 #[derive(Debug)]
-struct AggregateParameterType {
+pub struct AggregateParameterType {
 }
 
 #[derive(Debug)]
@@ -72,34 +72,36 @@ pub struct ParameterSetType {
 }
 
 #[derive(Debug)]
-struct ParameterType {
+pub struct ParameterType {
 }
 
 #[derive(Debug)]
-struct ParameterRefType {
+pub struct ParameterRefType {
 }
 
 #[derive(Debug)]
-struct ContainerSetType {
+pub struct ContainerSetType {
     sequence_countainer:    SequenceContainerType,
 }
 
 #[derive(Debug)]
-struct SequenceContainerType {
+pub struct SequenceContainerType {
     r#abstract:     Boolean,      // FIXME: abstract is a reserved word, change
     idle_pattern:   FixedIntegerValueType,
 }
 
 #[derive(Debug)]
-struct MessageSetType {
+pub struct MessageSetType {
     message:    Vec<MessageType>,
     name:       r#String,
 }
 
 #[derive(Debug)]
-struct MessageType {
+pub struct MessageType {
 }
 
+// FIXME: should the algorithm stuff get its own file. Is it shared
+// between command and telemetry?
 #[derive(Debug)]
 pub struct AlgorithmSetType {
     custom_algorithm:   InputOutputTriggerAlgorithmType,
@@ -107,9 +109,9 @@ pub struct AlgorithmSetType {
 }
 
 #[derive(Debug)]
-struct InputOutputTriggerAlgorithmType {
+pub struct InputOutputTriggerAlgorithmType {
 }
 
 #[derive(Debug)]
-struct MathAlgorithmType {
+pub struct MathAlgorithmType {
 }

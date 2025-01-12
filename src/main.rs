@@ -12,7 +12,10 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 mod basic;
+mod command_meta_data;
 mod gen_c;
+mod gen_xtce;
+mod meta_command;
 mod parameter_type_set;
 mod parser;
 mod sequence_container;
@@ -25,6 +28,7 @@ mod xtce_document;
 mod xtce_parser_error;
 
 use gen_c::generate_c;
+use gen_xtce::generate_xtce;
 use space_system::{SpaceSystemType};
 use xml::reader::{XmlEvent};
 use xtce::Xtce;
@@ -44,7 +48,7 @@ struct Container {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let document = parse_file("test/test1.xtce");
+    let document = parse_file("test/test1.xtce".to_string());
 
     println!("document: {:?}", document);
 /*
@@ -57,8 +61,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn parse_file(file_path: &str) -> Result<XtceDocument, XtceParserError> {
+fn parse_file(file_path: String) -> Result<XtceDocument, Box<dyn Error>> {
     // Similar setup as before...
+/*
 
     let file = match File::open(file_path) {
         Err(e) => return Err(XtceParserError::GeneralError(0, Box::new(e))),
@@ -66,11 +71,14 @@ fn parse_file(file_path: &str) -> Result<XtceDocument, XtceParserError> {
     };
 
     let mut buf_reader = BufReader::new(file);
+*/
 
-    match XtceDocument::new(buf_reader) {
+    match XtceDocument::new(file_path) {
         Err(e) => Err(e),
         Ok(document) => {
-            generate_c(&document);
+            println!("Output");
+            println!("------");
+            generate_xtce(&document);
             Ok(document)
         }
     }

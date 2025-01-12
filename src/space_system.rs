@@ -4,15 +4,17 @@
 
 use xml::common::{XmlVersion};
 
+use crate::basic::*;
+use crate::command_meta_data::*;
 use crate::telemetry_meta_data::*;
 
 #[derive(Debug)]
 pub struct SpaceSystemType {
-    header:                 Option<HeaderType>,
-    telemetry_meta_data:    Option<TelemetryMetaDataType>,
-    command_meta_data:      Option<Box<CommandMetaDataType>>,
-    service_set:            Option<ServiceSetType>,
-    space_system_ref:       Vec<SpaceSystemV1_1>,
+    pub header:                 Option<HeaderType>,
+    pub telemetry_meta_data:    Option<TelemetryMetaDataType>,
+    pub command_meta_data:      Option<Box<CommandMetaDataType>>,
+    pub service_set:            Option<ServiceSetType>,
+    pub space_system_ref:       Vec<SpaceSystemV1_1>,
 }
 
 impl SpaceSystemType {
@@ -28,14 +30,12 @@ impl SpaceSystemType {
 }
 
 #[derive(Debug)]
-struct NameDescriptionType {
-    name:   NameType
+pub struct NameDescriptionType {
+    name:   NameType,
 }
 
-type NameType = r#String;
-
 #[derive(Debug)]
-struct HeaderType {
+pub struct HeaderType {
     author_set:                     Option<AuthorSetType>,
     note_set:                       Option<NoteSetType>,
     history_set:                    Option<HistorySetType>,
@@ -47,19 +47,19 @@ struct HeaderType {
 }
 
 #[derive(Debug)]
-struct AuthorSetType {
+pub struct AuthorSetType {
 }
 
 #[derive(Debug)]
-struct NoteSetType {
+pub struct NoteSetType {
 }
 
 #[derive(Debug)]
-struct HistorySetType {
+pub struct HistorySetType {
 }
 
 #[derive(Debug)]
-struct ValidationStatusType {
+pub struct ValidationStatusType {
 }
 
 #[derive(Debug)]
@@ -70,19 +70,20 @@ pub struct StreamSetType {
 }
 
 #[derive(Debug)]
-struct FixedFrameStreamType {
+pub struct FixedFrameStreamType {
 }
 
 #[derive(Debug)]
-struct VariableFrameStreamType {
+pub struct VariableFrameStreamType {
 }
 
 #[derive(Debug)]
-struct CustomStreamType {
+pub struct CustomStreamType {
 }
 
+/* FIXME: remove this
 #[derive(Debug)]
-struct CommandMetaDataType {
+pub struct CommandMetaDataType {
     parameter_type_set:     Option<Box<SpaceSystemType>>,
     parameter_set:          Option<ParameterSetType>,
     argument_type_set:      Option<ArgumentTypeSetType>,
@@ -91,28 +92,29 @@ struct CommandMetaDataType {
     stream_set:             Option<StreamSetType>,
     algorithm_set:          Option<AlgorithmSetType>,
 }
+*/
 
 #[derive(Debug)]
-struct ArgumentTypeSetType {
+pub struct ArgumentTypeSetType {
 }
 
 #[derive(Debug)]
-struct MetaCommandSetType {
+pub struct MetaCommandSetType {
 }
 
 #[derive(Debug)]
-struct CommandContainerSetType {
+pub struct CommandContainerSetType {
 }
 
 #[derive(Debug)]
-struct ServiceSetType {
+pub struct ServiceSetType {
     service:    Vec<ServiceType>,
 }
 
 #[derive(Debug)]
-struct ServiceType {
+pub struct ServiceType {
 }
 
 #[derive(Debug)]
-struct SpaceSystemV1_1 {
+pub struct SpaceSystemV1_1 {
 }

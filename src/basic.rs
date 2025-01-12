@@ -26,6 +26,12 @@ pub struct Double {
 pub struct Duration {
 }
 
+#[derive(Debug)]
+pub struct Decimal {
+}
+
+pub type NameType = r#String;
+
 // FIXME: this that seem like they should really be defined elsewhere
 #[derive(Debug)]
 pub struct NameReferenceType {

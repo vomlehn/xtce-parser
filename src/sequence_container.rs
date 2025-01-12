@@ -1,9 +1,11 @@
 use crate::basic::*;
 
-struct ContainerSetType {
+#[derive(Debug)]
+pub struct ContainerSetType {
 }
 
-struct EntryListType {
+#[derive(Debug)]
+pub struct EntryListType {
 /* FIXME: figure this out.
     mixed = false,
     min_occurs = 0,
@@ -11,55 +13,66 @@ struct EntryListType {
 */
 }
 
-struct ContainerType {
+#[derive(Debug)]
+pub struct ContainerType {
 /* FIXME: figure this out.
     mixed = false,
     complex_content_mixed = false,
 */
 }
 
-struct BaseContainer {
+#[derive(Debug)]
+pub struct BaseContainer {
     container_ref:  NameReferenceType,
 }
 
-struct ParameterRefEntryType {
+#[derive(Debug)]
+pub struct ParameterRefEntryType {
     parameter_ref:  NameReferenceType,
 }
 
-struct ArrayParameterRefEntryType {
+#[derive(Debug)]
+pub struct ArrayParameterRefEntryType {
     parameter_ref:                      NameReferenceType,
     last_entry_for_this_array_instance: Boolean,
 }
 
-struct ArgumentRefEntry {
+#[derive(Debug)]
+pub struct ArgumentRefEntry {
     argument_ref:   NameReferenceType,
 }
 
-struct ContainerRefEntryType {
+#[derive(Debug)]
+pub struct ContainerRefEntryType {
     container_ref:  NameReferenceType,
 }
 
-struct StreamSegmentEntryType {
+#[derive(Debug)]
+pub struct StreamSegmentEntryType {
     stream_ref:     NameReferenceType,
     order:          PositiveInteger,
     size_in_bits:   PositiveInteger,
 }
 
-struct SequenceEntryType {
+#[derive(Debug)]
+pub struct SequenceEntryType {
 }
 
-struct ParameterSegmentRefEntryType {
+#[derive(Debug)]
+pub struct ParameterSegmentRefEntryType {
     parameter_ref:  NameReferenceType,
     order:          PositiveInteger,
     size_in_bits:   PositiveInteger,
 }
 
-struct ContainerSegmentRefEntryType {
+#[derive(Debug)]
+pub struct ContainerSegmentRefEntryType {
     parameter_ref:  NameReferenceType,
     order:          PositiveInteger,
     size_in_bits:   PositiveInteger,
 }
 
-struct IndirectParameterRefEntryType {
+#[derive(Debug)]
+pub struct IndirectParameterRefEntryType {
     alias_name_space:   r#String,
 }
