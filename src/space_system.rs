@@ -1,3 +1,4 @@
+use crate::space_system_converted::*;
 
 /* I don't know what these are for yet */
 struct parameterNameKey {}
@@ -18,7 +19,9 @@ pub struct SpaceSystemType {
     pub telemetry_meta_data:    Option<TelemetryMetaDataType>,
     pub command_meta_data:      Option<Box<CommandMetaDataType>>,
     pub service_set:            Option<ServiceSetType>,
-    pub space_system_ref:       Vec<SpaceSystemV1_1>,
+//    pub space_system_ref:       Vec<SpaceSystemV1_1>,
+// FIXME: this refers to xml:base, whatever that is. This may be a non-standard
+// It could, perhaps, since it is the root XTCE type, pick up other XML attributes.
 }
 
 impl SpaceSystemType {
@@ -43,29 +46,6 @@ pub struct HeaderType {
     date:                           r#String,
     classification:                 r#String,
     classification_instructions:    r#String,
-}
-
-#[derive(Debug)]
-pub struct TelemetryMetaDataType {
-    parameter_type_set:     Option<ParameterTypeSetType>,
-    parameter_set:          Option<ParameterSetType>,
-    container_set:          Option<ContainerSetType>,
-    message_set:            Option<MessageSetType>,
-    stream_set:             Option<StreamSetType>,
-    algorithm_set:          Option<AlgorithmSetType>,
-}
-
-impl TelemetryMetaDataType {
-    pub fn new() -> TelemetryMetaDataType {
-        TelemetryMetaDataType {
-            parameter_type_set:     None,
-            parameter_set:          None,
-            container_set:          None,
-            message_set:            None,
-            stream_set:             None,
-            algorithm_set:          None,
-        }
-    }
 }
 
 #[derive(Debug)]
@@ -107,32 +87,6 @@ pub struct ServiceSetType {
 }
 
 #[derive(Debug)]
-pub struct CommandMetaDataType {
-    parameter_type_set:     Option<Box<SpaceSystemType>>,
-    parameter_set:          Option<ParameterSetType>,
-    argument_type_set:      Option<ArgumentTypeSetType>,
-    meta_command_set:       MetaCommandSetType,
-    command_container_set:  Option<CommandContainerSetType>,
-    stream_set:             Option<StreamSetType>,
-    algorithm_set:          Option<AlgorithmSetType>,
-}
-
-#[derive(Debug)]
-pub struct ParameterTypeSetType {
-    integer_parameter_type:         IntegerParameterType,
-    float_parameter_type:           FloatParameterType,
-    string_parameter_type:          StringParameterType,
-    enumerated_parameter_type:      EnumeratedParameterType,
-    binary_parameter_type:          BinaryParameterType,
-    boolean_parameter_type:         BooleanParameterType,
-    relative_time_parameter_type:   RelativeTimeParameterType,
-    // FIXME: should these be Data or Parameter?
-    absolute_time_parameter_type:   AbsoluteTimeDataType,
-    array_parameter_type:           ArrayDataTypeType,
-    aggregate_parameter_type:       AggregateDataType,
-}
-
-#[derive(Debug)]
 pub struct ParameterSetType {
     /* FIXME: figure this out
     max_occurs = unbounded,
@@ -166,47 +120,6 @@ pub struct CommandContainerSetType {
 }
 
 #[derive(Debug)]
-pub struct StreamSetType {
-    fixed_frame_stream:     FixedFrameStreamType,
-    variable_frame_stream:  VariableFrameStreamType,
-    custom_stream:          CustomStreamType,
-}
-
-#[derive(Debug)]
-pub struct AlgorithmSetType {
-    /* FIXME: figure this out
-    mixed = false,
-    max_occurs = unbounded,
-    */
-    custom_algorithm:   InputOutputTriggerAlgorithmType,
-    math_algorithm:     MathAlgorithmType,
-}
-
-#[derive(Debug)]
-pub struct TeemetryMetaDataType {
-}
-
-#[derive(Debug)]
-pub struct ParameterTypeSetType {
-    string_parameter_type:          StringParameterType,
-    enumerated_parameter_type:      EnumeratedParameterType,
-    integer_parameter_type:         IntegerParameterType,
-    binary_parameter_type:          BinaryParameterType,
-    float_parameter_type:           FloatParameterType,
-    boolean_parameter_type:         BooleanParameterType,
-    relative_time_parameter_type:   RelativeTimeParameterType,
-    absolute_time_parameter_type:   AbsoluteTimeParameterType,
-    array_parameter_type:           ArrayParameterType,
-    aggregate_parameter_type:       AggregateParameterType,
-}
-
-#[derive(Debug)]
-pub struct ParameterSetType {
-    parameter:      ParameterType,
-    parameter_ref:  ParameterRefType,
-}
-
-#[derive(Debug)]
 pub struct ContainerSetType {
     sequence_countainer:    SequenceContainerType,
 }
@@ -218,19 +131,24 @@ pub struct MessageSetType {
 }
 
 #[derive(Debug)]
-pub struct StreamSetType {
-/* FIXME: figure this out
-    max_occurs = unbounded,
-*/
-    fixed_frame_stream:     FixedFrameStreamType,
-    variable_frame_stream:  VariableFrameStreamType,
-    custom_stream:          CustomStreamType,
+pub struct TelemetryMetaDataType {
+    parameter_type_set:     Option<ParameterTypeSetType>,
+    parameter_set:          Option<ParameterSetType>,
+    container_set:          Option<ContainerSetType>,
+    message_set:            Option<MessageSetType>,
+    stream_set:             Option<StreamSetType>,
+    algorithm_set:          Option<AlgorithmSetType>,
 }
 
-// FIXME: should the algorithm stuff get its own file. Is it shared
-// between command and telemetry?
-#[derive(Debug)]
-pub struct AlgorithmSetType {
-    custom_algorithm:   InputOutputTriggerAlgorithmType,
-    math_algorithm:     MathAlgorithmType,
+impl TelemetryMetaDataType {
+    pub fn new() -> TelemetryMetaDataType {
+        TelemetryMetaDataType {
+            parameter_type_set:     None,
+            parameter_set:          None,
+            container_set:          None,
+            message_set:            None,
+            stream_set:             None,
+            algorithm_set:          None,
+        }
+    }
 }

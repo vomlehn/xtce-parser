@@ -14,14 +14,10 @@ use xml::name::OwnedName;
 use xml::namespace::Namespace;
 use xml::reader::{EventReader, XmlEvent};
 
-use crate::command_meta_data::*;
 use crate::Container;
 use crate::Parameter;
 use crate::parser::{Element, Parser};
 use crate::space_system::*;
-
-use crate::space_system::{SpaceSystemType, HeaderType, ServiceSetType, SpaceSystemV1_1};
-use crate::telemetry_meta_data::*;
 use crate::xtce::Xtce;
 use crate::xtce_parser_error::{XtceParserError};
 

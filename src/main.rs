@@ -11,17 +11,12 @@ use std::io::{BufReader, Read};
 use std::rc::Rc;
 use std::cell::RefCell;
 
-mod basic;
-mod command_meta_data;
+mod space_system;
+mod space_system_converted;
+
 mod gen_c;
 mod gen_xtce;
-mod meta_command;
-mod parameter_type_set;
 mod parser;
-mod sequence_container;
-mod space_system;
-mod stream_set;
-mod telemetry_meta_data;
 mod xml_lineno;
 mod xtce;
 mod xtce_document;
