@@ -1,0 +1,3524 @@
+<!-- ****** Packaging Schema ******************************* -->
+
+#[derive(Debug)]
+struct ArgumentArgumentRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	argumentRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentArrayArgumentRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+<sequence minOccurs="0">
+	DimensionList:	xtce:ArgumentDimensionListType, // [element]
+</sequence>
+	argumentRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	lastEntryForThisArrayInstance:	boolean, // default="false"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentArrayParameterRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+<sequence minOccurs="0">
+	DimensionList:	xtce:DimensionListType, // [element]
+</sequence>
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	lastEntryForThisArrayInstance:	boolean, // default="false"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentContainerRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	containerRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentContainerSegmentRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	containerRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	order:	xtce:PositiveLongType, /// [attribute]
+	sizeInBits:	xtce:PositiveLongType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentFixedValueEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	name:	string, // use="optional" [attribute]
+</attribute>
+	binaryValue:	hexBinary, // use="required" [attribute]
+</attribute>
+	sizeInBits:	xtce:PositiveLongType, // use="required" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentIndirectParameterRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+<sequence>
+	ParameterInstance:	xtce:ParameterInstanceRefType, /// [element]
+</sequence>
+	aliasNameSpace:	string, /// [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentParameterRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentParameterSegmentRefEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	order:	xtce:PositiveLongType, /// [attribute]
+	sizeInBits:	xtce:PositiveLongType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentStreamSegmentEntryType {
+<complexContent>
+<extension base="xtce:ArgumentSequenceEntryType">
+	streamRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	order:	xtce:PositiveLongType, /// [attribute]
+	sizeInBits:	xtce:PositiveLongType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArrayParameterRefEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+<sequence minOccurs="0">
+	DimensionList:	xtce:DimensionListType, // [element]
+</sequence>
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+<complexType name="BaseAlarmType" abstract="true">
+<sequence>
+	AncillaryDataSet:	xtce:AncillaryDataSetType, // minOccurs="0"/ [element]
+</sequence>
+	name:	string, // use="optional" [attribute]
+</attribute>
+	shortDescription:	xtce:ShortDescriptionType, // [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct BaseContainerType {
+<sequence>
+	RestrictionCriteria:	xtce:RestrictionCriteriaType, // minOccurs="0" [element]
+</sequence>
+	containerRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+<complexType name="ContainerType" abstract="true" mixed="false">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+<appinfo>The software should check that any Stream names referenced in the RateInStreamSet actually exist.</appinfo>
+	DefaultRateInStream:	xtce:RateInStreamType, // minOccurs="0"/ [element]
+	RateInStreamSet:	xtce:RateInStreamSetType, // minOccurs="0"/ [element]
+	BinaryEncoding:	xtce:BinaryDataEncodingType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ContainerRefSetType {
+<sequence>
+	ContainerRef:	xtce:ContainerRefType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ContainerRefType {
+	containerRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ContainerRefEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+	containerRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ContainerSegmentRefEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+	containerRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	order:	xtce:PositiveLongType, /// [attribute]
+	sizeInBits:	xtce:PositiveLongType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ContainerSetType {
+<choice maxOccurs="unbounded">
+	SequenceContainer:	xtce:SequenceContainerType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+<complexType name="EntryListType" mixed="false">
+<choice minOccurs="0" maxOccurs="unbounded">
+	ParameterRefEntry:	xtce:ParameterRefEntryType, // [element]
+	ParameterSegmentRefEntry:	xtce:ParameterSegmentRefEntryType, // [element]
+	ContainerRefEntry:	xtce:ContainerRefEntryType, // [element]
+	ContainerSegmentRefEntry:	xtce:ContainerSegmentRefEntryType, // [element]
+	StreamSegmentEntry:	xtce:StreamSegmentEntryType, // [element]
+	IndirectParameterRefEntry:	xtce:IndirectParameterRefEntryType, // [element]
+	ArrayParameterRefEntry:	xtce:ArrayParameterRefEntryType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct IndirectParameterRefEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+<sequence>
+	ParameterInstance:	xtce:ParameterInstanceRefType, /// [element]
+</sequence>
+	aliasNameSpace:	string, /// [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct LocationInContainerInBitsType {
+<complexContent>
+<extension base="xtce:IntegerValueType">
+	referenceLocation:	xtce:ReferenceLocationType, // default="previousEntry" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentLocationInContainerInBitsType {
+<complexContent>
+<extension base="xtce:ArgumentIntegerValueType">
+	referenceLocation:	xtce:ReferenceLocationType, // default="previousEntry"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MessageRefType {
+	messageRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ParameterRefEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ParameterSegmentRefEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	order:	xtce:PositiveLongType, /// [attribute]
+	sizeInBits:	xtce:PositiveLongType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct SequenceContainerType {
+<complexContent>
+<extension base="xtce:ContainerType">
+<sequence>
+	EntryList:	xtce:EntryListType, // [element]
+	BaseContainer:	xtce:BaseContainerType, // minOccurs="0" [element]
+</sequence>
+	abstract:	boolean, // default="false" [attribute]
+</attribute>
+	idlePattern:	xtce:FixedIntegerValueType, // default="0x0" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+<complexType name="SequenceEntryType" abstract="true">
+<sequence>
+	LocationInContainerInBits:	xtce:LocationInContainerInBitsType, // minOccurs="0" [element]
+	RepeatEntry:	xtce:RepeatType, // minOccurs="0" [element]
+	IncludeCondition:	xtce:MatchCriteriaType, // minOccurs="0" [element]
+	TimeAssociation:	xtce:TimeAssociationType, // minOccurs="0" [element]
+	AncillaryDataSet:	xtce:AncillaryDataSetType, // minOccurs="0" [element]
+</sequence>
+	shortDescription:	xtce:ShortDescriptionType, // use="optional" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+<complexType name="ArgumentSequenceEntryType" abstract="true">
+<sequence>
+	LocationInContainerInBits:	xtce:ArgumentLocationInContainerInBitsType, // minOccurs="0" [element]
+	RepeatEntry:	xtce:ArgumentRepeatType, // minOccurs="0" [element]
+	IncludeCondition:	xtce:ArgumentMatchCriteriaType, // minOccurs="0" [element]
+	AncillaryDataSet:	xtce:AncillaryDataSetType, // minOccurs="0" [element]
+</sequence>
+	shortDescription:	xtce:ShortDescriptionType, // use="optional" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ServiceType {
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<choice>
+	MessageRefSet:	xtce:MessageRefSetType, /// [element]
+	ContainerRefSet:	xtce:ContainerRefSetType, /// [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct StreamSegmentEntryType {
+<complexContent>
+<extension base="xtce:SequenceEntryType">
+	streamRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+	order:	xtce:PositiveLongType, /// [attribute]
+	sizeInBits:	xtce:PositiveLongType, // use="required"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MessageType {
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	MatchCriteria:	xtce:MatchCriteriaType, /// [element]
+	ContainerRef:	xtce:ContainerRefType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MessageSetType {
+<complexContent>
+<extension base="xtce:OptionalNameDescriptionType">
+<sequence>
+	Message:	xtce:MessageType, // maxOccurs="unbounded"/ [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct RateInStreamSetType {
+<sequence>
+	RateInStream:	xtce:RateInStreamWithStreamNameType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct RateInStreamType {
+	basis:	xtce:BasisType, // default="perSecond" [attribute]
+</attribute>
+	minimumValue:	double, // [attribute]
+</attribute>
+	maximumValue:	double, // [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct RateInStreamWithStreamNameType {
+<complexContent>
+<extension base="xtce:RateInStreamType">
+	streamRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ReferenceLocationType {
+<restriction base="string">
+<enumeration value="containerStart"/>
+<enumeration value="containerEnd"/>
+<enumeration value="previousEntry"/>
+<enumeration value="nextEntry"/>
+</restriction>
+</simpleType>
+
+#[derive(Debug)]
+struct ReferencePointType {
+<restriction base="string">
+<enumeration value="start"/>
+<enumeration value="end"/>
+</restriction>
+</simpleType>
+
+#[derive(Debug)]
+struct RestrictionCriteriaType {
+<complexContent>
+<extension base="xtce:MatchCriteriaType">
+<choice>
+	NextContainer:	xtce:ContainerRefType, // minOccurs="0" [element]
+</choice>
+</extension>
+</complexContent>
+}
+<!-- ****** End of Packaging Schema ********************** -->
+<!-- ************************************************************* -->
+<!-- ****** Telemetry Schema ******************************* -->
+
+#[derive(Debug)]
+struct AbsoluteTimeParameterType {
+<complexContent>
+<extension base="xtce:AbsoluteTimeDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct AggregateParameterType {
+<complexContent>
+<extension base="xtce:AggregateDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArrayParameterType {
+<complexContent>
+<extension base="xtce:ArrayDataTypeType">
+<sequence>
+	DimensionList:	xtce:DimensionListType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BinaryParameterType {
+<complexContent>
+<extension base="xtce:BinaryDataType">
+<sequence>
+	DefaultAlarm:	xtce:BinaryAlarmType, // minOccurs="0" [element]
+	BinaryContextAlarmList:	xtce:BinaryContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BooleanParameterType {
+<complexContent>
+<extension base="xtce:BooleanDataType">
+<sequence>
+	DefaultAlarm:	xtce:BooleanAlarmType, // minOccurs="0" [element]
+	ContextAlarmList:	xtce:BooleanContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct EnumeratedParameterType {
+<complexContent>
+<extension base="xtce:EnumeratedDataType">
+<sequence>
+	DefaultAlarm:	xtce:EnumerationAlarmType, // minOccurs="0" [element]
+	ContextAlarmList:	xtce:EnumerationContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct EnumerationContextAlarmListType {
+<sequence>
+	ContextAlarm:	xtce:EnumerationContextAlarmType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct FloatParameterType {
+<complexContent>
+<extension base="xtce:FloatDataType">
+<sequence>
+	DefaultAlarm:	xtce:NumericAlarmType, // minOccurs="0" [element]
+	ContextAlarmList:	xtce:NumericContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct IntegerParameterType {
+<complexContent>
+<extension base="xtce:IntegerDataType">
+<sequence>
+	DefaultAlarm:	xtce:NumericAlarmType, // minOccurs="0" [element]
+	ContextAlarmList:	xtce:NumericContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MessageRefSetType {
+<sequence>
+	MessageRef:	xtce:MessageRefType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct NumericContextAlarmListType {
+<sequence>
+	ContextAlarm:	xtce:NumericContextAlarmType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ParameterInstanceRefType {
+<complexContent>
+<extension base="xtce:ParameterRefType">
+	instance:	long, // default="0"/ [attribute]
+	useCalibratedValue:	boolean, // default="true"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+<complexType name="ParameterPropertiesType" mixed="false">
+<sequence>
+	SystemName:	string, // minOccurs="0" [element]
+	ValidityCondition:	xtce:MatchCriteriaType, // minOccurs="0" [element]
+	PhysicalAddressSet:	xtce:PhysicalAddressSetType, // minOccurs="0" [element]
+	TimeAssociation:	xtce:TimeAssociationType, // minOccurs="0" [element]
+</sequence>
+	dataSource:	xtce:TelemetryDataSourceType, // use="optional" [attribute]
+</attribute>
+	readOnly:	boolean, // use="optional" default="false" [attribute]
+</attribute>
+	persistence:	boolean, // default="true" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ParameterType {
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	ParameterProperties:	xtce:ParameterPropertiesType, // minOccurs="0" [element]
+</sequence>
+	parameterTypeRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+	initialValue:	string, // use="optional" [attribute]
+<appinfo>The value type must match the Parameter type</appinfo>
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ParameterTypeSetType {
+<choice maxOccurs="unbounded">
+	StringParameterType:	xtce:StringParameterType, // [element]
+	EnumeratedParameterType:	xtce:EnumeratedParameterType, // [element]
+	IntegerParameterType:	xtce:IntegerParameterType, // [element]
+	BinaryParameterType:	xtce:BinaryParameterType, // [element]
+	FloatParameterType:	xtce:FloatParameterType, // [element]
+	BooleanParameterType:	xtce:BooleanParameterType, // [element]
+	RelativeTimeParameterType:	xtce:RelativeTimeParameterType, // [element]
+	AbsoluteTimeParameterType:	xtce:AbsoluteTimeParameterType, // [element]
+	ArrayParameterType:	xtce:ArrayParameterType, // [element]
+	AggregateParameterType:	xtce:AggregateParameterType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct ParameterRefType {
+	parameterRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+}
+
+#[derive(Debug)]
+struct PhysicalAddressSetType {
+<sequence>
+	PhysicalAddress:	xtce:PhysicalAddressType, // minOccurs="0" maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+<complexType name="PhysicalAddressType" mixed="false">
+<sequence>
+	SubAddress:	xtce:PhysicalAddressType, // minOccurs="0" [element]
+</sequence>
+	sourceName:	string, // [attribute]
+</attribute>
+	sourceAddress:	string, // [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ServiceSetType {
+<sequence>
+	Service:	xtce:ServiceType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct StringParameterType {
+<complexContent>
+<extension base="xtce:StringDataType">
+<sequence>
+	DefaultAlarm:	xtce:StringAlarmType, // minOccurs="0" [element]
+	ContextAlarmList:	xtce:StringContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct RelativeTimeParameterType {
+<complexContent>
+<extension base="xtce:RelativeTimeDataType">
+<sequence>
+	DefaultAlarm:	xtce:TimeAlarmType, // minOccurs="0" [element]
+	ContextAlarmList:	xtce:TimeContextAlarmListType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TelemetryDataSourceType {
+<restriction base="string">
+<enumeration value="telemetered"/>
+<enumeration value="derived"/>
+<enumeration value="constant"/>
+<enumeration value="local"/>
+<enumeration value="ground"/>
+</restriction>
+</simpleType>
+
+#[derive(Debug)]
+struct TimeAssociationType {
+<complexContent>
+<extension base="xtce:ParameterInstanceRefType">
+	interpolateTime:	boolean, // default="true" [attribute]
+</attribute>
+	offset:	double, // [attribute]
+</attribute>
+	unit:	xtce:TimeAssociationUnitType, // default="si_second" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TimeWindowIsRelativeToType {
+<restriction base="string">
+<enumeration value="commandRelease"/>
+<enumeration value="timeLastVerifierPassed"/>
+</restriction>
+</simpleType>
+<!-- ****** End of Telemetry Schema *********************** -->
+<!-- ************************************************************* -->
+<!-- ****** Command Schema ******************************* -->
+
+#[derive(Debug)]
+struct AbsoluteTimeArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentAbsoluteTimeDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArrayArgumentType {
+<complexContent>
+<extension base="xtce:ArrayDataTypeType">
+<sequence>
+	DimensionList:	xtce:ArgumentDimensionListType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct AggregateArgumentType {
+<complexContent>
+<extension base="xtce:AggregateDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentAssignmentListType {
+<sequence>
+	ArgumentAssignment:	xtce:ArgumentAssignmentType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentAssignmentType {
+	argumentName:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+	argumentValue:	string, // use="required" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ArgumentComparisonType {
+<choice>
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+	ArgumentInstanceRef:	xtce:ArgumentInstanceRefType, // [element]
+</choice>
+	comparisonOperator:	xtce:ComparisonOperatorsType, // default="==" [attribute]
+</attribute>
+	value:	string, // use="required" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ArgumentComparisonCheckType {
+<complexContent>
+<extension base="xtce:BaseConditionsType">
+<sequence>
+<choice>
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+	ArgumentInstanceRef:	xtce:ArgumentInstanceRefType, // [element]
+</choice>
+	ComparisonOperator:	xtce:ComparisonOperatorsType, // [element]
+<choice>
+<choice>
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+	ArgumentInstanceRef:	xtce:ArgumentInstanceRefType, // [element]
+</choice>
+	Value:	string, // [element]
+</choice>
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentComparisonListType {
+<sequence>
+	Comparison:	xtce:ArgumentComparisonType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentDiscreteLookupType {
+<complexContent>
+<extension base="xtce:ArgumentMatchCriteriaType">
+	value:	long, // use="required" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentDiscreteLookupListType {
+<sequence>
+	DiscreteLookup:	xtce:ArgumentDiscreteLookupType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentDynamicValueType {
+<sequence>
+<choice>
+	ArgumentInstanceRef:	xtce:ArgumentInstanceRefType, // [element]
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+</choice>
+	LinearAdjustment:	xtce:LinearAdjustmentType, // minOccurs="0" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentInputAlgorithmType {
+<complexContent>
+<extension base="xtce:SimpleAlgorithmType">
+<sequence>
+	InputSet:	xtce:ArgumentInputSetType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentInputSetType {
+<choice maxOccurs="unbounded">
+	InputParameterInstanceRef:	xtce:InputParameterInstanceRefType, // [element]
+	InputArgumentInstanceRef:	xtce:ArgumentInstanceRefType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct ArgumentInstanceRefType {
+	argumentRef:	xtce:NameType, // use="required" [attribute]
+</attribute>
+	useCalibratedValue:	boolean, // default="true" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ArgumentListType {
+<sequence>
+	Argument:	xtce:ArgumentType, // maxOccurs="unbounded" [element]
+<appinfo>Need to ensure that the named types actually exist</appinfo>
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentBooleanExpressionType {
+<choice>
+	Condition:	xtce:ArgumentComparisonCheckType, // [element]
+	ANDedConditions:	xtce:ArgumentANDedConditionsType, // [element]
+	ORedConditions:	xtce:ArgumentORedConditionsType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct ArgumentANDedConditionsType {
+<complexContent>
+<extension base="xtce:BaseConditionsType">
+<choice minOccurs="2" maxOccurs="unbounded">
+	Condition:	xtce:ArgumentComparisonCheckType, // [element]
+	ORedConditions:	xtce:ArgumentORedConditionsType, // [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentORedConditionsType {
+<complexContent>
+<extension base="xtce:BaseConditionsType">
+<choice minOccurs="2" maxOccurs="unbounded">
+	Condition:	xtce:ArgumentComparisonCheckType, // [element]
+	ANDedConditions:	xtce:ArgumentANDedConditionsType, // [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentMatchCriteriaType {
+<choice>
+	Comparison:	xtce:ArgumentComparisonType, // [element]
+	ComparisonList:	xtce:ArgumentComparisonListType, // [element]
+	BooleanExpression:	xtce:ArgumentBooleanExpressionType, // [element]
+	CustomAlgorithm:	xtce:ArgumentInputAlgorithmType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct ArgumentType {
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+	argumentTypeRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+	initialValue:	string, // [attribute]
+<appinfo>The value type must match the Argument type</appinfo>
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ArgumentTypeSetType {
+<choice maxOccurs="unbounded">
+	StringArgumentType:	xtce:StringArgumentType, // [element]
+	EnumeratedArgumentType:	xtce:EnumeratedArgumentType, // [element]
+	IntegerArgumentType:	xtce:IntegerArgumentType, // [element]
+	BinaryArgumentType:	xtce:BinaryArgumentType, // [element]
+	FloatArgumentType:	xtce:FloatArgumentType, // [element]
+	BooleanArgumentType:	xtce:BooleanArgumentType, // [element]
+	RelativeTimeAgumentType:	xtce:RelativeTimeArgumentType, // [element]
+	AbsoluteTimeArgumentType:	xtce:AbsoluteTimeArgumentType, // [element]
+	ArrayArgumentType:	xtce:ArrayArgumentType, // [element]
+	AggregateArgumentType:	xtce:AggregateArgumentType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct BaseMetaCommandType {
+<sequence>
+	ArgumentAssignmentList:	xtce:ArgumentAssignmentListType, // minOccurs="0" [element]
+</sequence>
+	metaCommandRef:	xtce:NameReferenceType, // use="required" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct BinaryArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentBinaryDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BlockMetaCommandType {
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	MetaCommandStepList:	xtce:MetaCommandStepListType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BooleanArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentBooleanDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct CommandContainerEntryListType {
+<choice minOccurs="0" maxOccurs="unbounded">
+	ParameterRefEntry:	xtce:ArgumentParameterRefEntryType, // [element]
+	ParameterSegmentRefEntry:	xtce:ArgumentParameterSegmentRefEntryType, // [element]
+	ContainerRefEntry:	xtce:ArgumentContainerRefEntryType, // [element]
+	ContainerSegmentRefEntry:	xtce:ArgumentContainerSegmentRefEntryType, // [element]
+	StreamSegmentEntry:	xtce:ArgumentStreamSegmentEntryType, // [element]
+	IndirectParameterRefEntry:	xtce:ArgumentIndirectParameterRefEntryType, // [element]
+	ArrayParameterRefEntry:	xtce:ArgumentArrayParameterRefEntryType, // [element]
+	ArgumentRefEntry:	xtce:ArgumentArgumentRefEntryType, // [element]
+	ArrayArgumentRefEntry:	xtce:ArgumentArrayArgumentRefEntryType, // [element]
+	FixedValueEntry:	xtce:ArgumentFixedValueEntryType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct CommandContainerSetType {
+<sequence>
+	CommandContainer:	xtce:SequenceContainerType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+<complexType name="CommandContainerType" mixed="false">
+<complexContent>
+<extension base="xtce:ContainerType">
+<sequence>
+	EntryList:	xtce:CommandContainerEntryListType, // [element]
+	BaseContainer:	xtce:BaseContainerType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+<complexType name="CommandVerifierType" abstract="true">
+<complexContent>
+<extension base="xtce:OptionalNameDescriptionType">
+<sequence>
+<choice>
+	ComparisonList:	xtce:ComparisonListType, // [element]
+	ContainerRef:	xtce:ContainerRefType, // [element]
+	ParameterValueChange:	xtce:ParameterValueChangeType, // [element]
+	CustomAlgorithm:	xtce:InputAlgorithmType, // [element]
+	BooleanExpression:	xtce:BooleanExpressionType, // [element]
+	Comparison:	xtce:ComparisonType, // [element]
+</choice>
+<choice>
+	CheckWindow:	xtce:CheckWindowType, // [element]
+	CheckWindowAlgorithms:	xtce:CheckWindowAlgorithmsType, // [element]
+</choice>
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct EnumeratedArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentEnumeratedDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FloatArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentFloatDataType">
+<sequence>
+	ValidRangeSet:	xtce:ValidFloatRangeSetType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct IntegerArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentIntegerDataType">
+<sequence>
+	ValidRangeSet:	xtce:ValidIntegerRangeSetType, // minOccurs="0" [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MetaCommandSetType {
+<choice maxOccurs="unbounded">
+	MetaCommand:	xtce:MetaCommandType, // [element]
+<key name="ArgumentNameKey">
+<selector xpath="xtce:ArgumentList/*"/>
+<field xpath="@name"/>
+</key>
+	MetaCommandRef:	xtce:NameReferenceType, // [element]
+	BlockMetaCommand:	xtce:BlockMetaCommandType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct MetaCommandStepListType {
+<sequence>
+	MetaCommandStep:	xtce:MetaCommandStepType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct MetaCommandStepType {
+<sequence>
+	ArgumentAssigmentList:	xtce:ArgumentAssignmentListType, // minOccurs="0"/ [element]
+</sequence>
+	metaCommandRef:	xtce:NameReferenceType, // use="required"/ [attribute]
+}
+
+#[derive(Debug)]
+<complexType name="MetaCommandType" mixed="false">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	BaseMetaCommand:	xtce:BaseMetaCommandType, // minOccurs="0" [element]
+	SystemName:	string, // minOccurs="0" [element]
+	ArgumentList:	xtce:ArgumentListType, // minOccurs="0" [element]
+	CommandContainer:	xtce:CommandContainerType, // minOccurs="0" [element]
+	TransmissionConstraintList:	xtce:TransmissionConstraintListType, // minOccurs="0" [element]
+	DefaultSignificance:	xtce:SignificanceType, // minOccurs="0" [element]
+	ContextSignificanceList:	xtce:ContextSignificanceListType, // minOccurs="0" [element]
+	Interlock:	xtce:InterlockType, // minOccurs="0" [element]
+	VerifierSet:	xtce:VerifierSetType, // minOccurs="0" [element]
+	ParameterToSetList:	xtce:ParameterToSetListType, // minOccurs="0" [element]
+	ParametersToSuspendAlarmsOnSet:	xtce:ParametersToSuspendAlarmsOnSetType, // minOccurs="0" [element]
+</sequence>
+	abstract:	boolean, // default="false" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct RelativeTimeArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentRelativeTimeDataType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+<complexType name="SignificanceType" mixed="false">
+	spaceSystemAtRisk:	xtce:NameReferenceType, // [attribute]
+</attribute>
+	reasonForWarning:	string, /// [attribute]
+	consequenceLevel:	xtce:ConsequenceLevelType, // default="normal"/ [attribute]
+}
+
+#[derive(Debug)]
+struct StringArgumentType {
+<complexContent>
+<extension base="xtce:ArgumentStringDataType"/>
+</complexContent>
+}
+<!-- ************************************************************* -->
+<!-- ******** Types used with Cmd Execution Control **** -->
+
+#[derive(Debug)]
+struct AcceptedVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct CheckWindowType {
+	timeToStartChecking:	xtce:RelativeTimeType, /// [attribute]
+	timeToStopChecking:	xtce:RelativeTimeType, // use="required"/ [attribute]
+	timeWindowIsRelativeTo:	xtce:TimeWindowIsRelativeToType, // default="timeLastVerifierPassed"/ [attribute]
+}
+
+#[derive(Debug)]
+struct CheckWindowAlgorithmsType {
+<sequence>
+	StartCheck:	xtce:InputAlgorithmType, /// [element]
+	StopTime:	xtce:InputAlgorithmType, /// [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct CompleteVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType">
+<sequence minOccurs="0">
+	ReturnParmRef:	xtce:ParameterRefType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ContextSignificanceType {
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, // [element]
+	Significance:	xtce:SignificanceType, // [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ContextSignificanceListType {
+<sequence>
+	ContextSignificance:	xtce:ContextSignificanceType, // maxOccurs="unbounded" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ExecutionVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType">
+<sequence minOccurs="0">
+	PercentComplete:	xtce:PercentCompleteType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FailedVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType">
+<sequence minOccurs="0">
+	ReturnParmRef:	xtce:ParameterRefType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct InterlockType {
+	scopeToSpaceSystem:	xtce:NameReferenceType, // [attribute]
+</attribute>
+	verificationToWaitFor:	xtce:VerifierEnumerationType, // default="complete" [attribute]
+</attribute>
+	verificationProgressPercentage:	double, // [attribute]
+</attribute>
+	suspendable:	boolean, // default="false" [attribute]
+</attribute>
+}
+
+#[derive(Debug)]
+struct ParameterToSetType {
+<appinfo>Value type must match Parameter type.</appinfo>
+<complexContent>
+<extension base="xtce:ParameterRefType">
+<choice>
+	Derivation:	xtce:MathOperationType, // [element]
+	NewValue:	string, // [element]
+</choice>
+	setOnVerification:	xtce:VerifierEnumerationType, // default="complete" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ParameterToSetListType {
+<sequence>
+	ParameterToSet:	xtce:ParameterToSetType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ParameterToSuspendAlarmsOnType {
+<complexContent>
+<extension base="xtce:ParameterRefType">
+	suspenseTime:	xtce:RelativeTimeType, // use="required"/ [attribute]
+	verifierToTriggerOn:	xtce:VerifierEnumerationType, // default="release"/ [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ParametersToSuspendAlarmsOnSetType {
+<sequence>
+	ParameterToSuspendAlarmsOn:	xtce:ParameterToSuspendAlarmsOnType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ParameterValueChangeType {
+<sequence>
+	ParameterRef:	xtce:ParameterRefType, /// [element]
+	Change:	xtce:ChangeValueType, /// [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct QueuedVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ReceivedVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct SentFromRangeVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TimeAssociationUnitType {
+<restriction base="string">
+<enumeration value="si_nanosecond"/>
+<enumeration value="si_microsecond"/>
+<enumeration value="si_millsecond"/>
+<enumeration value="si_second"/>
+<enumeration value="minute"/>
+<enumeration value="day"/>
+<enumeration value="julianYear"/>
+</restriction>
+</simpleType>
+
+#[derive(Debug)]
+struct TransferredToRangeVerifierType {
+<complexContent>
+<extension base="xtce:CommandVerifierType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TransmissionConstraintType {
+<complexContent>
+<extension base="xtce:MatchCriteriaType">
+	timeOut:	xtce:RelativeTimeType, // [attribute]
+<!--  removed for CASTOR: default="PT0S"  -->
+</attribute>
+	suspendable:	boolean, // default="false" [attribute]
+</attribute>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TransmissionConstraintListType {
+<sequence>
+	TransmissionConstraint:	xtce:TransmissionConstraintType, // maxOccurs="unbounded"/ [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct VerifierEnumerationType {
+<restriction base="string">
+<enumeration value="release"/>
+<enumeration value="transferredToRange"/>
+<enumeration value="sentFromRange"/>
+<enumeration value="received"/>
+<enumeration value="accepted"/>
+<enumeration value="queued"/>
+<enumeration value="executing"/>
+<enumeration value="complete"/>
+<enumeration value="failed"/>
+</restriction>
+</simpleType>
+
+#[derive(Debug)]
+struct VerifierSetType {
+<sequence>
+	TransferredToRangeVerifier:	xtce:TransferredToRangeVerifierType, // minOccurs="0"/ [element]
+	SentFromRangeVerifier:	xtce:SentFromRangeVerifierType, // minOccurs="0"/ [element]
+	ReceivedVerifier:	xtce:ReceivedVerifierType, // minOccurs="0"/ [element]
+	AcceptedVerifier:	xtce:AcceptedVerifierType, // minOccurs="0"/ [element]
+	QueuedVerifier:	xtce:QueuedVerifierType, // minOccurs="0"/ [element]
+	ExecutionVerifier:	xtce:ExecutionVerifierType, // minOccurs="0" maxOccurs="unbounded"/ [element]
+	CompleteVerifier:	xtce:CompleteVerifierType, // minOccurs="0" maxOccurs="unbounded"/ [element]
+	FailedVerifier:	xtce:FailedVerifierType, // minOccurs="0"/ [element]
+</sequence>
+}
+<!-- ******** End of Command Schema ********************* -->
+<!-- ************************************************************* -->
+<!-- ****** Algorithm Schema ******************************** -->
+
+#[derive(Debug)]
+struct AlgorithmTextType {
+<simpleContent>
+<extension base="string">
+	language:	string, // default="pseudo"/ [attribute]
+</extension>
+</simpleContent>
+}
+
+#[derive(Debug)]
+<complexType name="BaseTriggerType" abstract="true">
+}
+
+#[derive(Debug)]
+struct ChecksumType {
+<sequence>
+	InputAlgorithm:	xtce:InputAlgorithmType, // minOccurs="0" [element]
+</sequence>
+	bitsFromReference:	xtce:NonNegativeLongType, //
+	reference:	xtce:ReferencePointType, // default="start"
+<attribute name="name" use="required">
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<simpleType>
+<restriction base="string">
+<enumeration value="unix_sum"/>
+<enumeration value="sum8"/>
+<enumeration value="sum16"/>
+<enumeration value="sum24"/>
+<enumeration value="sum32"/>
+<enumeration value="fletcher4"/>
+<enumeration value="fletcher8"/>
+<enumeration value="fletcher16"/>
+<enumeration value="fletcher32"/>
+<enumeration value="adler32"/>
+<enumeration value="luhn"/>
+<enumeration value="verhoeff"/>
+<enumeration value="damm"/>
+<enumeration value="custom">
+</enumeration>
+</restriction>
+}
+	hashSizeInBits:	xtce:PositiveLongType, //
+}
+
+#[derive(Debug)]
+struct ConstantType {
+	constantName:	string, //
+	value:	string, // required
+}
+
+#[derive(Debug)]
+struct ContextCalibratorListType {
+<sequence>
+	ContextCalibrator:	Vec<xtce:ContextCalibratorType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct ExternalAlgorithmType {
+	implementationName:	string, // required
+	algorithmLocation:	string, // required
+}
+
+#[derive(Debug)]
+struct ExternalAlgorithmSetType {
+<sequence>
+	ExternalAlgorithm:	Vec<xtce:ExternalAlgorithmType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct InputAlgorithmType {
+<complexContent>
+<extension base="xtce:SimpleAlgorithmType">
+<sequence>
+	InputSet:	Option(xtce:InputSetType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct InputOutputAlgorithmType {
+<complexContent>
+<extension base="xtce:InputAlgorithmType">
+<sequence>
+	OutputSet:	Option(xtce:OutputSetType),
+</sequence>
+	thread:	boolean, // use="optional" default="false"
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct InputOutputTriggerAlgorithmType {
+<complexContent>
+<extension base="xtce:InputOutputAlgorithmType">
+<sequence>
+	TriggerSet:	Option(xtce:TriggerSetType),
+</sequence>
+	triggerContainer:	xtce:NameReferenceType, // use="optional" [attribute]
+	priority:	int, // use="optional" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct InputParameterInstanceRefType {
+<complexContent>
+<extension base="xtce:ParameterInstanceRefType">
+	inputName:	string, //
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct InputSetType {
+<choice maxOccurs="unbounded">
+	InputParameterInstanceRef:	xtce:InputParameterInstanceRefType, /// [element]
+	Constant:	Option(xtce:ConstantType),
+</choice>
+}
+
+#[derive(Debug)]
+struct MathAlgorithmType {
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	MathOperation:	xtce:TriggeredMathOperationType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct OnContainerUpdateTriggerType {
+<complexContent>
+<extension base="xtce:BaseTriggerType">
+	containerRef:	xtce:NameReferenceType, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct OnPeriodicRateTriggerType {
+<complexContent>
+<extension base="xtce:BaseTriggerType">
+	fireRateInSeconds:	double, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct OnParameterUpdateTriggerType {
+<complexContent>
+<extension base="xtce:BaseTriggerType">
+	parameterRef:	xtce:NameReferenceType, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct OutputParameterRefType {
+<complexContent>
+<extension base="xtce:ParameterRefType">
+	outputName:	string, //
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct OutputSetType {
+<sequence>
+	OutputParameterRef:	Vec<xtce:OutputParameterRefType>,
+</sequence>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="SimpleAlgorithmType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	AlgorithmText:	Option(xtce:AlgorithmTextType),
+	ExternalAlgorithmSet:	Option(xtce:ExternalAlgorithmSetType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TriggeredMathOperationType {
+<complexContent>
+<extension base="xtce:MathOperationType">
+<sequence>
+	TriggerSet:	xtce:TriggerSetType, /// [element]
+</sequence>
+	outputParameterRef:	xtce:NameReferenceType, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TriggerSetType {
+<choice maxOccurs="unbounded">
+	OnParameterUpdateTrigger:	xtce:OnParameterUpdateTriggerType, // [element]
+	OnContainerUpdateTrigger:	xtce:OnContainerUpdateTriggerType, // [element]
+	OnPeriodicRateTrigger:	xtce:OnPeriodicRateTriggerType, // [element]
+</choice>
+	name:	string, // use="optional" [attribute]
+	triggerRate:	xtce:NonNegativeLongType, // use="optional" default="1" [attribute]
+}
+<!-- ************************************************************* -->
+<!-- ******** Calibrator Algorithm Types *********************** -->
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="BaseCalibratorType" abstract="true">
+<sequence>
+	AncillaryDataSet:	Option(xtce:AncillaryDataSetType),
+</sequence>
+	name:	string, // [attribute]
+	shortDescription:	xtce:ShortDescriptionType, // [attribute]
+}
+
+#[derive(Debug)]
+struct CalibratorType {
+<complexContent>
+<extension base="xtce:BaseCalibratorType">
+<choice>
+	SplineCalibrator:	xtce:SplineCalibratorType, // [element]
+	PolynomialCalibrator:	xtce:PolynomialCalibratorType, // [element]
+	MathOperationCalibrator:	xtce:MathOperationCalibratorType, // [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ChangeValueType {
+	value:	double, // required
+}
+
+#[derive(Debug)]
+struct MathOperationCalibratorType {
+<complexContent>
+<extension base="xtce:BaseCalibratorType">
+<choice maxOccurs="unbounded">
+	ValueOperand:	string, // [element]
+	ThisParameterOperand:	string, // fixed="" [element]
+	Operator:	xtce:MathOperatorsType, // [element]
+	ParameterInstanceRefOperand:	xtce:ParameterInstanceRefType, // [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct PolynomialCalibratorType {
+<complexContent>
+<extension base="xtce:BaseCalibratorType">
+<sequence>
+	Term:	Vec<xtce:TermType>,
+<appinfo>Generally only up to second order powers are reflexive. Implementations may limit the maximum number of terms supported.</appinfo>
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct SplineCalibratorType {
+<complexContent>
+<extension base="xtce:BaseCalibratorType">
+<sequence>
+	SplinePoint:	Vec<xtce:SplinePointType>,
+</sequence>
+	order:	xtce:NonNegativeLongType, // default="1" [attribute]
+	extrapolate:	boolean, // default="false" [attribute]
+</extension>
+</complexContent>
+}
+<!-- ******** End of Algorithm Schema ********************* -->
+<!-- ************************************************************* -->
+<!-- ******** Stream Definitions Schema ******************* -->
+
+#[derive(Debug)]
+struct AutoInvertType {
+<sequence>
+	InvertAlgorithm:	Option(xtce:InputAlgorithmType),
+</sequence>
+	badFramesToAutoInvert:	xtce:PositiveLongType, // default="1024"
+}
+
+#[derive(Debug)]
+struct CustomStreamType {
+<appinfo>Must check to ensure that the attributes encodedStreamRef and decodedStreamRef point to valid Streams</appinfo>
+<complexContent>
+<extension base="xtce:PCMStreamType">
+<sequence>
+	EncodingAlgorithm:	xtce:InputAlgorithmType, /// [element]
+	DecodingAlgorithm:	xtce:InputOutputAlgorithmType, // [element]
+</sequence>
+	encodedStreamRef:	xtce:NameReferenceType, // required
+	decodedStreamRef:	xtce:NameReferenceType, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FlagBitType {
+<restriction base="string">
+<enumeration value="zeros"/>
+<enumeration value="ones"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct FlagType {
+	flagSizeInBits:	xtce:PositiveLongType, // default="6"
+	flagBitType:	xtce:FlagBitType, // default="ones"
+}
+
+#[derive(Debug)]
+struct FrameStreamType {
+<complexContent>
+<extension base="xtce:PCMStreamType">
+<sequence>
+<choice>
+	ContainerRef:	xtce:ContainerRefType, // [element]
+	ServiceRef:	xtce:ServiceRefType, /// [element]
+</choice>
+	StreamRef:	Option(xtce:StreamRefType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FixedFrameStreamType {
+<complexContent>
+<extension base="xtce:FrameStreamType">
+<sequence>
+	SyncStrategy:	xtce:FixedFrameSyncStrategyType, /// [element]
+</sequence>
+	syncApertureInBits:	xtce:NonNegativeLongType, // default="0" [attribute]
+	frameLengthInBits:	long, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FixedFrameSyncStrategyType {
+<complexContent>
+<extension base="xtce:SyncStrategyType">
+<sequence>
+	SyncPattern:	xtce:SyncPatternType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="PCMStreamType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+	bitRateInBPS:	double, //
+	pcmType:	xtce:PCMType, // default="NRZL"
+	inverted:	boolean, // default="false"
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct PCMType {
+<restriction base="string">
+<enumeration value="NRZL"/>
+<enumeration value="NRZM"/>
+<enumeration value="NRZS"/>
+<enumeration value="BiPhaseL"/>
+<enumeration value="BiPhaseM"/>
+<enumeration value="BiPhaseS"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct StreamRefType {
+	streamRef:	xtce:NameReferenceType, // required
+}
+
+#[derive(Debug)]
+struct StreamSetType {
+<choice maxOccurs="unbounded">
+	FixedFrameStream:	xtce:FixedFrameStreamType, /// [element]
+	VariableFrameStream:	xtce:VariableFrameStreamType, /// [element]
+	CustomStream:	xtce:CustomStreamType, /// [element]
+</choice>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="SyncStrategyType" abstract="true">
+<sequence>
+	AutoInvert:	Option(xtce:AutoInvertType),
+</sequence>
+	verifyToLockGoodFrames:	xtce:NonNegativeLongType, // default="4"
+	checkToLockGoodFrames:	xtce:NonNegativeLongType, // default="1"
+	maxBitErrorsInSyncPattern:	xtce:NonNegativeLongType, // default="0" [attribute]
+}
+
+#[derive(Debug)]
+struct SyncPatternType {
+	pattern:	hexBinary, // required
+	bitLocationFromStartOfContainer:	long, // default="0"
+	mask:	hexBinary, //
+	maskLengthInBits:	xtce:PositiveLongType, // [attribute]
+	patternLengthInBits:	xtce:PositiveLongType, // required
+}
+
+#[derive(Debug)]
+struct VariableFrameStreamType {
+<complexContent>
+<extension base="xtce:FrameStreamType">
+<sequence>
+	SyncStrategy:	xtce:VariableFrameSyncStrategyType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct VariableFrameSyncStrategyType {
+<complexContent>
+<extension base="xtce:SyncStrategyType">
+<sequence>
+	Flag:	xtce:FlagType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+<!-- ******** End of Stream Definition Schema ************ -->
+<!-- ************************************************************* -->
+<!-- ******** DataTypes *************************************** -->
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentAbsoluteTimeDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseTimeDataType">
+	initialValue:	dateTime, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="AbsoluteTimeDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseTimeDataType">
+	initialValue:	dateTime, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="AggregateDataType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	MemberList:	xtce:MemberListType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArrayDataTypeType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+	arrayTypeRef:	xtce:NameReferenceType, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="BaseDataType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	UnitSet:	Option(xtce:UnitSetType),
+<choice minOccurs="0">
+	BinaryDataEncoding:	xtce:BinaryDataEncodingType, // [element]
+	FloatDataEncoding:	xtce:FloatDataEncodingType, // [element]
+	IntegerDataEncoding:	xtce:IntegerDataEncodingType, // [element]
+	StringDataEncoding:	xtce:StringDataEncodingType, // [element]
+</choice>
+</sequence>
+	baseType:	xtce:NameReferenceType, // [attribute]
+<appinfo>Must be derived from a like type (e.g,, String from String). No circular derivations.</appinfo>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentBaseDataType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	UnitSet:	Option(xtce:UnitSetType),
+<choice minOccurs="0">
+	BinaryDataEncoding:	xtce:ArgumentBinaryDataEncodingType, // [element]
+	FloatDataEncoding:	xtce:FloatDataEncodingType, // [element]
+	IntegerDataEncoding:	xtce:IntegerDataEncodingType, // [element]
+	StringDataEncoding:	xtce:ArgumentStringDataEncodingType, // [element]
+</choice>
+</sequence>
+	baseType:	xtce:NameReferenceType, // [attribute]
+<appinfo>Must be derived from a like type (e.g,, String from String). No circular derivations.</appinfo>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentBaseTimeDataType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	Encoding:	Option(xtce:EncodingType),
+	ReferenceTime:	Option(xtce:ReferenceTimeType),
+</sequence>
+	baseType:	xtce:NameReferenceType, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="BaseTimeDataType" abstract="true">
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+<sequence>
+	Encoding:	Option(xtce:EncodingType),
+	ReferenceTime:	Option(xtce:ReferenceTimeType),
+</sequence>
+	baseType:	xtce:NameReferenceType, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentBinaryDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseDataType">
+	initialValue:	hexBinary, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="BinaryDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseDataType">
+	initialValue:	hexBinary, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentBooleanDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseDataType">
+	initialValue:	string, // [attribute]
+<appinfo>Initial value must match either the oneStringValue or the zeroStringValue</appinfo>
+	oneStringValue:	string, // default="True" [attribute]
+	zeroStringValue:	string, // default="False" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="BooleanDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseDataType">
+	initialValue:	string, // [attribute]
+<appinfo>Initial value must match either the oneStringValue or the zeroStringValue</appinfo>
+	oneStringValue:	string, // default="True" [attribute]
+	zeroStringValue:	string, // default="False" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="DimensionType" mixed="false">
+<sequence>
+	StartingIndex:	xtce:IntegerValueType, // [element]
+	EndingIndex:	xtce:IntegerValueType, /// [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentDimensionType {
+<sequence>
+	StartingIndex:	xtce:ArgumentIntegerValueType, // [element]
+	EndingIndex:	xtce:ArgumentIntegerValueType, /// [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct DimensionListType {
+<sequence>
+	Dimension:	Vec<xtce:DimensionType>,
+<appinfo>For an ArrayParameterType of size N, their should be N Dimensions</appinfo>
+<appinfo>An array made up by multiple Entries should not have indexes that overlap, but should be continuous.</appinfo>
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentDimensionListType {
+<sequence>
+	Dimension:	Vec<xtce:ArgumentDimensionType>,
+<appinfo>For an ArrayParameterType of size N, their should be N Dimensions</appinfo>
+<appinfo>An array made up by multiple Entries should not have indexes that overlap, but should be continuous.</appinfo>
+</sequence>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentEnumeratedDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseDataType">
+<sequence>
+	EnumerationList:	xtce:EnumerationListType, // [element]
+<appinfo>Check that values do not overlap in the mappings.</appinfo>
+</sequence>
+	initialValue:	string, // [attribute]
+<appinfo>Label must be in the enumeration list to be valid.</appinfo>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="EnumeratedDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseDataType">
+<sequence>
+	EnumerationList:	xtce:EnumerationListType, // [element]
+<appinfo>Check that values do not overlap in the mappings.</appinfo>
+</sequence>
+	initialValue:	string, // [attribute]
+<appinfo>Label must be in the enumeration list to be valid.</appinfo>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct EnumerationListType {
+<sequence>
+	Enumeration:	Vec<xtce:ValueEnumerationType>,
+</sequence>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentFloatDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseDataType">
+<sequence>
+	ToString:	Option(xtce:ToStringType),
+</sequence>
+	initialValue:	double, // [attribute]
+	sizeInBits:	xtce:FloatSizeInBitsType, // default="32" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="FloatDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseDataType">
+<sequence>
+	ToString:	Option(xtce:ToStringType),
+<element name="ValidRange" minOccurs="0">
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType>
+<complexContent>
+<extension base="xtce:FloatRangeType">
+	validRangeAppliesToCalibrated:	boolean, // default="true" [attribute]
+</extension>
+</complexContent>
+}
+</sequence>
+	initialValue:	double, // [attribute]
+	sizeInBits:	xtce:FloatSizeInBitsType, // default="32" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentIntegerDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseDataType">
+<sequence>
+	ToString:	Option(xtce:ToStringType),
+</sequence>
+	initialValue:	xtce:FixedIntegerValueType, // [attribute]
+	sizeInBits:	xtce:PositiveLongType, // default="32" [attribute]
+	signed:	boolean, // default="true" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="IntegerDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseDataType">
+<sequence>
+	ToString:	Option(xtce:ToStringType),
+<element name="ValidRange" minOccurs="0">
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType>
+<complexContent>
+<extension base="xtce:IntegerRangeType">
+	validRangeAppliesToCalibrated:	boolean, // default="true" [attribute]
+</extension>
+</complexContent>
+}
+</sequence>
+	initialValue:	long, // [attribute]
+	sizeInBits:	xtce:PositiveLongType, // default="32" [attribute]
+	signed:	boolean, // default="true" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MemberType {
+<appinfo>ensure no circular references</appinfo>
+<complexContent>
+<extension base="xtce:NameDescriptionType">
+	typeRef:	xtce:NameReferenceType, // required
+	initialValue:	string, // use="optional" [attribute]
+<appinfo>The value type must match the Parameter type</appinfo>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct MemberListType {
+<sequence>
+	Member:	Vec<xtce:MemberType>,
+</sequence>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentRelativeTimeDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseTimeDataType">
+	initialValue:	duration, //
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="RelativeTimeDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseTimeDataType">
+	initialValue:	duration, //
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="ArgumentStringDataType" abstract="true">
+<complexContent>
+<extension base="xtce:ArgumentBaseDataType">
+<sequence>
+	SizeRangeInCharacters:	Option(xtce:IntegerRangeType),
+</sequence>
+	initialValue:	string, // [attribute]
+	restrictionPattern:	string, // [attribute]
+	characterWidth:	xtce:CharacterWidthType, //
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="StringDataType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseDataType">
+<sequence>
+	SizeRangeInCharacters:	Option(xtce:IntegerRangeType),
+</sequence>
+	initialValue:	string, // [attribute]
+	restrictionPattern:	string, // [attribute]
+	characterWidth:	xtce:CharacterWidthType, //
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct UnitSetType {
+<sequence>
+	Unit:	Vec<xtce:UnitType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct ValidFloatRangeSetType {
+<sequence>
+	ValidRange:	Vec<xtce:FloatRangeType>,
+</sequence>
+	validRangeAppliesToCalibrated:	boolean, // default="true" [attribute]
+}
+
+#[derive(Debug)]
+struct ValidIntegerRangeSetType {
+<sequence>
+	ValidRange:	Vec<xtce:IntegerRangeType>,
+</sequence>
+	validRangeAppliesToCalibrated:	boolean, // default="true" [attribute]
+}
+<!-- ************************************************************* -->
+<!-- ******** Data Types used with Encoding ************** -->
+
+#[derive(Debug)]
+struct BitOrderType {
+<restriction base="string">
+<enumeration value="leastSignificantBitFirst"/>
+<enumeration value="mostSignificantBitFirst"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ArgumentBinaryDataEncodingType {
+<complexContent>
+<extension base="xtce:DataEncodingType">
+<sequence>
+	SizeInBits:	xtce:ArgumentIntegerValueType, // [element]
+	FromBinaryTransformAlgorithm:	Option(xtce:ArgumentInputAlgorithmType),
+	ToBinaryTransformAlgorithm:	Option(xtce:ArgumentInputAlgorithmType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BinaryDataEncodingType {
+<complexContent>
+<extension base="xtce:DataEncodingType">
+<sequence>
+	SizeInBits:	xtce:IntegerValueType, // [element]
+	FromBinaryTransformAlgorithm:	Option(xtce:InputAlgorithmType),
+	ToBinaryTransformAlgorithm:	Option(xtce:InputAlgorithmType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ByteType {
+	byteSignificance:	xtce:NonNegativeLongType, // required
+}
+
+#[derive(Debug)]
+struct CharacterWidthType {
+<restriction base="integer">
+<enumeration value="8"/>
+<enumeration value="16"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct CRCType {
+<sequence>
+	Polynomial:	hexBinary, /// [element]
+	InitRemainder:	Option(hexBinary),
+	FinalXOR:	Option(hexBinary),
+</sequence>
+	width:	xtce:PositiveLongType, //
+	reflectData:	boolean, // default="false"
+	reflectRemainder:	boolean, // default="false"
+	bitsFromReference:	xtce:NonNegativeLongType, //
+	reference:	xtce:ReferencePointType, // default="start"
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="DataEncodingType" abstract="true">
+<sequence>
+	ErrorDetectCorrect:	Option(xtce:ErrorDetectCorrectType),
+</sequence>
+	bitOrder:	xtce:BitOrderType, // default="mostSignificantBitFirst"
+	byteOrder:	xtce:ByteOrderType, // default="mostSignificantByteFirst"
+}
+
+#[derive(Debug)]
+struct EncodingType {
+<choice>
+	BinaryDataEncoding:	xtce:BinaryDataEncodingType, // [element]
+	FloatDataEncoding:	xtce:FloatDataEncodingType, // [element]
+	IntegerDataEncoding:	xtce:IntegerDataEncodingType, // [element]
+	StringDataEncoding:	xtce:StringDataEncodingType, // [element]
+</choice>
+	units:	xtce:TimeUnitsType, // default="seconds" [attribute]
+	scale:	double, // default="1" [attribute]
+	offset:	double, // default="0" [attribute]
+}
+
+#[derive(Debug)]
+struct EpochType {
+<union memberTypes="date dateTime xtce:EpochTimeEnumsType"/>
+}
+
+#[derive(Debug)]
+struct FloatDataEncodingType {
+<complexContent>
+<extension base="xtce:DataEncodingType">
+<sequence>
+	DefaultCalibrator:	Option(xtce:CalibratorType),
+	ContextCalibratorList:	Option(xtce:ContextCalibratorListType),
+</sequence>
+	encoding:	xtce:FloatEncodingType, // default="IEEE754_1985" [attribute]
+	sizeInBits:	xtce:FloatEncodingSizeInBitsType, // default="32" [attribute]
+<appinfo>Verify the number of bits for encoding is valid for the encoding method.</appinfo>
+	changeThreshold:	double, // use="optional" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FloatEncodingSizeInBitsType {
+<restriction base="unsignedShort">
+<enumeration value="16">
+</enumeration>
+<enumeration value="32">
+</enumeration>
+<enumeration value="40">
+</enumeration>
+<enumeration value="48">
+</enumeration>
+<enumeration value="64">
+</enumeration>
+<enumeration value="80">
+</enumeration>
+<enumeration value="128">
+</enumeration>
+</restriction>
+}
+
+#[derive(Debug)]
+struct FloatEncodingType {
+<restriction base="string">
+<enumeration value="IEEE754_1985"/>
+<enumeration value="IEEE754"/>
+<enumeration value="MILSTD_1750A"/>
+<enumeration value="DEC"/>
+<enumeration value="IBM"/>
+<enumeration value="TI"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct FloatSizeInBitsType {
+<restriction base="xtce:PositiveLongType">
+<enumeration value="32"/>
+<enumeration value="64"/>
+<enumeration value="128"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct IntegerDataEncodingType {
+<complexContent>
+<extension base="xtce:DataEncodingType">
+<sequence>
+	DefaultCalibrator:	Option(xtce:CalibratorType),
+	ContextCalibratorList:	Option(xtce:ContextCalibratorListType),
+</sequence>
+	encoding:	xtce:IntegerEncodingType, // default="unsigned" [attribute]
+	sizeInBits:	xtce:PositiveLongType, // default="8" [attribute]
+	changeThreshold:	xtce:NonNegativeLongType, // use="optional" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct IntegerEncodingType {
+<restriction base="string">
+<enumeration value="unsigned"/>
+<enumeration value="signMagnitude"/>
+<enumeration value="twosComplement"/>
+<enumeration value="onesComplement"/>
+<enumeration value="BCD"/>
+<enumeration value="packedBCD"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct LeadingSizeType {
+	sizeInBitsOfSizeTag:	xtce:PositiveLongType, // default="16"
+}
+
+#[derive(Debug)]
+struct ParityFormType {
+<restriction base="string">
+<enumeration value="Even"/>
+<enumeration value="Odd"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ParityType {
+	type:	xtce:ParityFormType, // required
+	bitsFromReference:	xtce:NonNegativeLongType, // required
+	reference:	xtce:ReferencePointType, // default="start"
+}
+
+#[derive(Debug)]
+struct SizeInBitsType {
+<sequence>
+<element name="Fixed">
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType>
+<sequence>
+	FixedValue:	xtce:PositiveLongType, // [element]
+</sequence>
+}
+	TerminationChar:	Option(hexBinary),
+	LeadingSize:	Option(xtce:LeadingSizeType),
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentVariableStringType {
+<sequence>
+<choice>
+	DynamicValue:	xtce:ArgumentDynamicValueType, // [element]
+	DiscreteLookupList:	xtce:ArgumentDiscreteLookupListType, // [element]
+</choice>
+	LeadingSize:	Option(xtce:LeadingSizeType),
+	TerminationChar:	Option(hexBinary),
+</sequence>
+	maxSizeInBits:	xtce:PositiveLongType, // required
+}
+
+#[derive(Debug)]
+struct VariableStringType {
+<sequence>
+<choice>
+	DynamicValue:	xtce:DynamicValueType, // [element]
+	DiscreteLookupList:	xtce:DiscreteLookupListType, // [element]
+</choice>
+	LeadingSize:	Option(xtce:LeadingSizeType),
+	TerminationChar:	Option(hexBinary),
+</sequence>
+	maxSizeInBits:	xtce:PositiveLongType, // required
+}
+
+#[derive(Debug)]
+struct ArgumentStringDataEncodingType {
+<complexContent>
+<extension base="xtce:DataEncodingType">
+<choice>
+	SizeInBits:	xtce:SizeInBitsType, // [element]
+	Variable:	xtce:ArgumentVariableStringType, // [element]
+</choice>
+	encoding:	xtce:StringEncodingType, // default="UTF-8" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct StringDataEncodingType {
+<complexContent>
+<extension base="xtce:DataEncodingType">
+<choice>
+	SizeInBits:	xtce:SizeInBitsType, // [element]
+	Variable:	xtce:VariableStringType, // [element]
+</choice>
+	encoding:	xtce:StringEncodingType, // default="UTF-8" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct StringEncodingType {
+<restriction base="string">
+<enumeration value="US-ASCII"/>
+<enumeration value="ISO-8859-1"/>
+<enumeration value="Windows-1252"/>
+<enumeration value="UTF-8"/>
+<enumeration value="UTF-16">
+</enumeration>
+<enumeration value="UTF-16LE">
+</enumeration>
+<enumeration value="UTF-16BE">
+</enumeration>
+<enumeration value="UTF-32">
+</enumeration>
+<enumeration value="UTF-32LE">
+</enumeration>
+<enumeration value="UTF-32BE">
+</enumeration>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ToStringType {
+<sequence>
+	NumberFormat:	xtce:NumberFormatType, // minOccurs="1" maxOccurs="1" [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct EpochTimeEnumsType {
+<restriction base="string">
+<enumeration value="TAI"/>
+<enumeration value="J2000"/>
+<enumeration value="UNIX"/>
+<enumeration value="GPS"/>
+</restriction>
+}
+<!-- ******** DataTypes ************************************** -->
+<!-- ************************************************************* -->
+<!-- ******** Common Types Schema ********************** -->
+<!--  Basic elements used for in all dictionaries  -->
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="AlgorithmSetType" mixed="false">
+<choice maxOccurs="unbounded">
+	CustomAlgorithm:	xtce:InputOutputTriggerAlgorithmType, /// [element]
+	MathAlgorithm:	xtce:MathAlgorithmType, /// [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct AliasSetType {
+<appinfo>Applications should enforce uniqueness of individual nameSpace attribute values. Aliases are usually unique within the same nameSpace attribute value, depending on the physical meaning of that nameSpace. There are some cases where Alias values can be duplicated in a single nameSpace value.</appinfo>
+<sequence>
+	Alias:	Vec<xtce:AliasType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct AliasType {
+	nameSpace:	string, // required
+	alias:	string, // required
+}
+
+#[derive(Debug)]
+struct AncillaryDataType {
+<simpleContent>
+<extension base="string">
+	name:	string, // required
+	mimeType:	string, // default="text/plain" [attribute]
+	href:	anyURI, // [attribute]
+</extension>
+</simpleContent>
+}
+
+#[derive(Debug)]
+struct AncillaryDataSetType {
+<sequence>
+	AncillaryData:	Vec<xtce:AncillaryDataType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct ANDedConditionsType {
+<complexContent>
+<extension base="xtce:BaseConditionsType">
+<choice minOccurs="2" maxOccurs="unbounded">
+	Condition:	xtce:ComparisonCheckType, // [element]
+	ORedConditions:	xtce:ORedConditionsType, // [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct AuthorSetType {
+<sequence>
+	Author:	Vec<xtce:AuthorType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct AuthorType {
+<restriction base="string"/>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="BaseConditionsType" abstract="true">
+}
+
+#[derive(Debug)]
+struct BinaryType {
+<restriction base="string">
+<pattern value="0[bB][0-1]+"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct BooleanExpressionType {
+<choice>
+	Condition:	xtce:ComparisonCheckType, // [element]
+	ANDedConditions:	xtce:ANDedConditionsType, // [element]
+	ORedConditions:	xtce:ORedConditionsType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct ByteOrderType {
+<union memberTypes="xtce:ByteOrderCommonType xtce:ByteOrderArbitraryType"/>
+}
+
+#[derive(Debug)]
+struct ByteOrderCommonType {
+<restriction base="string">
+<enumeration value="mostSignificantByteFirst"/>
+<enumeration value="leastSignificantByteFirst"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ByteOrderArbitraryType {
+<restriction base="string">
+<pattern value="(0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15)(,(0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15))*"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ComparisonCheckType {
+<complexContent>
+<extension base="xtce:BaseConditionsType">
+<sequence>
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+	ComparisonOperator:	xtce:ComparisonOperatorsType, // [element]
+<choice>
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+	Value:	string, // [element]
+</choice>
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ComparisonListType {
+<sequence>
+	Comparison:	Vec<xtce:ComparisonType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct ComparisonOperatorsType {
+<restriction base="string">
+<enumeration value="=="/>
+<enumeration value="!="/>
+<enumeration value="<"/>
+<enumeration value="<="/>
+<enumeration value=">"/>
+<enumeration value=">="/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ComparisonType {
+<complexContent>
+<extension base="xtce:ParameterInstanceRefType">
+	comparisonOperator:	xtce:ComparisonOperatorsType, // default="==" [attribute]
+	value:	string, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ContextCalibratorType {
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, /// [element]
+	Calibrator:	xtce:CalibratorType, /// [element]
+</sequence>
+}
+
+#[derive(Debug)]
+struct ContextMatchType {
+<complexContent>
+<extension base="xtce:MatchCriteriaType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct CustomAlarmType {
+<complexContent>
+<extension base="xtce:BaseAlarmType">
+<sequence>
+	InputAlgorithm:	xtce:InputAlgorithmType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct PercentCompleteType {
+<choice>
+<element name="FixedValue">
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<simpleType>
+<restriction base="double">
+<minInclusive value="0.0"/>
+<maxInclusive value="100.0"/>
+</restriction>
+}
+	DynamicValue:	xtce:DynamicValueType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="DescriptionType" abstract="true">
+<sequence>
+	LongDescription:	Option(xtce:LongDescriptionType),
+	AliasSet:	Option(xtce:AliasSetType),
+	AncillaryDataSet:	Option(xtce:AncillaryDataSetType),
+</sequence>
+	shortDescription:	xtce:ShortDescriptionType, // use="optional" [attribute]
+}
+
+#[derive(Debug)]
+struct DiscreteLookupListType {
+<sequence>
+	DiscreteLookup:	Vec<xtce:DiscreteLookupType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct DynamicValueType {
+<sequence>
+	ParameterInstanceRef:	xtce:ParameterInstanceRefType, // [element]
+	LinearAdjustment:	Option(xtce:LinearAdjustmentType),
+</sequence>
+}
+
+#[derive(Debug)]
+struct ErrorDetectCorrectType {
+<choice>
+	Checksum:	xtce:ChecksumType, /// [element]
+	CRC:	xtce:CRCType, /// [element]
+	Parity:	xtce:ParityType, /// [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct FixedIntegerValueType {
+<union memberTypes="integer xtce:HexadecimalType xtce:OctalType xtce:BinaryType"/>
+}
+
+#[derive(Debug)]
+struct HeaderType {
+<sequence>
+	AuthorSet:	Option(xtce:AuthorSetType),
+	NoteSet:	Option(xtce:NoteSetType),
+	HistorySet:	Option(xtce:HistorySetType),
+</sequence>
+	version:	string, // [attribute]
+	date:	string, // [attribute]
+	classification:	string, // default="NotClassified" [attribute]
+	classificationInstructions:	string, // [attribute]
+	validationStatus:	xtce:ValidationStatusType, // required
+}
+
+#[derive(Debug)]
+struct HexadecimalType {
+<restriction base="string">
+<pattern value="0[xX][0-9a-fA-F]+"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct HistorySetType {
+<sequence>
+	History:	Vec<xtce:HistoryType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct HistoryType {
+<restriction base="string"/>
+}
+
+#[derive(Debug)]
+struct IntegerValueType {
+<choice>
+	FixedValue:	long, // [element]
+	DynamicValue:	xtce:DynamicValueType, // [element]
+	DiscreteLookupList:	xtce:DiscreteLookupListType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct ArgumentIntegerValueType {
+<choice>
+	FixedValue:	long, // [element]
+	DynamicValue:	xtce:ArgumentDynamicValueType, // [element]
+	DiscreteLookupList:	xtce:ArgumentDiscreteLookupListType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct LongDescriptionType {
+<restriction base="string"/>
+}
+
+#[derive(Debug)]
+struct MathOperatorsType {
+<restriction base="string">
+<enumeration value="+">
+</enumeration>
+<enumeration value="-">
+</enumeration>
+<enumeration value="*">
+</enumeration>
+<enumeration value="/">
+<appinfo>An undefined condition exists if x2 is 0</appinfo>
+</enumeration>
+<enumeration value="%">
+<appinfo>An undefined condition exists if x2 is 0. Implementations should verify modulo versus remainder behavior.</appinfo>
+</enumeration>
+<enumeration value="^">
+<appinfo>An undefined condition exists if an imaginary number is the result. Imaginary numbers are not supported</appinfo>
+</enumeration>
+<enumeration value="y^x">
+</enumeration>
+<enumeration value="ln">
+<appinfo>An undefined condition exists if x is less than or equal to 0</appinfo>
+</enumeration>
+<enumeration value="log">
+<appinfo>An undefined condition exists if x is less than or equal to 0</appinfo>
+</enumeration>
+<enumeration value="e^x">
+</enumeration>
+<enumeration value="1/x">
+<appinfo>An undefined condition exists if x is less than 0</appinfo>
+</enumeration>
+<enumeration value="x!">
+<appinfo>An undefined condition exists if x is less than 0</appinfo>
+</enumeration>
+<enumeration value="tan">
+</enumeration>
+<enumeration value="cos">
+</enumeration>
+<enumeration value="sin">
+</enumeration>
+<enumeration value="atan">
+</enumeration>
+<enumeration value="atan2">
+<appinfo>An undefined condition exists if x1 and x2 are 0</appinfo>
+</enumeration>
+<enumeration value="acos">
+</enumeration>
+<enumeration value="asin">
+</enumeration>
+<enumeration value="tanh">
+</enumeration>
+<enumeration value="cosh">
+</enumeration>
+<enumeration value="sinh">
+</enumeration>
+<enumeration value="atanh">
+<appinfo>An undefined condition exists if x is outside the range [-1.0,+1.0]</appinfo>
+</enumeration>
+<enumeration value="acosh">
+<appinfo>An undefined condition exists if n is less than 1</appinfo>
+</enumeration>
+<enumeration value="asinh">
+</enumeration>
+<enumeration value="swap">
+</enumeration>
+<enumeration value="drop">
+</enumeration>
+<enumeration value="dup">
+</enumeration>
+<enumeration value="over">
+</enumeration>
+<enumeration value="<<">
+<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+</enumeration>
+<enumeration value=">>">
+<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+</enumeration>
+<enumeration value="&">
+<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+</enumeration>
+<enumeration value="|">
+<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+</enumeration>
+<enumeration value="&&">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="||">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="!">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="abs">
+</enumeration>
+<enumeration value="div">
+</enumeration>
+<enumeration value="int">
+</enumeration>
+<enumeration value=">">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value=">=">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="<">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="<=">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="==">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="!=">
+<appinfo>The result of this can only be 0 or 1</appinfo>
+</enumeration>
+<enumeration value="min">
+</enumeration>
+<enumeration value="max">
+</enumeration>
+<enumeration value="xor">
+<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+</enumeration>
+<enumeration value="~">
+<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+</enumeration>
+</restriction>
+}
+
+#[derive(Debug)]
+struct MatchCriteriaType {
+<choice>
+	Comparison:	xtce:ComparisonType, // [element]
+	ComparisonList:	xtce:ComparisonListType, // [element]
+	BooleanExpression:	xtce:BooleanExpressionType, // [element]
+	CustomAlgorithm:	xtce:InputAlgorithmType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="MathOperationType" abstract="true">
+<complexContent>
+<extension base="xtce:MathOperationCalibratorType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct NameType {
+<restriction base="normalizedString">
+<pattern value="[^./:\[\] ]+"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct NameDescriptionType {
+<complexContent>
+<extension base="xtce:DescriptionType">
+	name:	xtce:NameType, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct NameReferenceType {
+<restriction base="normalizedString">
+<pattern value="/?(([^./:\[\]]+|\.|\.\.)/)*([^./:\[\]]+)+"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct NoteSetType {
+<sequence>
+	Note:	Vec<xtce:NoteType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct NoteType {
+<restriction base="string"/>
+}
+
+#[derive(Debug)]
+struct NumberFormatType {
+	numberBase:	xtce:RadixType, // use="optional" default="Decimal" [attribute]
+	minimumFractionDigits:	xtce:NonNegativeLongType, // use="optional" default="0" [attribute]
+	maximumFractionDigits:	xtce:NonNegativeLongType, // use="optional" [attribute]
+	minimumIntegerDigits:	xtce:NonNegativeLongType, // use="optional" default="1" [attribute]
+	maximumIntegerDigits:	xtce:NonNegativeLongType, // use="optional" [attribute]
+	negativeSuffix:	string, // use="optional" default="" [attribute]
+	positiveSuffix:	string, // use="optional" default="" [attribute]
+	negativePrefix:	string, // use="optional" default="-" [attribute]
+	positivePrefix:	string, // use="optional" default="" [attribute]
+	showThousandsGrouping:	boolean, // use="optional" default="false" [attribute]
+	notation:	xtce:FloatingPointNotationType, // use="optional" default="normal" [attribute]
+}
+
+#[derive(Debug)]
+struct OctalType {
+<restriction base="string">
+<pattern value="0[oO][0-7]+"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct OptionalNameDescriptionType {
+<complexContent>
+<extension base="xtce:DescriptionType">
+	name:	xtce:NameType, // use="optional" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ORedConditionsType {
+<complexContent>
+<extension base="xtce:BaseConditionsType">
+<choice minOccurs="2" maxOccurs="unbounded">
+	Condition:	xtce:ComparisonCheckType, // [element]
+	ANDedConditions:	xtce:ANDedConditionsType, // [element]
+</choice>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ParameterSetType {
+<choice maxOccurs="unbounded">
+	Parameter:	xtce:ParameterType, // [element]
+<appinfo>Need to ensure that the named types actually exist</appinfo>
+	ParameterRef:	xtce:ParameterRefType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct RadixType {
+<restriction base="string">
+<enumeration value="Decimal"/>
+<enumeration value="Hexadecimal"/>
+<enumeration value="Octal"/>
+<enumeration value="Binary"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct RangeFormType {
+<restriction base="string">
+<enumeration value="outside"/>
+<enumeration value="inside"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ReferenceTimeType {
+<choice>
+	OffsetFrom:	xtce:ParameterInstanceRefType, /// [element]
+	Epoch:	xtce:EpochType, // [element]
+</choice>
+}
+
+#[derive(Debug)]
+struct RelativeTimeType {
+<restriction base="duration"/>
+}
+
+#[derive(Debug)]
+struct RepeatType {
+<sequence>
+	Count:	xtce:IntegerValueType, // [element]
+	Offset:	Option(xtce:IntegerValueType),
+</sequence>
+}
+
+#[derive(Debug)]
+struct ArgumentRepeatType {
+<sequence>
+	Count:	xtce:ArgumentIntegerValueType, // [element]
+	Offset:	Option(xtce:ArgumentIntegerValueType),
+</sequence>
+}
+
+#[derive(Debug)]
+struct ServiceRefType {
+<simpleContent>
+<extension base="xtce:NameReferenceType">
+	serviceRef:	xtce:NameReferenceType, // required
+</extension>
+</simpleContent>
+}
+
+#[derive(Debug)]
+struct ShortDescriptionType {
+<restriction base="string"/>
+}
+
+#[derive(Debug)]
+struct SplinePointType {
+	order:	xtce:NonNegativeLongType, // default="1" [attribute]
+	raw:	double, // required
+	calibrated:	double, // required
+}
+
+#[derive(Debug)]
+struct TermType {
+	coefficient:	double, // required
+	exponent:	xtce:NonNegativeLongType, // required
+}
+
+#[derive(Debug)]
+struct TimeUnitsType {
+<restriction base="string">
+<enumeration value="seconds"/>
+<enumeration value="picoSeconds"/>
+<enumeration value="days"/>
+<enumeration value="months"/>
+<enumeration value="years"/>
+</restriction>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="UnitType" mixed="true">
+	power:	double, // use="optional" default="1" [attribute]
+	factor:	string, // use="optional" default="1" [attribute]
+	description:	xtce:ShortDescriptionType, // use="optional" [attribute]
+	form:	xtce:UnitFormType, // use="optional" default="calibrated" [attribute]
+}
+
+#[derive(Debug)]
+struct ValidationStatusType {
+<restriction base="string">
+<enumeration value="Unknown"/>
+<enumeration value="Working"/>
+<enumeration value="Draft"/>
+<enumeration value="Test"/>
+<enumeration value="Validated"/>
+<enumeration value="Released"/>
+<enumeration value="Withdrawn"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ValueEnumerationType {
+	value:	long, // required
+	maxValue:	long, // [attribute]
+	label:	string, // required
+	shortDescription:	xtce:ShortDescriptionType, // [attribute]
+}
+<!-- ************************************************************* -->
+<!-- ******** Types used with alarms *********************** -->
+
+#[derive(Debug)]
+struct AlarmConditionsType {
+<sequence>
+	WatchAlarm:	Option(xtce:MatchCriteriaType),
+	WarningAlarm:	Option(xtce:MatchCriteriaType),
+	DistressAlarm:	Option(xtce:MatchCriteriaType),
+	CriticalAlarm:	Option(xtce:MatchCriteriaType),
+	SevereAlarm:	Option(xtce:MatchCriteriaType),
+</sequence>
+}
+
+#[derive(Debug)]
+struct AlarmRangesType {
+<complexContent>
+<extension base="xtce:BaseAlarmType">
+<sequence>
+	WatchRange:	Option(xtce:FloatRangeType),
+	WarningRange:	Option(xtce:FloatRangeType),
+	DistressRange:	Option(xtce:FloatRangeType),
+	CriticalRange:	Option(xtce:FloatRangeType),
+	SevereRange:	Option(xtce:FloatRangeType),
+</sequence>
+	rangeForm:	xtce:RangeFormType, // default="outside" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+
+#[derive(Debug)]
+<complexType name="AlarmType" abstract="true">
+<complexContent>
+<extension base="xtce:BaseAlarmType">
+<sequence>
+<choice minOccurs="0">
+	AlarmConditions:	xtce:AlarmConditionsType, // [element]
+	CustomAlarm:	xtce:CustomAlarmType, // [element]
+</choice>
+</sequence>
+	minViolations:	xtce:PositiveLongType, // default="1" [attribute]
+	minConformance:	xtce:PositiveLongType, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct AlarmMultiRangesType {
+<complexContent>
+<extension base="xtce:BaseAlarmType">
+<sequence>
+	Range:	Vec<xtce:MultiRangeType>,
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BasisType {
+<restriction base="string">
+<enumeration value="perSecond"/>
+<enumeration value="perContainerUpdate"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct BinaryAlarmType {
+<complexContent>
+<extension base="xtce:AlarmType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BooleanAlarmType {
+<complexContent>
+<extension base="xtce:AlarmType"/>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BinaryContextAlarmListType {
+<sequence>
+	ContextAlarm:	Vec<xtce:BinaryContextAlarmType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct BinaryContextAlarmType {
+<complexContent>
+<extension base="xtce:AlarmType">
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BooleanContextAlarmType {
+<complexContent>
+<extension base="xtce:BooleanAlarmType">
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct BooleanContextAlarmListType {
+<sequence>
+	ContextAlarm:	Vec<xtce:BooleanContextAlarmType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct ChangeAlarmRangesType {
+<complexContent>
+<extension base="xtce:AlarmRangesType">
+	changeType:	xtce:ChangeSpanType, // default="changePerSecond"
+	changeBasis:	xtce:ChangeBasisType, // default="absoluteChange"
+	spanOfInterestInSamples:	xtce:PositiveLongType, // default="1"
+	spanOfInterestInSeconds:	double, // default="0"
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct ChangeBasisType {
+<restriction base="string">
+<enumeration value="absoluteChange"/>
+<enumeration value="percentageChange"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ConcernLevelsType {
+<restriction base="string">
+<enumeration value="normal"/>
+<enumeration value="watch"/>
+<enumeration value="warning"/>
+<enumeration value="distress"/>
+<enumeration value="critical"/>
+<enumeration value="severe"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ConsequenceLevelType {
+<restriction base="string">
+<enumeration value="normal">
+</enumeration>
+<enumeration value="vital">
+</enumeration>
+<enumeration value="critical">
+</enumeration>
+<enumeration value="forbidden">
+</enumeration>
+<enumeration value="user1">
+</enumeration>
+<enumeration value="user2">
+</enumeration>
+</restriction>
+}
+
+#[derive(Debug)]
+struct ChangeSpanType {
+<restriction base="string">
+<enumeration value="changePerSecond"/>
+<enumeration value="changePerSample"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct DiscreteLookupType {
+<complexContent>
+<extension base="xtce:MatchCriteriaType">
+	value:	long, // required
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct EnumerationAlarmLevelType {
+	alarmLevel:	xtce:ConcernLevelsType, // required
+	enumerationLabel:	string, // required
+}
+
+#[derive(Debug)]
+struct EnumerationAlarmListType {
+<sequence>
+	EnumerationAlarm:	Vec<xtce:EnumerationAlarmLevelType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct EnumerationContextAlarmType {
+<complexContent>
+<extension base="xtce:EnumerationAlarmType">
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct EnumerationAlarmType {
+<appinfo>An additional check needs to be performed to ensure that the enumeration values in the alarms are valid enumeration values for the Parameter</appinfo>
+<complexContent>
+<extension base="xtce:AlarmType">
+<sequence>
+	EnumerationAlarmList:	Option(xtce:EnumerationAlarmListType),
+</sequence>
+	defaultAlarmLevel:	xtce:ConcernLevelsType, // default="normal" [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct FloatingPointNotationType {
+<restriction base="string">
+<enumeration value="normal"/>
+<enumeration value="scientific"/>
+<enumeration value="engineering"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct FloatRangeType {
+<appinfo>Verify that the combination provided is usable.</appinfo>
+	minInclusive:	double, // [attribute]
+	minExclusive:	double, // [attribute]
+	maxInclusive:	double, // [attribute]
+	maxExclusive:	double, // [attribute]
+}
+
+#[derive(Debug)]
+struct IntegerRangeType {
+	minInclusive:	long, // [attribute]
+	maxInclusive:	long, // [attribute]
+}
+
+#[derive(Debug)]
+struct LinearAdjustmentType {
+	slope:	double, //
+	intercept:	double, // default="0"
+}
+
+#[derive(Debug)]
+struct MultiRangeType {
+<complexContent>
+<extension base="xtce:FloatRangeType">
+	rangeForm:	xtce:RangeFormType, // default="outside" [attribute]
+	level:	xtce:ConcernLevelsType, // [attribute]
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct NumericAlarmType {
+<complexContent>
+<extension base="xtce:AlarmType">
+<sequence>
+	StaticAlarmRanges:	Option(xtce:AlarmRangesType),
+	ChangeAlarmRanges:	Option(xtce:ChangeAlarmRangesType),
+	AlarmMultiRanges:	Option(xtce:AlarmMultiRangesType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct NumericContextAlarmType {
+<complexContent>
+<extension base="xtce:NumericAlarmType">
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, // [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct StringAlarmLevelType {
+	alarmLevel:	xtce:ConcernLevelsType, // required
+	matchPattern:	string, // required
+}
+
+#[derive(Debug)]
+struct StringAlarmListType {
+<sequence>
+	StringAlarm:	Vec<xtce:StringAlarmLevelType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct StringAlarmType {
+<complexContent>
+<extension base="xtce:AlarmType">
+<sequence>
+	StringAlarmList:	Option(xtce:StringAlarmListType),
+</sequence>
+	defaultAlarmLevel:	xtce:ConcernLevelsType, // default="normal"
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct StringContextAlarmType {
+<complexContent>
+<extension base="xtce:StringAlarmType">
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct StringContextAlarmListType {
+<sequence>
+	ContextAlarm:	Vec<xtce:StringContextAlarmType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct TimeAlarmType {
+<complexContent>
+<extension base="xtce:AlarmType">
+<sequence>
+	StaticAlarmRanges:	Option(xtce:TimeAlarmRangesType),
+	ChangePerSecondAlarmRanges:	Option(xtce:TimeAlarmRangesType),
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TimeAlarmRangesType {
+<complexContent>
+<extension base="xtce:AlarmRangesType">
+	timeUnits:	xtce:TimeUnitsType, // default="seconds"
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct TimeContextAlarmListType {
+<sequence>
+	ContextAlarm:	Vec<xtce:TimeContextAlarmType>,
+</sequence>
+}
+
+#[derive(Debug)]
+struct TimeContextAlarmType {
+<complexContent>
+<extension base="xtce:TimeAlarmType">
+<sequence>
+	ContextMatch:	xtce:ContextMatchType, /// [element]
+</sequence>
+</extension>
+</complexContent>
+}
+
+#[derive(Debug)]
+struct NonNegativeLongType {
+<restriction base="long">
+<minInclusive value="0"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct PositiveLongType {
+<restriction base="long">
+<minInclusive value="1"/>
+</restriction>
+}
+
+#[derive(Debug)]
+struct UnitFormType {
+<restriction base="string">
+<enumeration value="calibrated"/>
+<enumeration value="uncalibrated"/>
+<enumeration value="raw"/>
+</restriction>
+}
+<!-- ******** End of Common Types Schema ************** -->
+<!-- ************************************************************* -->
+</schema>

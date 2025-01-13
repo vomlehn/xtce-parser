@@ -25,6 +25,33 @@ use crate::telemetry_meta_data::*;
 use crate::xtce::Xtce;
 use crate::xtce_parser_error::{XtceParserError};
 
+//fn my_function<T>(x: T) -> T {
+fn my_function(x: &BufReader<Read>) -> &BufReader<Read> {
+    x 
+}
+
+fn main() {
+    // Declare a function pointer with generic type parameters
+    let my_function_ptr: fn(&BufReader<Read>) -> &BufReader<Read> = my_function; 
+
+    // Use the function pointer with different types
+    let result_int: i32 = my_function_ptr(5); 
+    println!("Result int: {}", result_int); 
+
+    let result_str: String = my_function_ptr("Hello".to_string());
+    println!("Result str: {}", result_str); 
+}
+
+struct StartElementParser<'a> {
+    name:       &'a str,
+    parser:     fn(parser: &mut Parser<BufReader<Read>>) ->
+        Result<CommandMetaDataType, XtceParserError>,
+}
+/*
+    fn command_meta_data_new<R: Read>(parser: &mut Parser<R>) ->
+        Result<CommandMetaDataType, XtceParserError> {
+*/
+
 #[derive(Debug)]
 pub struct XtceDocument {
     version:        XmlVersion,
