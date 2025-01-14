@@ -1,16 +1,16 @@
 use crate::space_system_converted::*;
 
 /* I don't know what these are for yet */
-struct parameterNameKey {}
-struct parameterTypeNameKey {}
-struct metaCommandNameKey {}
-struct algorithmNameKey {}
-struct streamNameKey {}
-struct serviceNameKey {}
-struct containerNameKey {}
-struct messageNameKey {}
-struct argumentTypeNameKey {}
-struct blockMetaCommandNameKey {}
+struct ParameterNameKey {}
+struct ParameterTypeNameKey {}
+struct MetaCommandNameKey {}
+struct AlgorithmNameKey {}
+struct StreamNameKey {}
+struct ServiceNameKey {}
+struct ContainerNameKey {}
+struct MessageNameKey {}
+struct ArgumentTypeNameKey {}
+struct BlockMetaCommandNameKey {}
 
 #[derive(Debug)]
 pub struct SpaceSystemType {
@@ -31,7 +31,7 @@ impl SpaceSystemType {
             telemetry_meta_data:    None,
             command_meta_data:      None,
             service_set:            None,
-            space_system_ref:       Vec::<SpaceSystemV1_1>::new(),
+//            space_system_ref:       Vec::<SpaceSystemV1_1>::new(),
         }
     }
 }
@@ -91,7 +91,7 @@ pub struct ParameterSetType {
     /* FIXME: figure this out
     max_occurs = unbounded,
     */
-    parameter:      Parameter,
+    parameter:      ParameterType,
     parameter_ref:  ParameterRefType,
 }
 

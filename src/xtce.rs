@@ -11,9 +11,9 @@ use xml::name::OwnedName;
 use xml::namespace::Namespace;
 use xml::reader::{EventReader, XmlEvent};
 
-use crate::Container;
+//use crate::Container;
 use crate::xtce_parser_error::{XtceParserError};
-use crate::Parameter;
+//use crate::Parameter;
 use crate::space_system::SpaceSystemType;
 
 #[derive(Clone, Debug, Eq, PartialEq)]

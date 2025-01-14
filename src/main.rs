@@ -6,10 +6,6 @@
 extern crate xml;
 
 use std::error::Error;
-use std::fs::File;
-use std::io::{BufReader, Read};
-use std::rc::Rc;
-use std::cell::RefCell;
 
 mod space_system;
 mod space_system_converted;
@@ -17,6 +13,7 @@ mod space_system_converted;
 mod gen_c;
 mod gen_xtce;
 mod parser;
+mod rust_data_types;
 mod xml_lineno;
 mod xtce;
 mod xtce_document;
@@ -30,6 +27,7 @@ use xtce::Xtce;
 use xtce_document::XtceDocument;
 use xtce_parser_error::{XtceParserError};
 
+/* FIXME: remove this?
 #[derive(Clone, Debug)]
 struct Parameter {
     _name: r#String,
@@ -41,6 +39,7 @@ struct Container {
     _name: r#String,
     parameters: Vec<Parameter>,
 }
+*/
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let document = parse_file("test/test1.xtce".to_string());
