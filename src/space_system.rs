@@ -26,7 +26,10 @@ pub struct SpaceSystemType {
 
 impl SpaceSystemType {
     pub fn new() -> SpaceSystemType {
+        let name = NameType {};
+        let name_description = NameDescriptionType::new(name);
         SpaceSystemType {
+            name_description_type:  name_description,
             header:                 None,
             telemetry_meta_data:    None,
             command_meta_data:      None,

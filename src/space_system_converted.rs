@@ -3036,6 +3036,14 @@ pub struct NameDescriptionType {
     name:   NameType, // required
 }
 
+impl NameDescriptionType {
+    pub fn new(name: NameType) -> NameDescriptionType {
+        NameDescriptionType {
+            name: name,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct NameReferenceType {
 //<restriction base="normalizedString">

@@ -14,18 +14,24 @@ use xml::name::OwnedName;
 use xml::namespace::Namespace;
 use xml::reader::{EventReader, XmlEvent};
 
-//use crate::Container;
-//use crate::Parameter;
+use crate::Container;
+use crate::Parameter;
 use crate::parser::{Element, Parser};
 use crate::space_system::*;
 use crate::xtce::Xtce;
 use crate::xtce_parser_error::{XtceParserError};
 
+struct SpaceSystemV1_1 {
+}
+
+/*
 //fn my_function<T>(x: T) -> T {
 fn my_function(x: &BufReader<Read>) -> &BufReader<Read> {
     x 
 }
+*/
 
+/*
 fn main() {
     // Declare a function pointer with generic type parameters
     let my_function_ptr: fn(&BufReader<Read>) -> &BufReader<Read> = my_function; 
@@ -37,12 +43,15 @@ fn main() {
     let result_str: String = my_function_ptr("Hello".to_string());
     println!("Result str: {}", result_str); 
 }
+*/
 
+/*
 struct StartElementParser<'a> {
     name:       &'a str,
-    parser:     fn(parser: &mut Parser<BufReader<Read>>) ->
+    parser:     fn(&mut Parser<BufReader<Read>>) ->
         Result<CommandMetaDataType, XtceParserError>,
 }
+*/
 /*
     fn command_meta_data_new<R: Read>(parser: &mut Parser<R>) ->
         Result<CommandMetaDataType, XtceParserError> {
@@ -204,7 +213,7 @@ println!("EndDocument");
                                             space_system.telemetry_meta_data = telemetry_meta_data;
                                             space_system.command_meta_data = command_meta_data;
                                             space_system.service_set = service_set;
-                                            space_system.space_system_ref = space_system_ref;
+//                                            space_system.space_system_ref = space_system_ref;
                                         },
                                     }
                                 },
@@ -326,7 +335,7 @@ println!("CommandMetaData");
         loop {
             let element = parser.next()?;
 println!("*: {:?} [telemetry_meta_data_new]", element);
-            match (element.event) {
+            match element.event {
                 XmlEvent::EndElement{name} => {
                         if name.local_name == "TelemetryMetaData" {
                             return Ok(TelemetryMetaDataType::new());
@@ -344,7 +353,7 @@ println!("*: {:?} [telemetry_meta_data_new]", element);
         loop {
             let element = parser.next()?;
 println!("*: {:?} [command_meta_data_new]", element);
-            match (element.event) {
+            match element.event {
                 XmlEvent::EndElement{name} => {
                         if name.local_name == "CommandMetaData" {
                             return Ok(CommandMetaDataType::new());

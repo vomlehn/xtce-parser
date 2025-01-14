@@ -27,7 +27,6 @@ use xtce::Xtce;
 use xtce_document::XtceDocument;
 use xtce_parser_error::{XtceParserError};
 
-/* FIXME: remove this?
 #[derive(Clone, Debug)]
 struct Parameter {
     _name: r#String,
@@ -39,7 +38,6 @@ struct Container {
     _name: r#String,
     parameters: Vec<Parameter>,
 }
-*/
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let document = parse_file("test/test1.xtce".to_string());
