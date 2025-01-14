@@ -14,7 +14,6 @@ mod gen_c;
 mod gen_xtce;
 mod parser;
 mod rust_data_types;
-mod xml_lineno;
 mod xtce;
 mod xtce_document;
 mod xtce_parser_error;

@@ -9,12 +9,32 @@ use xml::reader::{EventReader, XmlEvent};
 
 use crate::xtce_parser_error::{XtceParserError};
 
+pub struct ElementDesc {
+    allowable_subelements:  &'static[ElementDesc]
+}
+
+const root_desc: ElementDesc = ElementDesc {
+    allowable_subelements: &[space_system_desc],
+};
+
+const space_system_desc: ElementDesc = ElementDesc {
+    allowable_subelements: &[telemetry_meta_data_desc, command_meta_data_desc],
+};
+
+const telemetry_meta_data_desc: ElementDesc = ElementDesc {
+    allowable_subelements: &[],
+};
+
+const command_meta_data_desc: ElementDesc = ElementDesc {
+    allowable_subelements: &[],
+};
+
 type LineNumber = usize;
 
 #[derive(Debug)]
 pub struct Element {
-    pub lineno:     LineNumber,
-    pub event:      XmlEvent,
+    pub lineno:         LineNumber,
+    pub event:          XmlEvent,
 }
 
 impl Element {
@@ -25,7 +45,7 @@ impl Element {
 
 pub struct Parser<R: Read> {
     lineno_ref:     Rc<RefCell<LineNumber>>,
-    event_reader:   EventReader<LineReader<BufReader<R>>>,
+    event_reader:   EventReader<LinenoReader<BufReader<R>>>,
 }
 
 impl<R: Read> fmt::Debug for Parser<R> {
@@ -37,7 +57,7 @@ impl<R: Read> fmt::Debug for Parser<R> {
 
 impl<R: Read> Parser<R> {
     pub fn new<T: Read>(buf_reader: BufReader<T>) -> Parser<T> {
-        let line_reader = LineReader::new(buf_reader);
+        let line_reader = LinenoReader::new(buf_reader);
         let lineno_ref = line_reader.lineno_ref();
         let mut event_reader = EventReader::new(line_reader);
         Parser {
@@ -56,17 +76,16 @@ impl<R: Read> Parser<R> {
     }
 }
 
-
 // This is how we get line numbers for the XML file
 // FIXME: handle nested files
-pub struct LineReader<R: Read> {
+pub struct LinenoReader<R: Read> {
     inner: BufReader<R>,
     line: Rc<RefCell<usize>>,
 }
 
-impl<R: Read> LineReader<R> {
+impl<R: Read> LinenoReader<R> {
     pub fn new(inner: R) -> Self {
-        LineReader {
+        LinenoReader {
             inner: BufReader::new(inner),
             line: Rc::new(RefCell::new(1)),
         }
@@ -77,7 +96,7 @@ impl<R: Read> LineReader<R> {
     }
 }
 
-impl<R: Read> Read for LineReader<R> {
+impl<R: Read> Read for LinenoReader<R> {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
         let bytes_read = self.inner.read(buf)?;
         let mut line = self.line.borrow_mut();

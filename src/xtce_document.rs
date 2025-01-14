@@ -66,12 +66,6 @@ pub struct XtceDocument {
 }
 
 impl XtceDocument {
-
-fn x() -> Result<(), Box<dyn std::error::Error>> {
-    let _file = File::open("path/to/file")?; 
-    Ok(()) 
-}
-
     pub fn new(path: String) -> Result<XtceDocument, Box<dyn Error>> {
         let file = File::open(path)?;
         let mut buf_reader = BufReader::new(file);
@@ -166,7 +160,10 @@ println!("Expecting SpaceSystem: {:?}", element);
                 match element.event {
                     XmlEvent::StartElement{name, attributes, namespace} => {
                         match name.local_name.as_str() {
-                            "XTCE" => (name, attributes, namespace),
+                            "XTCE" => {
+println!("Matched StartElement(XTCE)");
+                                (name, attributes, namespace)
+                            },
                             _ => return Err(XtceParserError::BadXtceStart(element.lineno, name.local_name)),
                         }
                     },
@@ -337,16 +334,79 @@ println!("CommandMetaData");
 println!("*: {:?} [telemetry_meta_data_new]", element);
             match element.event {
                 XmlEvent::EndElement{name} => {
-                        if name.local_name == "TelemetryMetaData" {
+                    match name.local_name.as_str() {
+                        "TelemetryMetaData" => {
                             return Ok(TelemetryMetaDataType::new());
-                        }
-                    },
+                        },
+                        _ => {},
+                    }
+                },
+                XmlEvent::StartElement{name, attributes, namespace} => {
+                    match name.local_name.as_str() {
+                        "ParameterTypeSetType" => {
+//                            parameter_type_set = parameter_type_set_new(parser)?;
+                        },
+                        "ParameterSetType" => {
+//                            parameter_set = parameter_set_new(parser)?;
+                        },
+                        "ContainerSetType" => {
+//                            container_set = container_set_new(parser)?;
+                        },
+                        "MessageSetType" => {
+//                            message_set = message_set_new(parser)?;
+                        },
+                        "StreamSetType" => {
+//                            stream_set = stream_set_new(parser)?;
+                        },
+                        "AlgorithmSetType" => {
+//                            algorithm_set = algorithm_set_new(parser)?;
+                        },
+                        _ => {},
+                    }
+                },
                 _ => {},
             }
         }
 
         Err(XtceParserError::Unknown(0))
     }
+
+/*
+    fn parameter_type_set_new<R: Read>(parser: &mut Parser<R>) ->
+        Result<ParameterTypeSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+
+	fn parameter_type_set_new<R: Read>(parser: &mut Parser<R>) ->
+		Result<ParameterTypeSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+
+	fn parameter_set_new<R: Read>(parser: &mut Parser<R>) ->
+		Result<ParameterSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+
+	fn container_set_new<R: Read>(parser: &mut Parser<R>) ->
+		Result<ContainerSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+
+	fn message_set_new<R: Read>(parser: &mut Parser<R>) ->
+		Result<MessageSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+
+	fn stream_set_new<R: Read>(parser: &mut Parser<R>) ->
+		Result<StreamSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+
+	fn algorithm_set_new<R: Read>(parser: &mut Parser<R>) ->
+		Result<AlgorithmSetType, XtceParserError> {
+        Err(XtceParserError::Unknown(0))
+    }
+*/
 
     fn command_meta_data_new<R: Read>(parser: &mut Parser<R>) ->
         Result<CommandMetaDataType, XtceParserError> {
