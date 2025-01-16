@@ -52,7 +52,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn parse_file(file_path: String) -> Result<XtceDocument, Box<dyn Error>> {
+fn parse_file(file_path: String) -> Result<XtceDocument, XtceParserError> {
     // Similar setup as before...
 /*
 

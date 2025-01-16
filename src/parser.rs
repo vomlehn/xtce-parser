@@ -9,37 +9,20 @@ use xml::reader::{EventReader, XmlEvent};
 
 use crate::xtce_parser_error::{XtceParserError};
 
-pub struct ElementDesc {
-    allowable_subelements:  &'static[ElementDesc]
-}
-
-const root_desc: ElementDesc = ElementDesc {
-    allowable_subelements: &[space_system_desc],
-};
-
-const space_system_desc: ElementDesc = ElementDesc {
-    allowable_subelements: &[telemetry_meta_data_desc, command_meta_data_desc],
-};
-
-const telemetry_meta_data_desc: ElementDesc = ElementDesc {
-    allowable_subelements: &[],
-};
-
-const command_meta_data_desc: ElementDesc = ElementDesc {
-    allowable_subelements: &[],
-};
-
-type LineNumber = usize;
+pub type LineNumber = usize;
 
 #[derive(Debug)]
-pub struct Element {
+pub struct XmlElement {
     pub lineno:         LineNumber,
     pub event:          XmlEvent,
 }
 
-impl Element {
-    fn new(lineno: LineNumber, event: XmlEvent) -> Element {
-        Element { lineno: lineno, event: event }
+impl XmlElement {
+    fn new(lineno: LineNumber, event: XmlEvent) -> XmlElement {
+        XmlElement {
+            lineno:         lineno,
+            event:          event,
+        }
     }
 }
 
@@ -54,27 +37,43 @@ impl<R: Read> fmt::Debug for Parser<R> {
     }
 }
 
-
 impl<R: Read> Parser<R> {
     pub fn new<T: Read>(buf_reader: BufReader<T>) -> Parser<T> {
         let line_reader = LinenoReader::new(buf_reader);
         let lineno_ref = line_reader.lineno_ref();
         let mut event_reader = EventReader::new(line_reader);
         Parser {
-            lineno_ref:      lineno_ref,
+            lineno_ref:     lineno_ref,
             event_reader:   event_reader,
         }
     }
 
-    pub fn next(&mut self) -> Result<Element, XtceParserError> {
+    /*
+     * Read the next XmlElement from the input stream, disc
+     */
+    pub fn next(&mut self) -> Result<XmlElement, XtceParserError> {
+        let xml_event = self.event_reader.next();
         let lineno = *self.lineno_ref.borrow();
 
-        match self.event_reader.next() {
+        let result = match xml_event {
             Err(e) => Err(XtceParserError::XmlError(lineno, Box::new(e))),
-            Ok(event) => Ok(Element::new(lineno, event)),
-        }
+            Ok(elem) => Ok(XmlElement::new(lineno, elem)),
+        };
+
+        result
     }
 }
+
+/*
+impl<R: Read> IntoIterator for Parser<R> {
+    type Item = XmlElement;
+    type IntoIter = std::iter::Iterator<Item = Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self
+    }
+}
+*/
 
 // This is how we get line numbers for the XML file
 // FIXME: handle nested files

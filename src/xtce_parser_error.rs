@@ -14,6 +14,9 @@ pub enum XtceParserError {
         found: String,
     },
 */
+    #[error("Line {0}: Element name {1} doesn't match closing name {2}")]
+    ElementNameMismatch(usize, String, String),
+
     #[error("Line {0}: unexpected XML CDATA in input")]
     UnexpectedCData(usize),
 
@@ -38,13 +41,19 @@ pub enum XtceParserError {
     #[error("line {0}: Unexpected element termination")]
     UnexpectedTermination(usize),
 
+    #[error("line {0}: StartDocument after StartDocument")]
+    StartAfterStart(usize), 
+
+    #[error("line {0}: Misplaced element end: {1}")]
+    MisplacedElementEnd(usize, String), 
+
     #[error("line {0}: Multiple SpaceSystem XTCE elements")]
     MultipleSpaceSystems(usize), 
 
     #[error("Line {0}: General error: {1}")]
     GeneralError(usize, Box<dyn std::error::Error>),
 
-    #[error("Unexpected XML: {0:?}")]
+    #[error("Unexpected XML error: {0:?}")]
     UnexpectedXml(XmlEvent),
 
     // FIXME: get line number from the XmlEvent
