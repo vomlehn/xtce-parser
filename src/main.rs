@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match &document {
         Err(e) => println!("Failed: {:?}", e),
-        Ok(d) => println!("Document:\n{:?}", document),
+        Ok(d) => generate_xtce(d),
     }
 /*
     
@@ -67,13 +67,5 @@ fn parse_file(file_path: String) -> Result<XtceDocument, XtceParserError> {
     let mut buf_reader = BufReader::new(file);
 */
 
-    match XtceDocument::new(file_path) {
-        Err(e) => Err(e),
-        Ok(document) => {
-            println!("Output");
-            println!("------");
-            generate_xtce(&document);
-            Ok(document)
-        }
-    }
+    XtceDocument::new(file_path)
 }

@@ -60,13 +60,13 @@ impl fmt::Debug for ElementDesc {
  */
 #[derive(Clone, Debug)]
 pub struct Element {
-    lineno:             LineNumber,
-    name:               OwnedName,
-    attributes:         Vec<OwnedAttribute>,
-    namespace:          Namespace,
-    pub subelements:    Vec<Element>,
-    before_comments:    Vec<String>,
-    after_comments:     Vec<String>,
+    lineno:                 LineNumber,
+    name:                   OwnedName,
+    attributes:             Vec<OwnedAttribute>,
+    namespace:              Namespace,
+    subelements:            Vec<Element>,
+    before_comments:        Vec<String>,
+    after_comments:         Vec<String>,
 }
 
 impl Element {
@@ -81,6 +81,44 @@ impl Element {
             before_comments:    Vec::<String>::new(),
             after_comments:     Vec::<String>::new(),
         }
+    }
+
+    fn dump(&self) {
+        let mut indent = 0;
+
+        self.dump_indented(indent);
+    }
+
+    fn dump_indented(&self, indent: usize) {
+        let indent_string = "   ".to_string().repeat(indent);
+        print!("{}<{}", indent_string, self.name.local_name);
+
+        for attribute in self.attributes.clone() {
+            print!(" {}={}", attribute.name.local_name, attribute.value);
+        }
+
+        if self.subelements.len() == 0 {
+            println!(" /> (line {})", self.lineno);
+        } else {
+            println!("> (line {})", self.lineno);
+            for element in self.subelements.clone() {
+                element.dump_indented(indent + 1);
+            }
+            println!("{}</{}>", indent_string, self.name.local_name);
+        }
+    }
+}
+
+impl Display for Element {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Element:\n")?;
+        write!(f, "   Line {}: <{}>", self.lineno, self.name.local_name)?;
+        write!(f, "   {} subelements\n", self.subelements.len())?;
+        for element in self.subelements.clone() {
+
+            write!(f, "   {}", element)?;
+        }
+        write!(f, "")
     }
 }
 
@@ -281,6 +319,7 @@ println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter()
                                         lineno, name, attributes, namespace,
                                         &new_desc)?;
                                     subelements.push(subelement);
+println!("root subelements now {:?}", subelements.len());
                                     break;
                                 }
                             };
@@ -322,6 +361,7 @@ println!("Skipping processing_instruction");
             return Err(XtceParserError::OnlyOneRootElement(info.0));
         }
 
+println!("root subelements finally {:?}", subelements.len());
         Ok(XtceDocument {
             version:    info.1,
             encoding:   info.2,
@@ -367,18 +407,22 @@ println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter()
                                         lineno, name, attributes, namespace,
                                         &new_desc)?;
                                     subelements.push(subelement);
+println!("{} subelements now {:?}", start_name, subelements.len());
                                 }
                             }
                             
                         }
                         XmlEvent::EndElement{name} => {
 println!("EndElement: name.local_name {}, desc.name {}", name.local_name, desc.name);
+println!("{} subelements finaally {:?}", start_name, subelements.len());
                             if name.local_name != desc.name {
                                 return Err(XtceParserError::MisplacedElementEnd(lineno,
                                     name.local_name));
                             }
 
-                            return Ok(Element::new(lineno, name, attributes, namespace));
+                            let mut element = Element::new(lineno, name, attributes, namespace);
+                            element.subelements = subelements;
+                            return Ok(element)
                         },
                         XmlEvent::Comment(cmnt) => {
 println!("Skipping comment");
@@ -413,11 +457,18 @@ println!("Skipping processing_instruction");
             }
         }
     }
+
+    pub fn dump(&self) {
+        println!("<?xml {} {} {:?}>",
+            self.version, self.encoding, self.standalone);
+        self.root.dump();
+    }
 }
 
 impl Display for XtceDocument {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "<?xml {} {} {:?}\n{:?}\n",
-            self.version, self.encoding, self.standalone, self.root)
+        write!(f, "<?xml {} {} {:?}>\n",
+            self.version, self.encoding, self.standalone);
+        write!(f, "{}", self.root)       
     }
 }
