@@ -31,7 +31,7 @@ pub struct ArgumentArrayArgumentRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/ArgumentSequenceEntryType">
 <sequence minOccurs="0">
-	DimensionList:	/*xtce:*/ArgumentDimensionListType, // [element]
+	dimension_list:	/*xtce:*/ArgumentDimensionListType, // [element]
 </sequence>
 	argumentRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 	lastEntryForThisArrayInstance:	XtceBoolean, // default="false"/ [attribute]
@@ -44,9 +44,9 @@ pub struct ArgumentArrayParameterRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/ArgumentSequenceEntryType">
 <sequence minOccurs="0">
-	DimensionList:	/*xtce:*/DimensionListType, // [element]
+	dimension_list:	/*xtce:*/DimensionListType, // [element]
 </sequence>
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 	lastEntryForThisArrayInstance:	XtceBoolean, // default="false"/ [attribute]
 </extension>
 </complexContent>
@@ -56,7 +56,7 @@ pub struct ArgumentArrayParameterRefEntryType {
 pub struct ArgumentContainerRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/ArgumentSequenceEntryType">
-	containerRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	container_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 </extension>
 </complexContent>
 }
@@ -65,7 +65,7 @@ pub struct ArgumentContainerRefEntryType {
 pub struct ArgumentContainerSegmentRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/ArgumentSequenceEntryType">
-	containerRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	container_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 	order:	/*xtce:*/PositiveLongType, // [attribute]
 	sizeInBits:	/*xtce:*/PositiveLongType, // use="required"/ [attribute]
 </extension>
@@ -102,7 +102,7 @@ pub struct ArgumentIndirectParameterRefEntryType {
 pub struct ArgumentParameterRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/ArgumentSequenceEntryType">
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 </extension>
 </complexContent>
 }
@@ -111,7 +111,7 @@ pub struct ArgumentParameterRefEntryType {
 pub struct ArgumentParameterSegmentRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/ArgumentSequenceEntryType">
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 	order:	/*xtce:*/PositiveLongType, // [attribute]
 	sizeInBits:	/*xtce:*/PositiveLongType, // use="required"/ [attribute]
 </extension>
@@ -134,9 +134,9 @@ pub struct ArrayParameterRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/SequenceEntryType">
 <sequence minOccurs="0">
-	DimensionList:	/*xtce:*/DimensionListType, // [element]
+	dimension_list:	/*xtce:*/DimensionListType, // [element]
 </sequence>
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 </extension>
 </complexContent>
 }
@@ -158,7 +158,7 @@ pub struct BaseContainerType {
 //<sequence>
 //	RestrictionCriteria:	/*xtce:*/RestrictionCriteriaType, // minOccurs="0" [element]
 //</sequence>
-	containerRef:	/*xtce:*/NameReferenceType, // use="required" [attribute]
+	container_ref:	/*xtce:*/NameReferenceType, // use="required" [attribute]
 //</attribute>
 }
 
@@ -178,20 +178,20 @@ pub struct ContainerType { // abstract="true" mixed="false"
 #[derive(Debug)]
 pub struct ContainerRefSetType {
 //<sequence>
-	ContainerRef:	/*xtce:*/ContainerRefType, // maxOccurs="unbounded"/ [element]
+	container_ref:	/*xtce:*/ContainerRefType, // maxOccurs="unbounded"/ [element]
 //</sequence>
 }
 
 #[derive(Debug)]
 pub struct ContainerRefType {
-	containerRef:	/*xtce:*/NameReferenceType, // use="required" [attribute]
+	container_ref:	/*xtce:*/NameReferenceType, // use="required" [attribute]
 }
 
 #[derive(Debug)]
 pub struct ContainerRefEntryType {
 //<complexContent>
 //<extension base="/*xtce:*/SequenceEntryType">
-	containerRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	container_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 //</extension>
 //</complexContent>
 }
@@ -201,7 +201,7 @@ pub struct ContainerRefEntryType {
 pub struct ContainerSegmentRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/SequenceEntryType">
-	containerRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	container_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 	order:	/*xtce:*/PositiveLongType, // [attribute]
 	sizeInBits:	/*xtce:*/PositiveLongType, // use="required"/ [attribute]
 </extension>
@@ -264,7 +264,7 @@ pub struct ArgumentLocationInContainerInBitsType {
 
 #[derive(Debug)]
 pub struct MessageRefType {
-	messageRef:	/*xtce:*/NameReferenceType, // use="required" [attribute]
+	message_ref:	/*xtce:*/NameReferenceType, // use="required" [attribute]
 }
 
 /*
@@ -272,7 +272,7 @@ pub struct MessageRefType {
 pub struct ParameterRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/SequenceEntryType">
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 </extension>
 </complexContent>
 }
@@ -281,7 +281,7 @@ pub struct ParameterRefEntryType {
 pub struct ParameterSegmentRefEntryType {
 <complexContent>
 <extension base="/*xtce:*/SequenceEntryType">
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 	order:	/*xtce:*/PositiveLongType, // [attribute]
 	sizeInBits:	/*xtce:*/PositiveLongType, // use="required"/ [attribute]
 </extension>
@@ -294,11 +294,11 @@ pub struct SequenceContainerType {
 //<complexContent>
 //<extension base="/*xtce:*/ContainerType">
 //<sequence>
-	EntryList:	/*xtce:*/EntryListType, // [element]
-	BaseContainer:	/*xtce:*/BaseContainerType, // minOccurs="0" [element]
+	entry_list:	/*xtce:*/EntryListType, // [element]
+	base_container:	/*xtce:*/BaseContainerType, // minOccurs="0" [element]
 //</sequence>
 	r#abstract:	bool, // default="false" [attribute]
-	idlePattern:	/*xtce:*/FixedIntegerValueType, // default="0x0" [attribute]
+	idle_pattern:	/*xtce:*/FixedIntegerValueType, // default="0x0" [attribute]
 //</extension>
 //</complexContent>
 }
@@ -361,7 +361,7 @@ pub struct MessageType {
 //<extension base="/*xtce:*/NameDescriptionType">
 //<sequence>
 //	MatchCriteria:	/*xtce:*/MatchCriteriaType, // [element]
-	ContainerRef:	/*xtce:*/ContainerRefType, // [element]
+	container_ref:	/*xtce:*/ContainerRefType, // [element]
 //</sequence>
 //</extension>
 //</complexContent>
@@ -372,7 +372,7 @@ pub struct MessageSetType {
 //<complexContent>
 //<extension base="/*xtce:*/OptionalNameDescriptionType">
 //<sequence>
-	Message:	/*xtce:*/MessageType, // maxOccurs="unbounded"/ [element]
+	message:	/*xtce:*/MessageType, // maxOccurs="unbounded"/ [element]
 //</sequence>
 //</extension>
 //</complexContent>
@@ -462,7 +462,7 @@ pub struct ArrayParameterType {
 //<complexContent>
 //<extension base="/*xtce:*/ArrayDataTypeType">
 //<sequence>
-	DimensionList:	/*xtce:*/DimensionListType, // [element]
+	dimension_list:	/*xtce:*/DimensionListType, // [element]
 //</sequence>
 //</extension>
 //</complexContent>
@@ -540,7 +540,7 @@ pub struct IntegerParameterType {
 #[derive(Debug)]
 pub struct MessageRefSetType {
 //<sequence>
-	MessageRef:	/*xtce:*/MessageRefType, // maxOccurs="unbounded"/ [element]
+	message_ref:	/*xtce:*/MessageRefType, // maxOccurs="unbounded"/ [element]
 //</sequence>
 }
 
@@ -588,7 +588,7 @@ pub struct ParameterType {
 //<sequence>
 	//ParameterProperties:	/*xtce:*/ParameterPropertiesType, // minOccurs="0" [element]
 //</sequence>
-	parameterTypeRef:	/*xtce:*/NameReferenceType, // use="required" [attribute]
+	parameter_type_ref:	/*xtce:*/NameReferenceType, // use="required" [attribute]
 //</attribute>
 	//initialValue:	XtceString, // use="optional" [attribute]
 //<appinfo>The value type must match the Parameter type</appinfo>
@@ -600,22 +600,22 @@ pub struct ParameterType {
 #[derive(Debug)]
 pub struct ParameterTypeSetType {
 // <choice maxOccurs="unbounded">
-	StringParameterType:	/*xtce:*/StringParameterType, // [element]
-	EnumeratedParameterType:	/*xtce:*/EnumeratedParameterType, // [element]
-	IntegerParameterType:	/*xtce:*/IntegerParameterType, // [element]
-	BinaryParameterType:	/*xtce:*/BinaryParameterType, // [element]
-	FloatParameterType:	/*xtce:*/FloatParameterType, // [element]
-	BooleanParameterType:	/*xtce:*/BooleanParameterType, // [element]
-	RelativeTimeParameterType:	/*xtce:*/RelativeTimeParameterType, // [element]
-	AbsoluteTimeParameterType:	/*xtce:*/AbsoluteTimeParameterType, // [element]
-	ArrayParameterType:	/*xtce:*/ArrayParameterType, // [element]
-	AggregateParameterType:	/*xtce:*/AggregateParameterType, // [element]
+	string_parameter_type:	/*xtce:*/StringParameterType, // [element]
+	enumerated_parameter_type:	/*xtce:*/EnumeratedParameterType, // [element]
+	integer_parameter_type:	/*xtce:*/IntegerParameterType, // [element]
+	binary_parameter_type:	/*xtce:*/BinaryParameterType, // [element]
+	float_parameter_type:	/*xtce:*/FloatParameterType, // [element]
+	boolean_parameter_type:	/*xtce:*/BooleanParameterType, // [element]
+	relative_time_parameter_type:	/*xtce:*/RelativeTimeParameterType, // [element]
+	absolute_time_parameter_type:	/*xtce:*/AbsoluteTimeParameterType, // [element]
+	array_parameter_type:	/*xtce:*/ArrayParameterType, // [element]
+	aggregate_parameter_type:	/*xtce:*/AggregateParameterType, // [element]
 // </choice>
 }
 
 #[derive(Debug)]
 pub struct ParameterRefType {
-	parameterRef:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
+	parameter_ref:	/*xtce:*/NameReferenceType, // use="required"/ [attribute]
 }
 
 /*
@@ -721,7 +721,7 @@ pub struct ArrayArgumentType {
 <complexContent>
 <extension base="/*xtce:*/ArrayDataTypeType">
 <sequence>
-	DimensionList:	/*xtce:*/ArgumentDimensionListType, // [element]
+	dimension_list:	/*xtce:*/ArgumentDimensionListType, // [element]
 </sequence>
 </extension>
 </complexContent>
@@ -987,8 +987,8 @@ pub struct CommandContainerType { // mixed="false"
 <complexContent>
 <extension base="/*xtce:*/ContainerType">
 <sequence>
-	EntryList:	/*xtce:*/CommandContainerEntryListType, // [element]
-	BaseContainer:	/*xtce:*/BaseContainerType, // minOccurs="0" [element]
+	entry_list:	/*xtce:*/CommandContainerEntryListType, // [element]
+	base_container:	/*xtce:*/BaseContainerType, // minOccurs="0" [element]
 </sequence>
 </extension>
 </complexContent>
@@ -1001,7 +1001,7 @@ pub struct CommandVerifierType { // abstract="true"
 <sequence>
 <choice>
 	ComparisonList:	/*xtce:*/ComparisonListType, // [element]
-	ContainerRef:	/*xtce:*/ContainerRefType, // [element]
+	container_ref:	/*xtce:*/ContainerRefType, // [element]
 	ParameterValueChange:	/*xtce:*/ParameterValueChangeType, // [element]
 	CustomAlgorithm:	/*xtce:*/InputAlgorithmType, // [element]
 	BooleanExpression:	/*xtce:*/BooleanExpressionType, // [element]
@@ -1496,7 +1496,7 @@ pub struct MathAlgorithmType {
 pub struct OnContainerUpdateTriggerType {
 <complexContent>
 <extension base="/*xtce:*/BaseTriggerType">
-	containerRef:	/*xtce:*/NameReferenceType, // required
+	container_ref:	/*xtce:*/NameReferenceType, // required
 </extension>
 </complexContent>
 }
@@ -1514,7 +1514,7 @@ pub struct OnPeriodicRateTriggerType {
 pub struct OnParameterUpdateTriggerType {
 <complexContent>
 <extension base="/*xtce:*/BaseTriggerType">
-	parameterRef:	/*xtce:*/NameReferenceType, // required
+	parameter_ref:	/*xtce:*/NameReferenceType, // required
 </extension>
 </complexContent>
 }
@@ -1668,8 +1668,8 @@ pub struct CustomStreamType {
 //	EncodingAlgorithm:	/*xtce:*/InputAlgorithmType, // [element]
 //	DecodingAlgorithm:	/*xtce:*/InputOutputAlgorithmType, // [element]
 //</sequence>
-	encodedStreamRef:	/*xtce:*/NameReferenceType, // required
-	decodedStreamRef:	/*xtce:*/NameReferenceType, // required
+	encoded_stream_ref:	/*xtce:*/NameReferenceType, // required
+	decoded_stream_ref:	/*xtce:*/NameReferenceType, // required
 //</extension>
 //</complexContent>
 }
@@ -1695,7 +1695,7 @@ pub struct FrameStreamType {
 <extension base="/*xtce:*/PCMStreamType">
 <sequence>
 <choice>
-	ContainerRef:	/*xtce:*/ContainerRefType, // [element]
+	container_ref:	/*xtce:*/ContainerRefType, // [element]
 	ServiceRef:	/*xtce:*/ServiceRefType, // [element]
 </choice>
 	StreamRef:	Option</*xtce:*/StreamRefType>,
@@ -1713,7 +1713,7 @@ pub struct FixedFrameStreamType {
 //	SyncStrategy:	/*xtce:*/FixedFrameSyncStrategyType, // [element]
 //</sequence>
 //	syncApertureInBits:	/*xtce:*/NonNegativeLongType, // default="0" [attribute]
-	frameLengthInBits:	XtceLong, // required
+	frame_length_in_bits:	XtceLong, // required
 //</extension>
 //</complexContent>
 }
@@ -2006,30 +2006,30 @@ pub struct BooleanDataType { // abstract="true"
 #[derive(Debug)]
 pub struct DimensionType { // mixed="false"
 //<sequence>
-	StartingIndex:	/*xtce:*/IntegerValueType, // [element]
-	EndingIndex:	/*xtce:*/IntegerValueType, // [element]
+	starting_index:	/*xtce:*/IntegerValueType, // [element]
+	ending_index:	/*xtce:*/IntegerValueType, // [element]
 //</sequence>
 }
 
 #[derive(Debug)]
 pub struct ArgumentDimensionType {
 //<sequence>
-	StartingIndex:	/*xtce:*/ArgumentIntegerValueType, // [element]
-	EndingIndex:	/*xtce:*/ArgumentIntegerValueType, // [element]
+	starting_index:	/*xtce:*/ArgumentIntegerValueType, // [element]
+	ending_index:	/*xtce:*/ArgumentIntegerValueType, // [element]
 //</sequence>
 }
 
 #[derive(Debug)]
 pub struct DimensionListType {
 //<sequence>
-	Dimension:	Vec</*xtce:*/DimensionType>,
+	dimension:	Vec</*xtce:*/DimensionType>,
 //</sequence>
 }
 
 #[derive(Debug)]
 pub struct ArgumentDimensionListType {
 //<sequence>
-	Dimension:	Vec</*xtce:*/ArgumentDimensionType>,
+	dimension:	Vec</*xtce:*/ArgumentDimensionType>,
 //</sequence>
 }
 
@@ -2460,7 +2460,7 @@ pub struct SizeInBitsType {
 #[derive(Debug)]
 <complexType>
 <sequence>
-	FixedValue:	/*xtce:*/PositiveLongType, // [element]
+	fixed_value:	/*xtce:*/PositiveLongType, // [element]
 </sequence>
 }
 	TerminationChar:	Option<hexBinary>,
@@ -2636,7 +2636,7 @@ pub struct ANDedConditionsType {
 #[derive(Debug)]
 pub struct AuthorSetType {
 // <sequence>
-	Author:	Vec</*xtce:*/AuthorType>,
+	author:	Vec</*xtce:*/AuthorType>,
 // </sequence>
 }
 
@@ -2816,15 +2816,15 @@ pub struct FixedIntegerValueType {
 #[derive(Debug)]
 pub struct HeaderType {
 //<sequence>
-	AuthorSet:	Option</*xtce:*/AuthorSetType>,
-	NoteSet:	Option</*xtce:*/NoteSetType>,
-	HistorySet:	Option</*xtce:*/HistorySetType>,
+	author_set:	Option</*xtce:*/AuthorSetType>,
+	note_set:	Option</*xtce:*/NoteSetType>,
+	history_set:	Option</*xtce:*/HistorySetType>,
 //</sequence>
 	version:	XtceString, // [attribute]
 	date:	XtceString, // [attribute]
 	classification:	XtceString, // default="NotClassified" [attribute]
-	classificationInstructions:	XtceString, // [attribute]
-	validationStatus:	/*xtce:*/ValidationStatusType, // required
+	classification_instructions:	XtceString, // [attribute]
+	validation_status:	/*xtce:*/ValidationStatusType, // required
 }
 
 /*
@@ -2839,7 +2839,7 @@ pub struct HexadecimalType {
 #[derive(Debug)]
 pub struct HistorySetType {
 //<sequence>
-	History:	Vec</*xtce:*/HistoryType>,
+	history:	Vec</*xtce:*/HistoryType>,
 //</sequence>
 }
 
@@ -2851,7 +2851,7 @@ pub struct HistoryType {
 #[derive(Debug)]
 pub struct IntegerValueType {
 //<choice>
-	FixedValue:	XtceLong, // [element]
+	fixed_value:	XtceLong, // [element]
 //	DynamicValue:	/*xtce:*/DynamicValueType, // [element]
 //	DiscreteLookupList:	/*xtce:*/DiscreteLookupListType, // [element]
 //</choice>
@@ -2860,7 +2860,7 @@ pub struct IntegerValueType {
 #[derive(Debug)]
 pub struct ArgumentIntegerValueType {
 //<choice>
-	FixedValue:	XtceLong, // [element]
+	fixed_value:	XtceLong, // [element]
 //	DynamicValue:	/*xtce:*/ArgumentDynamicValueType, // [element]
 //	DiscreteLookupList:	/*xtce:*/ArgumentDiscreteLookupListType, // [element]
 //</choice>
@@ -3054,7 +3054,7 @@ pub struct NameReferenceType {
 #[derive(Debug)]
 pub struct NoteSetType {
 // <sequence>
-	Note:	Vec</*xtce:*/NoteType>,
+	note:	Vec</*xtce:*/NoteType>,
 //</sequence>
 }
 
