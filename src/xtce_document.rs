@@ -51,7 +51,7 @@ impl ElementDesc {
 
 impl fmt::Debug for ElementDesc {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.name)
+        write!(f, "{} {:?}", self.name, self.allowable_subelements)
     }
 }
 
@@ -88,6 +88,11 @@ impl Element {
  * Define the XTCE document description tree structure
  */
 pub const ROOT_DESC: ElementDesc = ElementDesc {
+    name:                   "DOCUMENT_ROOT",
+    allowable_subelements:  &[XTCE_DESC],
+};
+
+pub const XTCE_DESC: ElementDesc = ElementDesc {
     name:                   "XTCE",
     allowable_subelements:  &[SPACE_SYSTEM_DESC],
 };
@@ -105,6 +110,17 @@ const TELEMETRY_META_DATA_DESC: ElementDesc = ElementDesc {
 
 const PARAMETER_SET_DESC: ElementDesc = ElementDesc {
     name:                   "ParameterSet",
+    allowable_subelements:  &[PARAMETER_DESC],
+};
+
+const PARAMETER_DESC: ElementDesc = ElementDesc {
+    name:                   "Parameter",
+    allowable_subelements:  &[DESCRIPTION_DESC],
+};
+
+// FIXME: is <Description> valid?
+const DESCRIPTION_DESC: ElementDesc = ElementDesc {
+    name:                   "Description",
     allowable_subelements:  &[],
 };
 
@@ -138,7 +154,7 @@ pub struct XtceDocument {
     version:        XmlVersion,
     encoding:       String,
     standalone:     Option<bool>,
-    root:           &'static ElementDesc,
+    root:           Element,
 }
 
 impl XtceDocument {
@@ -227,6 +243,7 @@ println!("Skipping whitespace");
     fn parse_end_document<R: Read>(parser: &mut Parser<R>, desc: &ElementDesc,
         info: (LineNumber, XmlVersion, String, Option<bool>)) ->
         Result<XtceDocument, XtceParserError> {
+println!("parse_end_document: {:?}", desc);
 
         let mut subelements = Vec::<Element>::new();
         let mut start_name = "".to_string();
@@ -249,51 +266,158 @@ println!("Skipping whitespace");
                             return Err(XtceParserError::StartAfterStart(lineno));
                         },
                         XmlEvent::EndDocument => {
-return Err(XtceParserError::Unknown(0));
+                            return Err(XtceParserError::Unknown(0));
                         },
                         XmlEvent::StartElement{name, attributes, namespace} => {
                             start_name = name.local_name.clone();
-        println!("StartElement {:?}: attributes {:?} namespace {:?}", start_name, attributes, namespace);
-                            match desc.position(&start_name) {
+        println!("parse_end_document: StartElement {:?}: attributes {:?} namespace {:?}", start_name, attributes, namespace);
+        println!("desc: {:?}", desc);
+println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter().position(|x| {println!("--> name: {:?}", x.name); x.name == start_name}));
+                            match desc.allowable_subelements.iter().position(|x| x.name == start_name) {
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
                                     let new_desc = &desc.allowable_subelements[pos];
-                                    let subelement = Self::parse_start_subelement(lineno,
-                                        name, attributes, namespace)?;
+                                    let subelement = Self::parse_subelement(parser,
+                                        lineno, name, attributes, namespace,
+                                        &new_desc)?;
                                     subelements.push(subelement);
+                                    break;
                                 }
-                            }
+                            };
                         }
                         XmlEvent::EndElement{name} => {
                             return Err(XtceParserError::MisplacedElementEnd(lineno,
                                 name.local_name));
                         },
+                        XmlEvent::Comment(cmnt) => {
+println!("Skipping comment");
+//                            comments_before.push(cmnt);
+                            continue;
+                        },
+                        XmlEvent::Whitespace(ws) => {
+println!("Skipping whitespace");
+                            continue;
+                        },
+                        XmlEvent::Characters(characters) => {
+println!("Skipping characters");
+                            continue;
+                        },
+                        XmlEvent::CData(cdata) => {
+println!("Skipping cdata");
+                            continue;
+                        },
+/*
+                        XmlEvent::ProcessingInstruction(processing_instruction) => {
+println!("Skipping processing_instruction");
+                            continue;
+                        },
+*/
                         _ => return Err(XtceParserError::UnexpectedXml(evt.event))
                     }
                 }
             }
         }
 
-/*
+        if subelements.len() != 1 {
+            return Err(XtceParserError::OnlyOneRootElement(info.0));
+        }
+
         Ok(XtceDocument {
             version:    info.1,
             encoding:   info.2,
             standalone: info.3,
-            root:       TBD,
+            root:       subelements[0].clone(),
         })
-*/
     }
 
-    fn parse_start_subelement(lineno: LineNumber, name: OwnedName,
-        attributes: Vec<OwnedAttribute>, namespace: Namespace) ->
+    fn parse_subelement<R: Read>(parser: &mut Parser<R>, lineno: LineNumber,
+        name: OwnedName, attributes: Vec<OwnedAttribute>, namespace: Namespace,
+        desc: &ElementDesc) ->
         Result<Element, XtceParserError> {
-        Ok(Element::new(lineno, name, attributes, namespace))
+println!("\nparse_subelement: {}/{}", name.local_name, desc.name);
+        let mut subelements = Vec::<Element>::new();
+        let mut start_name = "".to_string();
+
+        loop {
+            let xml_element = parser.next();
+
+            match xml_element {
+                Err(e) => {
+                    return Err(XtceParserError::XmlError(0, Box::new(e))); // FIXME: line number
+                },
+                Ok(evt) => {
+                    let lineno = evt.lineno;
+
+                    match evt.event {
+                        XmlEvent::StartDocument{..} => {
+                            return Err(XtceParserError::StartAfterStart(lineno));
+                        },
+                        XmlEvent::EndDocument => {
+                            return Err(XtceParserError::Unknown(0));
+                        },
+                        XmlEvent::StartElement{name, attributes, namespace} => {
+                            let start_name = name.local_name.clone();
+println!("desc: {:?}", desc);
+println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter().position(|x| {println!("--> name: {:?}", x.name); x.name == start_name}));
+                            match desc.allowable_subelements.iter().position(|x| x.name == start_name) {
+                                None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
+                                Some(pos) => {
+                                    let new_desc = &desc.allowable_subelements[pos];
+                                    let subelement = Self::parse_subelement(parser,
+                                        lineno, name, attributes, namespace,
+                                        &new_desc)?;
+                                    subelements.push(subelement);
+                                }
+                            }
+                            
+                        }
+                        XmlEvent::EndElement{name} => {
+println!("EndElement: name.local_name {}, desc.name {}", name.local_name, desc.name);
+                            if name.local_name != desc.name {
+                                return Err(XtceParserError::MisplacedElementEnd(lineno,
+                                    name.local_name));
+                            }
+
+                            return Ok(Element::new(lineno, name, attributes, namespace));
+                        },
+                        XmlEvent::Comment(cmnt) => {
+println!("Skipping comment");
+//                            comments_before.push(cmnt);
+                            continue;
+                        },
+                        XmlEvent::Whitespace(ws) => {
+println!("Skipping whitespace");
+                            continue;
+                        },
+                        XmlEvent::Characters(characters) => {
+println!("Skipping characters");
+                            continue;
+                        },
+                        XmlEvent::CData(cdata) => {
+println!("Skipping cdata");
+                            continue;
+                        },
+/*
+                        XmlEvent::ProcessingInstruction(processing_instruction) => {
+println!("Skipping processing_instruction");
+                            continue;
+                        },
+*/
+                        _ => {
+                            println!("Unknown event: {:?}", evt.event);
+                            return Err(XtceParserError::UnexpectedXml(evt.event));
+                        }
+//                        _ => return Err(XtceParserError::UnexpectedXml(evt.event));
+                    }
+                }
+            }
+        }
     }
 }
 
 impl Display for XtceDocument {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "version: {} encoding {} standalone{:?}",
-            self.version, self.encoding, self.standalone)
+        write!(f, "<?xml {} {} {:?}\n{:?}\n",
+            self.version, self.encoding, self.standalone, self.root)
     }
 }

@@ -41,7 +41,10 @@ struct Container {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let document = parse_file("test/test1.xtce".to_string());
 
-    println!("document: {:?}", document);
+    match &document {
+        Err(e) => println!("Failed: {:?}", e),
+        Ok(d) => println!("Document:\n{:?}", document),
+    }
 /*
     
     for param in parameters {
