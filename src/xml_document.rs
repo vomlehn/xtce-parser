@@ -227,10 +227,10 @@ impl XtceDocument {
         let (lineno, version, encoding, standalone) =
             Self::parse_start_document(&mut parser)?;
 println!("Processing document");
-        let xtce_document = Self::parse_end_document(&mut parser, &ROOT_DESC,
+        let xml_document = Self::parse_end_document(&mut parser, &ROOT_DESC,
             (lineno, version, encoding, standalone));
 
-        xtce_document
+        xml_document
     }
 
     /*

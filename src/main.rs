@@ -15,7 +15,7 @@ mod gen_xtce;
 mod parser;
 mod rust_data_types;
 mod xtce;
-mod xtce_document;
+mod xml_document;
 mod xtce_parser_error;
 
 use gen_c::generate_c;
@@ -23,7 +23,7 @@ use gen_xtce::generate_xtce;
 use space_system::{SpaceSystemType};
 use xml::reader::{XmlEvent};
 use xtce::Xtce;
-use xtce_document::XtceDocument;
+use xml_document::XtceDocument;
 use xtce_parser_error::{XtceParserError};
 
 #[derive(Clone, Debug)]
