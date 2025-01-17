@@ -15,6 +15,7 @@ mod xtce;
 mod xml_document;
 mod xtce_parser_error;
 
+use gen_c::generate_c;
 use gen_xtce::generate_xtce;
 use xml_document::XtceDocument;
 use xtce_parser_error::{XtceParserError};
@@ -24,7 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match &document {
         Err(e) => println!("Failed: {:?}", e),
-        Ok(d) => generate_xtce(d),
+        Ok(d) => generate_c(d),
     }
 /*
     

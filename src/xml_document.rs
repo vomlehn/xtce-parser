@@ -54,10 +54,10 @@ impl fmt::Debug for ElementDesc {
 pub struct Element {
     depth:                  usize,
     lineno:                 LineNumber,
-    name:                   OwnedName,
+    pub name:               OwnedName,
     attributes:             Vec<OwnedAttribute>,
     namespace:              Namespace,
-    subelements:            HashMap<String, Vec<Element>>,
+    pub subelements:        HashMap<String, Vec<Element>>,
     before_comments:        Vec<String>,
     after_comments:         Vec<String>,
 }
@@ -77,34 +77,15 @@ impl Element {
         }
     }
 
-/*
-    fn dump(&self) {
-        let indent = 0;
-
-        self.dump_indented(indent);
-    }
-
-    fn dump_indented(&self, indent: usize) {
-        let indent_string = "   ".to_string().repeat(indent);
-        print!("{}<{}", indent_string, self.name.local_name);
-
-        for attribute in self.attributes.clone() {
-            print!(" {}={}", attribute.name.local_name, attribute.value);
-        }
-
-        if self.subelements.len() == 0 {
-            println!(" /> (line {})", self.lineno);
-        } else {
-            println!("> (line {})", self.lineno);
-            for element_vec in self.subelements.values() {
-                for element in element_vec {
-                    element.dump_indented(indent + 1);
-                }
+    pub fn get_attribute(&self, name: &str) -> Option<&String> {
+        for attribute in &self.attributes {
+            if attribute.name.local_name == name {
+                return Some(&attribute.value);
             }
-            println!("{}</{}>", indent_string, self.name.local_name);
         }
+
+        return None;
     }
-*/
 }
 
 impl Display for Element {
@@ -135,21 +116,6 @@ impl Display for Element {
         Ok(())
     }
 }
-
-/*
-impl Display for Element {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "   Line {}: <{}>", self.lineno, self.name.local_name)?;
-        write!(f, "   {} subelements\n", self.subelements.len())?;
-        for element_vec in self.subelements.values() {
-            for element in element_vec {
-                write!(f, "   {}", element)?;
-            }
-        }
-        write!(f, "")
-    }
-}
-*/
 
 /*
  * Define the XTCE document description tree structure
@@ -397,7 +363,7 @@ pub struct XtceDocument {
     version:        XmlVersion,
     encoding:       String,
     standalone:     Option<bool>,
-    root:           Element,
+    pub root:       Element,
 }
 
 impl XtceDocument {
