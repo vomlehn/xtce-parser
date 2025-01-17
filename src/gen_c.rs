@@ -7,10 +7,21 @@
 use crate::xml_document::{Element, XtceDocument};
 
 pub fn generate_c(document: &XtceDocument) {
+    const XML_DOCUMENT_H: &str = "_XML_DOCUMENT_H_";
+
     println!("/*");
     println!(" * This is automatically generated code that may be regenerated.");
     println!(" * Manual changes may be lost at the next build");
     println!(" */");
+    println!();
+    println!("#ifdef {}", XML_DOCUMENT_H);
+    println!("#define {}", XML_DOCUMENT_H);
+    println!();
+    println!("#ifdef __cplusplus");
+    println!("#include <cstdint>");
+    println!("#else");
+    println!("#include <stdint.h>");
+    println!("#endif");
     println!();
 
     for element_vec in document.root.subelements.values() {
@@ -18,6 +29,9 @@ pub fn generate_c(document: &XtceDocument) {
             generate_c_element(&element);
         }
     }
+
+    println!();
+    println!("#endif /* {} */", XML_DOCUMENT_H);
 }
 
 fn generate_c_element(element: &Element) {
