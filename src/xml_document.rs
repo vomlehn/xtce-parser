@@ -64,7 +64,7 @@ pub struct Element {
     name:                   OwnedName,
     attributes:             Vec<OwnedAttribute>,
     namespace:              Namespace,
-    subelements:            Vec<Element>,
+    subelements:            HashMap<String, Vec<Element>>,
     before_comments:        Vec<String>,
     after_comments:         Vec<String>,
 }
@@ -77,7 +77,7 @@ impl Element {
             name:               name,
             attributes:         attributes,
             namespace:          namespace,
-            subelements:        Vec::<Element>::new(),
+            subelements:        HashMap::<String, Vec<Element>>::new(),
             before_comments:    Vec::<String>::new(),
             after_comments:     Vec::<String>::new(),
         }
@@ -101,8 +101,10 @@ impl Element {
             println!(" /> (line {})", self.lineno);
         } else {
             println!("> (line {})", self.lineno);
-            for element in self.subelements.clone() {
-                element.dump_indented(indent + 1);
+            for element_vec in self.subelements.values() {
+                for element in element_vec {
+                    element.dump_indented(indent + 1);
+                }
             }
             println!("{}</{}>", indent_string, self.name.local_name);
         }
@@ -114,9 +116,10 @@ impl Display for Element {
         write!(f, "Element:\n")?;
         write!(f, "   Line {}: <{}>", self.lineno, self.name.local_name)?;
         write!(f, "   {} subelements\n", self.subelements.len())?;
-        for element in self.subelements.clone() {
-
-            write!(f, "   {}", element)?;
+        for element_vec in self.subelements.values() {
+            for element in element_vec {
+                write!(f, "   {}", element)?;
+            }
         }
         write!(f, "")
     }
@@ -281,9 +284,9 @@ println!("Skipping whitespace");
     fn parse_end_document<R: Read>(parser: &mut Parser<R>, desc: &ElementDesc,
         info: (LineNumber, XmlVersion, String, Option<bool>)) ->
         Result<XtceDocument, XtceParserError> {
-println!("parse_end_document: {:?}", desc);
+println!("parse_end_document: {:?}", desc.name);
 
-        let mut subelements = Vec::<Element>::new();
+        let mut subelements = HashMap::<String, Vec::<Element>>::new();
         let mut start_name = "".to_string();
 
         let mut comments_before = Vec::<String>::new();
@@ -309,8 +312,6 @@ println!("parse_end_document: {:?}", desc);
                         XmlEvent::StartElement{name, attributes, namespace} => {
                             start_name = name.local_name.clone();
         println!("parse_end_document: StartElement {:?}: attributes {:?} namespace {:?}", start_name, attributes, namespace);
-        println!("desc: {:?}", desc);
-println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter().position(|x| {println!("--> name: {:?}", x.name); x.name == start_name}));
                             match desc.allowable_subelements.iter().position(|x| x.name == start_name) {
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
@@ -318,8 +319,8 @@ println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter()
                                     let subelement = Self::parse_subelement(parser,
                                         lineno, name, attributes, namespace,
                                         &new_desc)?;
-                                    subelements.push(subelement);
-println!("root subelements now {:?}", subelements.len());
+                                    Self::push_subelement(&mut subelements, start_name.clone(),
+                                        subelement);
                                     break;
                                 }
                             };
@@ -357,16 +358,34 @@ println!("Skipping processing_instruction");
             }
         }
 
+        // Get the root element
+println!("{} subelement types", subelements.len());
         if subelements.len() != 1 {
             return Err(XtceParserError::OnlyOneRootElement(info.0));
         }
+
+        let root = match subelements.get(&start_name) {
+            None => return Err(XtceParserError::Unknown(0)),
+            Some(root_vec) => {
+println!("{} subelements in type {}", root_vec.len(), start_name);
+                if root_vec.len() != 1 {
+                    return Err(XtceParserError::OnlyOneRootElement(info.0));
+                }
+
+                match root_vec.iter().next() {
+                    // FIXME: Internal error
+                    None => return Err(XtceParserError::Unknown(0)),
+                    Some(r) => r,
+                }
+            }
+        };
 
 println!("root subelements finally {:?}", subelements.len());
         Ok(XtceDocument {
             version:    info.1,
             encoding:   info.2,
             standalone: info.3,
-            root:       subelements[0].clone(),
+            root:       root.clone(),
         })
     }
 
@@ -374,8 +393,8 @@ println!("root subelements finally {:?}", subelements.len());
         name: OwnedName, attributes: Vec<OwnedAttribute>, namespace: Namespace,
         desc: &ElementDesc) ->
         Result<Element, XtceParserError> {
-println!("\nparse_subelement: {}/{}", name.local_name, desc.name);
-        let mut subelements = Vec::<Element>::new();
+println!("\nparse_subelement: enter {}/{}", name.local_name, desc.name);
+        let mut subelements = HashMap::<String, Vec::<Element>>::new();
         let mut start_name = "".to_string();
 
         loop {
@@ -397,8 +416,7 @@ println!("\nparse_subelement: {}/{}", name.local_name, desc.name);
                         },
                         XmlEvent::StartElement{name, attributes, namespace} => {
                             let start_name = name.local_name.clone();
-println!("desc: {:?}", desc);
-println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter().position(|x| {println!("--> name: {:?}", x.name); x.name == start_name}));
+println!("parse_subelement: event {:?}", desc);
                             match desc.allowable_subelements.iter().position(|x| x.name == start_name) {
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
@@ -406,7 +424,8 @@ println!("desc.position({}: {:?}", start_name, desc.allowable_subelements.iter()
                                     let subelement = Self::parse_subelement(parser,
                                         lineno, name, attributes, namespace,
                                         &new_desc)?;
-                                    subelements.push(subelement);
+                                    Self::push_subelement(&mut subelements, start_name.clone(),
+                                        subelement);
 println!("{} subelements now {:?}", start_name, subelements.len());
                                 }
                             }
@@ -458,6 +477,22 @@ println!("Skipping processing_instruction");
         }
     }
 
+    fn push_subelement(subelements: &mut HashMap<String, Vec<Element>>,
+        name: String, subelement: Element) {
+        match subelements.get_mut(&name) {
+            None => {
+println!("Insert new HashMap element for {}", name);
+                let mut v = Vec::<Element>::new();
+                v.push(subelement);
+                subelements.insert(name, v);
+            },
+            Some(v) => {
+println!("Inserting to existing HashMap for {}", name);
+                v.push(subelement)
+            }
+        };
+    }
+
     pub fn dump(&self) {
         println!("<?xml {} {} {:?}>",
             self.version, self.encoding, self.standalone);
@@ -468,7 +503,7 @@ println!("Skipping processing_instruction");
 impl Display for XtceDocument {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "<?xml {} {} {:?}>\n",
-            self.version, self.encoding, self.standalone);
+            self.version, self.encoding, self.standalone)?;
         write!(f, "{}", self.root)       
     }
 }
