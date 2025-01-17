@@ -52,6 +52,7 @@ impl fmt::Debug for ElementDesc {
  */
 #[derive(Clone, Debug)]
 pub struct Element {
+    depth:                  usize,
     lineno:                 LineNumber,
     name:                   OwnedName,
     attributes:             Vec<OwnedAttribute>,
@@ -62,9 +63,10 @@ pub struct Element {
 }
 
 impl Element {
-    fn new(lineno: LineNumber, name: OwnedName, attributes: Vec<OwnedAttribute>,
+    fn new(depth: usize, lineno: LineNumber, name: OwnedName, attributes: Vec<OwnedAttribute>,
         namespace: Namespace) -> Element {
         Element {
+            depth:              depth,
             lineno:             lineno,
             name:               name,
             attributes:         attributes,
@@ -75,6 +77,7 @@ impl Element {
         }
     }
 
+/*
     fn dump(&self) {
         let indent = 0;
 
@@ -101,11 +104,41 @@ impl Element {
             println!("{}</{}>", indent_string, self.name.local_name);
         }
     }
+*/
 }
 
 impl Display for Element {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Element:\n")?;
+        const INDENT_STR: &str = "   ";
+        let indent_string = INDENT_STR.to_string().repeat(self.depth);
+
+        write!(f, "{}<{}", indent_string, self.name.local_name)?;
+        for attribute in self.attributes.clone() {
+            write!(f, " {}={}", attribute.name.local_name, attribute.value)?;
+        }
+
+        if self.subelements.len() == 0 {
+            write!(f, " /> (line {})\n", self.lineno)?;
+        } else {
+            write!(f, "> (line {})\n", self.lineno)?;
+
+            for element_vec in self.subelements.values() {
+                for element in element_vec {
+                    element.fmt(f)?;
+                }
+            }
+
+            write!(f, "{}</{}>\n", indent_string, self.name.local_name)?;
+        }
+
+
+        Ok(())
+    }
+}
+
+/*
+impl Display for Element {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "   Line {}: <{}>", self.lineno, self.name.local_name)?;
         write!(f, "   {} subelements\n", self.subelements.len())?;
         for element_vec in self.subelements.values() {
@@ -116,6 +149,7 @@ impl Display for Element {
         write!(f, "")
     }
 }
+*/
 
 /*
  * Define the XTCE document description tree structure
@@ -457,7 +491,7 @@ impl XtceDocument {
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
                                     let new_desc = &desc.allowable_subelements[pos];
-                                    let subelement = Self::parse_subelement(parser,
+                                    let subelement = Self::parse_subelement(0, parser,
                                         attributes, namespace, &new_desc)?;
                                     Self::push_subelement(&mut subelements, start_name.clone(),
                                         subelement);
@@ -522,7 +556,7 @@ println!("Skipping processing_instruction");
         })
     }
 
-    fn parse_subelement<R: Read>(parser: &mut Parser<R>,
+    fn parse_subelement<R: Read>(depth: usize, parser: &mut Parser<R>,
         attributes: Vec<OwnedAttribute>, namespace: Namespace,
         desc: &ElementDesc) ->
         Result<Element, XtceParserError> {
@@ -551,7 +585,7 @@ println!("Skipping processing_instruction");
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
                                     let new_desc = &desc.allowable_subelements[pos];
-                                    let subelement = Self::parse_subelement(parser,
+                                    let subelement = Self::parse_subelement(depth + 1, parser,
                                         attributes, namespace,
                                         &new_desc)?;
                                     Self::push_subelement(&mut subelements, start_name.clone(),
@@ -566,7 +600,7 @@ println!("Skipping processing_instruction");
                                     name.local_name));
                             }
 
-                            let mut element = Element::new(lineno, name, attributes, namespace);
+                            let mut element = Element::new(depth, lineno, name, attributes, namespace);
                             element.subelements = subelements;
                             return Ok(element)
                         },
@@ -613,15 +647,18 @@ println!("Skipping processing_instruction");
         };
     }
 
+/*
     pub fn dump(&self) {
         println!("<?xml {} {} {:?}>",
             self.version, self.encoding, self.standalone);
         self.root.dump();
     }
+*/
 }
 
 impl Display for XtceDocument {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+println!("document:");
         write!(f, "<?xml {} {} {:?}>\n",
             self.version, self.encoding, self.standalone)?;
         write!(f, "{}", self.root)       
