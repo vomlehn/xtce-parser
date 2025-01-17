@@ -15,7 +15,7 @@ pub fn generate_c(document: &XtceDocument) {
     println!(" * Manual changes may be lost at the next build");
     println!(" */");
     println!();
-    println!("#ifdef {}", XML_DOCUMENT_H);
+    println!("#ifndef {}", XML_DOCUMENT_H);
     println!("#define {}", XML_DOCUMENT_H);
     println!();
     println!("#ifdef __cplusplus");
@@ -61,7 +61,7 @@ fn generate_argument_type_set(element: &Element, last_was_big: &mut bool) {
                     if *last_was_big {
                         println!();
                     }
-                    println!("typedef int32 {};", tc_name(element));
+                    println!("typedef int32_t {};", tc_name(element));
                     *last_was_big = false;
                 },
                 "EnumeratedArgumentType" => {
@@ -94,7 +94,7 @@ fn generate_parameter_type_set(element: &Element, last_was_big: &mut bool) {
                     if *last_was_big {
                         println!();
                     }
-                    println!("typedef int32 {};", tm_name(element));
+                    println!("typedef int32_t {};", tm_name(element));
                     *last_was_big = false;
                 },
                 "FloatParameterType" => {
@@ -134,9 +134,9 @@ fn temporary_get_attribute(element: &Element, name: &str) -> String {
 }
 
 fn generate_enumerated_types(element: &Element) {
-    let struct_name = tc_name(element);
+    let enum_name = tc_name(element);
 
-    println!("typedef struct {} {{", struct_name);
+    println!("typedef enum {} {{", enum_name);
 
     for element_vec in element.subelements.values() {
         for element in element_vec {
@@ -154,7 +154,7 @@ fn generate_enumerated_types(element: &Element) {
         }
     }
 
-    println!("}} {}_t;", struct_name);
+    println!("}} {}_t;", enum_name);
 }
 
 fn generate_enumerated_elements(element: &Element) {
