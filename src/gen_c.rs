@@ -8,6 +8,7 @@ use crate::xml_document::{Element, XtceDocument};
 
 pub fn generate_c(document: &XtceDocument) {
     const XML_DOCUMENT_H: &str = "_XML_DOCUMENT_H_";
+    let mut last_was_big = false;
 
     println!("/*");
     println!(" * This is automatically generated code that may be regenerated.");
@@ -26,7 +27,7 @@ pub fn generate_c(document: &XtceDocument) {
 
     for element_vec in document.root.subelements.values() {
         for element in element_vec {
-            generate_c_element(&element);
+            generate_c_element(&element, &mut last_was_big);
         }
     }
 
@@ -34,29 +35,39 @@ pub fn generate_c(document: &XtceDocument) {
     println!("#endif /* {} */", XML_DOCUMENT_H);
 }
 
-fn generate_c_element(element: &Element) {
+fn generate_c_element(element: &Element, last_was_big: &mut bool) {
     match element.name.local_name.as_str() {
-        "ArgumentTypeSet" => generate_argument_type_set(element),
-        "ParameterTypeSet" => generate_parameter_type_set(element),
+        "ArgumentTypeSet" => generate_argument_type_set(element, last_was_big),
+        "ParameterTypeSet" => generate_parameter_type_set(element, last_was_big),
         _ => {
             for element_vec in element.subelements.values () {
                 for elem in element_vec {
-                    generate_c_element(&elem);
+                    generate_c_element(&elem, last_was_big);
                 }
             }
         }
     }
 }
 
-fn generate_argument_type_set(element: &Element) {
+fn generate_argument_type_set(element: &Element, last_was_big: &mut bool) {
+    println!();
+    println!("/* Telemetry parameter definitions */");
+    println!();
+
     for element_vec in element.subelements.values() {
         for element in element_vec {
             match element.name.local_name.as_str() {
                 "BinaryArgumentType" => {
+                    if *last_was_big {
+                        println!();
+                    }
                     println!("typedef int32 {};", tc_name(element));
+                    *last_was_big = false;
                 },
                 "EnumeratedArgumentType" => {
-                    println!("// skipping EnumeratedArgumentType for {}", tc_name(element));
+                    println!();
+                    generate_enumerated_types(element);
+                    *last_was_big = true;
                 },
                 _ => {
                     println!("// Unknown argument type {}", tc_name(element));
@@ -67,21 +78,36 @@ fn generate_argument_type_set(element: &Element) {
 }
 
 fn tc_name(element: &Element) -> String {
-    "tc_".to_owned() + name_attribute(element)
+    "tc_".to_owned() + &name_attribute(element)
 }
 
-fn generate_parameter_type_set(element: &Element) {
+fn generate_parameter_type_set(element: &Element, last_was_big: &mut bool) {
+    println!();
+    println!("/* Command argument definitions */");
+    println!();
+
     for element_vec in element.subelements.values() {
         for element in element_vec {
+
             match element.name.local_name.as_str() {
                 "BinaryParameterType" => {
+                    if *last_was_big {
+                        println!();
+                    }
                     println!("typedef int32 {};", tm_name(element));
+                    *last_was_big = false;
                 },
                 "FloatParameterType" => {
+                    if *last_was_big {
+                        println!();
+                    }
                     println!("typedef float {};", tm_name(element));
+                    *last_was_big = false;
                 },
                 "EnumeratedParameterType" => {
-                    println!("// skipping EnumeratedParameterType for {}", tm_name(element));
+                    println!();
+                    generate_enumerated_types(element);
+                    *last_was_big = true;
                 },
                 _ => {
                     println!("// Unknown parameter type {}", tm_name(element));
@@ -92,12 +118,65 @@ fn generate_parameter_type_set(element: &Element) {
 }
 
 fn tm_name(element: &Element) -> String {
-    "tm_".to_owned() + name_attribute(element)
+    "tm_".to_owned() + &name_attribute(element)
 }
 
-fn name_attribute(element: &Element) -> &str {
-    match element.get_attribute("name") {
-        None => "\"attribute name not found\"",
-        Some(n) => n,
+fn name_attribute(element: &Element) -> String {
+    temporary_get_attribute(element, "name")
+}
+
+// FIXME: temporary function until error handling is better defined
+fn temporary_get_attribute(element: &Element, name: &str) -> String {
+    match element.get_attribute(name) {
+        None => "\"attribute \"".to_string() + name + "\" not found",
+        Some(n) => n.clone(),
     }
+}
+
+fn generate_enumerated_types(element: &Element) {
+    let struct_name = tc_name(element);
+
+    println!("typedef struct {} {{", struct_name);
+
+    for element_vec in element.subelements.values() {
+        for element in element_vec {
+            match element.name.local_name.as_str() {
+                "EnumerationList" => {
+                    generate_enumerated_elements(element);
+                },
+                "UnitSet" | "IntegerDataEncoding" => {
+                    // FIXME: Implement these
+                }
+                _ => {
+                    // FIXME: handle these errors
+                }
+            }
+        }
+    }
+
+    println!("}} {}_t;", struct_name);
+}
+
+fn generate_enumerated_elements(element: &Element) {
+    for element_vec in element.subelements.values() {
+        for element in element_vec {
+            match element.name.local_name.as_str() {
+                "Enumeration" => {
+                    generate_enumerated_element(element);
+                },
+                "UnitSet" | "IntegerDataEncoding" => {
+                    // FIXME: Implement these
+                },
+                _ => {
+                    // FIXME: handle these errors
+                }
+            }
+        }
+    }
+}
+
+fn generate_enumerated_element(element: &Element) {
+    let label = temporary_get_attribute(element, "label");
+    let value = temporary_get_attribute(element, "value");
+    println!("\t{} = {},", label, value);
 }
