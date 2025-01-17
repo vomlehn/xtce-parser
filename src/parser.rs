@@ -1,7 +1,6 @@
 use std::fmt;
 
 use std::cell::RefCell;
-use std::fs::File;
 use std::rc::Rc;
 use std::io::{BufReader, Read};
 
@@ -41,7 +40,7 @@ impl<R: Read> Parser<R> {
     pub fn new<T: Read>(buf_reader: BufReader<T>) -> Parser<T> {
         let line_reader = LinenoReader::new(buf_reader);
         let lineno_ref = line_reader.lineno_ref();
-        let mut event_reader = EventReader::new(line_reader);
+        let event_reader = EventReader::new(line_reader);
         Parser {
             lineno_ref:     lineno_ref,
             event_reader:   event_reader,

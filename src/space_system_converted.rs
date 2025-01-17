@@ -1,5 +1,6 @@
     // FIXME: not quite sure this is right
 /*
+/*
 
  FIXME: When the conversion to Rust code is complete, this should be divided
  into the following files:
@@ -1045,20 +1046,31 @@ pub struct IntegerArgumentType {
 //</extension>
 //</complexContent>
 }
+*/
 
+/*
 #[derive(Debug)]
 pub struct MetaCommandSetType {
-//<choice maxOccurs="unbounded">
-//	MetaCommand:	/*xtce:*/MetaCommandType, // [element]
-//<key name="ArgumentNameKey">
-//<selector xpath="/*xtce:*/ArgumentList/*"/>
-//<field xpath="@name"/>
-//</key>
-//	MetaCommandRef:	/*xtce:*/NameReferenceType, // [element]
-//	BlockMetaCommand:	/*xtce:*/BlockMetaCommandType, // [element]
-//</choice>
-}
+<choice maxOccurs="unbounded">
+	MetaCommand:	/*xtce:*/MetaCommandType, // [element]
+<key name="ArgumentNameKey">
+*/
 
+/*
+I can't have the slash and asterisks togther. This needs to be figured out.
+<selector xpath="/*xtce:*/ArgumentList/" + "*"/>
+*/
+
+/*
+<field xpath="@name"/>
+</key>
+	MetaCommandRef:	/*xtce:*/NameReferenceType, // [element]
+	BlockMetaCommand:	/*xtce:*/BlockMetaCommandType, // [element]
+</choice>
+}
+*/
+
+/*
 /*
 
 #[derive(Debug)]
@@ -3630,3 +3642,4 @@ pub struct UnitFormType {
 
 /* ******** End of Common Types Schema ************** */
 /* ************************************************************* */
+*/

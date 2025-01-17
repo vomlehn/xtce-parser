@@ -1,24 +1,16 @@
 use std::fmt::Display;
 
-use std::collections::{HashSet, HashMap};
-use std::error::Error;
+use std::collections::{HashMap};
 use std::fmt;
 use std::fs::File;
-use std::hash::{Hash, Hasher};
 use std::io::{BufReader, Read};
-use std::rc::Rc;
-use std::cell::RefCell;
 use xml::attribute::OwnedAttribute;
 use xml::common::XmlVersion;
 use xml::name::OwnedName;
 use xml::namespace::Namespace;
-use xml::reader::{EventReader, XmlEvent};
+use xml::reader::XmlEvent;
 
-use crate::Container;
-use crate::Parameter;
-use crate::parser::{LineNumber, Parser, XmlElement};
-use crate::space_system::*;
-use crate::xtce::Xtce;
+use crate::parser::{LineNumber, Parser};
 use crate::xtce_parser_error::{XtceParserError};
 
 pub struct ElementDesc {
@@ -84,7 +76,7 @@ impl Element {
     }
 
     fn dump(&self) {
-        let mut indent = 0;
+        let indent = 0;
 
         self.dump_indented(indent);
     }
@@ -204,32 +196,14 @@ impl XtceDocument {
             Err(e) => return Err(XtceParserError::XmlError(0, Box::new(e))),
             Ok(f) => f,
         };
-        let mut buf_reader = BufReader::new(file);
+        let buf_reader = BufReader::new(file);
         Self::new_from_reader(buf_reader)
     }
 
     pub fn new_from_reader<R: Read>(buf_reader: BufReader<R>) -> Result<XtceDocument, XtceParserError> {
-//        let mut containers = Vec::new();
-        let mut current_container = Container {
-            _name: r#String::new(),
-            parameters: Vec::new(),
-        };
-        let mut parameters: Vec<Parameter> = Vec::new();
-        let mut current_name = r#String::new();
-        let mut current_type = r#String::new();
-        let mut event: Result<XmlEvent, xml::reader::Error>;
-        let mut space_system = SpaceSystemType::new();
-
         let mut parser = Parser::<R>::new(buf_reader);
-        let space_system = SpaceSystemType::new();
-
-        let version = XmlVersion::Version11;
-        let encoding = "unknown".to_string();
-        let standalone: Option<bool> = None;
-                        
         let (lineno, version, encoding, standalone) =
             Self::parse_start_document(&mut parser)?;
-println!("Processing document");
         let xml_document = Self::parse_end_document(&mut parser, &ROOT_DESC,
             (lineno, version, encoding, standalone));
 
@@ -242,31 +216,27 @@ println!("Processing document");
     fn parse_start_document<R: Read>(parser: &mut Parser<R>) ->
         Result<(LineNumber, XmlVersion, String, Option<bool>), XtceParserError> {
         let mut comments_before = Vec::<String>::new();
-        let mut comments_after = Vec::<String>::new();
 
         let (lineno, version, encoding, standalone) = loop {
             let xml_element = parser.next();
 
             match xml_element {
-                Err(e) => return Err(XtceParserError::NoXTCE()),
+                Err(_) => return Err(XtceParserError::NoXTCE()),
                 Ok(evt) => {
                     let lineno = evt.lineno;
 
                     match evt.event {
                         XmlEvent::StartDocument{version, encoding, standalone} => {
-println!("Got StartDocument");
                             break (lineno, version, encoding, standalone)
                         },
                         XmlEvent::EndDocument => {
                             return Err(XtceParserError::NoXTCE());
                         },
                         XmlEvent::Comment(cmnt) => {
-println!("Got comment");
                             comments_before.push(cmnt);
                             continue;
                         },
-                        XmlEvent::Whitespace(ws) => {
-println!("Skipping whitespace");
+                        XmlEvent::Whitespace(_ws) => {
                             continue;
                         },
                         _ => return Err(XtceParserError::UnexpectedXml(evt.event))
@@ -284,13 +254,9 @@ println!("Skipping whitespace");
     fn parse_end_document<R: Read>(parser: &mut Parser<R>, desc: &ElementDesc,
         info: (LineNumber, XmlVersion, String, Option<bool>)) ->
         Result<XtceDocument, XtceParserError> {
-println!("parse_end_document: {:?}", desc.name);
 
-        let mut subelements = HashMap::<String, Vec::<Element>>::new();
         let mut start_name = "".to_string();
-
-        let mut comments_before = Vec::<String>::new();
-        let mut comments_after = Vec::<String>::new();
+        let mut subelements = HashMap::<String, Vec::<Element>>::new();
 
         loop {
             let xml_element = parser.next();
@@ -311,14 +277,12 @@ println!("parse_end_document: {:?}", desc.name);
                         },
                         XmlEvent::StartElement{name, attributes, namespace} => {
                             start_name = name.local_name.clone();
-        println!("parse_end_document: StartElement {:?}: attributes {:?} namespace {:?}", start_name, attributes, namespace);
                             match desc.allowable_subelements.iter().position(|x| x.name == start_name) {
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
                                     let new_desc = &desc.allowable_subelements[pos];
                                     let subelement = Self::parse_subelement(parser,
-                                        lineno, name, attributes, namespace,
-                                        &new_desc)?;
+                                        attributes, namespace, &new_desc)?;
                                     Self::push_subelement(&mut subelements, start_name.clone(),
                                         subelement);
                                     break;
@@ -329,21 +293,17 @@ println!("parse_end_document: {:?}", desc.name);
                             return Err(XtceParserError::MisplacedElementEnd(lineno,
                                 name.local_name));
                         },
-                        XmlEvent::Comment(cmnt) => {
-println!("Skipping comment");
+                        XmlEvent::Comment(_cmnt) => {
 //                            comments_before.push(cmnt);
                             continue;
                         },
-                        XmlEvent::Whitespace(ws) => {
-println!("Skipping whitespace");
+                        XmlEvent::Whitespace(_ws) => {
                             continue;
                         },
-                        XmlEvent::Characters(characters) => {
-println!("Skipping characters");
+                        XmlEvent::Characters(_characters) => {
                             continue;
                         },
-                        XmlEvent::CData(cdata) => {
-println!("Skipping cdata");
+                        XmlEvent::CData(_cdata) => {
                             continue;
                         },
 /*
@@ -359,7 +319,6 @@ println!("Skipping processing_instruction");
         }
 
         // Get the root element
-println!("{} subelement types", subelements.len());
         if subelements.len() != 1 {
             return Err(XtceParserError::OnlyOneRootElement(info.0));
         }
@@ -367,7 +326,6 @@ println!("{} subelement types", subelements.len());
         let root = match subelements.get(&start_name) {
             None => return Err(XtceParserError::Unknown(0)),
             Some(root_vec) => {
-println!("{} subelements in type {}", root_vec.len(), start_name);
                 if root_vec.len() != 1 {
                     return Err(XtceParserError::OnlyOneRootElement(info.0));
                 }
@@ -380,7 +338,6 @@ println!("{} subelements in type {}", root_vec.len(), start_name);
             }
         };
 
-println!("root subelements finally {:?}", subelements.len());
         Ok(XtceDocument {
             version:    info.1,
             encoding:   info.2,
@@ -389,13 +346,11 @@ println!("root subelements finally {:?}", subelements.len());
         })
     }
 
-    fn parse_subelement<R: Read>(parser: &mut Parser<R>, lineno: LineNumber,
-        name: OwnedName, attributes: Vec<OwnedAttribute>, namespace: Namespace,
+    fn parse_subelement<R: Read>(parser: &mut Parser<R>,
+        attributes: Vec<OwnedAttribute>, namespace: Namespace,
         desc: &ElementDesc) ->
         Result<Element, XtceParserError> {
-println!("\nparse_subelement: enter {}/{}", name.local_name, desc.name);
         let mut subelements = HashMap::<String, Vec::<Element>>::new();
-        let mut start_name = "".to_string();
 
         loop {
             let xml_element = parser.next();
@@ -416,24 +371,20 @@ println!("\nparse_subelement: enter {}/{}", name.local_name, desc.name);
                         },
                         XmlEvent::StartElement{name, attributes, namespace} => {
                             let start_name = name.local_name.clone();
-println!("parse_subelement: event {:?}", desc);
                             match desc.allowable_subelements.iter().position(|x| x.name == start_name) {
                                 None => return Err(XtceParserError::UnknownElement(lineno, start_name)),
                                 Some(pos) => {
                                     let new_desc = &desc.allowable_subelements[pos];
                                     let subelement = Self::parse_subelement(parser,
-                                        lineno, name, attributes, namespace,
+                                        attributes, namespace,
                                         &new_desc)?;
                                     Self::push_subelement(&mut subelements, start_name.clone(),
                                         subelement);
-println!("{} subelements now {:?}", start_name, subelements.len());
                                 }
                             }
                             
                         }
                         XmlEvent::EndElement{name} => {
-println!("EndElement: name.local_name {}, desc.name {}", name.local_name, desc.name);
-println!("{} subelements finaally {:?}", start_name, subelements.len());
                             if name.local_name != desc.name {
                                 return Err(XtceParserError::MisplacedElementEnd(lineno,
                                     name.local_name));
@@ -443,21 +394,17 @@ println!("{} subelements finaally {:?}", start_name, subelements.len());
                             element.subelements = subelements;
                             return Ok(element)
                         },
-                        XmlEvent::Comment(cmnt) => {
-println!("Skipping comment");
+                        XmlEvent::Comment(_cmnt) => {
 //                            comments_before.push(cmnt);
                             continue;
                         },
-                        XmlEvent::Whitespace(ws) => {
-println!("Skipping whitespace");
+                        XmlEvent::Whitespace(_ws) => {
                             continue;
                         },
-                        XmlEvent::Characters(characters) => {
-println!("Skipping characters");
+                        XmlEvent::Characters(_characters) => {
                             continue;
                         },
-                        XmlEvent::CData(cdata) => {
-println!("Skipping cdata");
+                        XmlEvent::CData(_cdata) => {
                             continue;
                         },
 /*
@@ -467,7 +414,6 @@ println!("Skipping processing_instruction");
                         },
 */
                         _ => {
-                            println!("Unknown event: {:?}", evt.event);
                             return Err(XtceParserError::UnexpectedXml(evt.event));
                         }
 //                        _ => return Err(XtceParserError::UnexpectedXml(evt.event));
@@ -481,13 +427,11 @@ println!("Skipping processing_instruction");
         name: String, subelement: Element) {
         match subelements.get_mut(&name) {
             None => {
-println!("Insert new HashMap element for {}", name);
                 let mut v = Vec::<Element>::new();
                 v.push(subelement);
                 subelements.insert(name, v);
             },
             Some(v) => {
-println!("Inserting to existing HashMap for {}", name);
                 v.push(subelement)
             }
         };

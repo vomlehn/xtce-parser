@@ -1,3 +1,4 @@
+/*
 use crate::space_system_converted::*;
 
 /* I don't know what these are for yet */
@@ -155,3 +156,4 @@ impl TelemetryMetaDataType {
         }
     }
 }
+*/
