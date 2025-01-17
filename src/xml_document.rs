@@ -138,7 +138,68 @@ const SPACE_SYSTEM_DESC: ElementDesc = ElementDesc {
 const TELEMETRY_META_DATA_DESC: ElementDesc = ElementDesc {
     name:                   "TelemetryMetaData",
     allowable_subelements:  &[PARAMETER_SET_DESC, CONTAINER_SET_DESC,
+                            PARAMETER_TYPE_SET_DESC,
                             MESSAGE_SET_DESC, STREAM_SET_DESC, ALGORITHM_SET_DESC],
+};
+
+const PARAMETER_TYPE_SET_DESC: ElementDesc = ElementDesc {
+    name:                   "ParameterTypeSet",
+    allowable_subelements:  &[FLOAT_PARAMETER_TYPE_DESC,
+                            ENUMERATED_PARAMETER_TYPE_DESC,
+                            BINARY_PARAMETER_TYPE_DESC],
+};
+
+const FLOAT_PARAMETER_TYPE_DESC: ElementDesc = ElementDesc {
+    name:                   "FloatParameterType",
+    allowable_subelements:  &[UNIT_SET_DESC, INTEGER_DATA_ENCODING_DESC,
+                            DEFAULT_CALIBRATOR_DESC],
+};
+
+const UNIT_SET_DESC: ElementDesc = ElementDesc {
+    name:                   "UnitSet",
+    allowable_subelements:  &[],
+};
+
+const INTEGER_DATA_ENCODING_DESC: ElementDesc = ElementDesc {
+    name:                   "IntegerDataEncoding",
+    allowable_subelements:  &[],
+};
+
+const DEFAULT_CALIBRATOR_DESC: ElementDesc = ElementDesc {
+    name:                   "DefaultCalibrator",
+    allowable_subelements:  &[POLYNOMIAL_CALIBRATOR_DESC],
+
+};
+
+const POLYNOMIAL_CALIBRATOR_DESC: ElementDesc = ElementDesc {
+    name:                   "PolynomialCalibrator",
+    allowable_subelements:   &[TERM_DESC],
+};
+
+const TERM_DESC: ElementDesc = ElementDesc {
+    name:                   "Term",
+    allowable_subelements:   &[],
+};
+
+const ENUMERATED_PARAMETER_TYPE_DESC: ElementDesc = ElementDesc {
+    name:                   "EnumeratedParameterType",
+    allowable_subelements:  &[UNIT_SET_DESC, INTEGER_DATA_ENCODING_DESC,
+                            ENUMERATION_LIST_DESC],
+};
+
+const ENUMERATION_LIST_DESC: ElementDesc = ElementDesc {
+    name:                   "EnumerationList",
+    allowable_subelements:  &[ENUMERATION_DESC],
+};
+
+const ENUMERATION_DESC:     ElementDesc = ElementDesc {
+    name:                   "Enumeration",
+    allowable_subelements:  &[],
+};
+
+const BINARY_PARAMETER_TYPE_DESC: ElementDesc = ElementDesc {
+    name:                   "BinaryParameterType",
+    allowable_subelements:  &[UNIT_SET_DESC],
 };
 
 const PARAMETER_SET_DESC: ElementDesc = ElementDesc {
@@ -159,6 +220,36 @@ const DESCRIPTION_DESC: ElementDesc = ElementDesc {
 
 const CONTAINER_SET_DESC: ElementDesc = ElementDesc {
     name:                   "ContainerSet",
+    allowable_subelements:  &[SEQUENCE_CONTAINER_DESC],
+};
+
+const SEQUENCE_CONTAINER_DESC: ElementDesc = ElementDesc {
+    name:                   "SequenceContainer",
+    allowable_subelements:  &[ENTRY_LIST_TM_DESC, BASE_CONTAINER_TM_DESC],
+};
+
+const ENTRY_LIST_TM_DESC: ElementDesc = ElementDesc {
+    name:                   "EntryList",
+    allowable_subelements:  &[PARAMETER_REF_ENTRY_DESC],
+};
+
+const PARAMETER_REF_ENTRY_DESC: ElementDesc = ElementDesc {
+    name:                   "ParameterRefEntry",
+    allowable_subelements:  &[],
+};
+
+const BASE_CONTAINER_TM_DESC: ElementDesc = ElementDesc {
+    name:                   "BaseContainer",
+    allowable_subelements:  &[RESTRICTION_CRITERIA_DESC],
+};
+
+const RESTRICTION_CRITERIA_DESC: ElementDesc = ElementDesc {
+    name:                   "RestrictionCriteria",
+    allowable_subelements:  &[COMPARISON_DESC],
+};
+
+const COMPARISON_DESC: ElementDesc = ElementDesc {
+    name:                   "Comparison",
     allowable_subelements:  &[],
 };
 
@@ -179,8 +270,93 @@ const ALGORITHM_SET_DESC: ElementDesc = ElementDesc {
 
 const COMMAND_META_DATA_DESC: ElementDesc = ElementDesc {
     name:                   "CommandMetaData",
+    allowable_subelements:  &[ARGUMENT_TYPE_SET_DESC, META_COMMAND_SET_DESC],
+};
+
+const ARGUMENT_TYPE_SET_DESC: ElementDesc = ElementDesc {
+    name:                   "ArgumentTypeSet",
+    allowable_subelements:  &[BINARY_ARGUMENT_TYPE_DESC,
+                            ENUMERATED_ARGUMENT_TYPE_DESC],
+};
+
+const ENUMERATED_ARGUMENT_TYPE_DESC: ElementDesc = ElementDesc {
+    name:                   "EnumeratedArgumentType",
+    allowable_subelements:  &[UNIT_SET_DESC,
+                            ENUMERATION_LIST_DESC],
+};
+
+const BINARY_ARGUMENT_TYPE_DESC: ElementDesc = ElementDesc {
+    name:                   "BinaryArgumentType",
+    allowable_subelements:  &[UNIT_SET_DESC],
+};
+
+const META_COMMAND_SET_DESC: ElementDesc = ElementDesc {
+    name:                   "MetaCommandSet",
+    allowable_subelements:  &[META_COMMAND_DESC],
+};
+
+const META_COMMAND_DESC: ElementDesc = ElementDesc {
+    name:                   "MetaCommand",
+    allowable_subelements:  &[LONG_DESCRIPTION_DESC, ARGUMENT_LIST_DESC,
+                            BASE_META_COMMAND_DESC, COMMAND_CONTAINER_DESC],
+};
+
+const ARGUMENT_LIST_DESC: ElementDesc = ElementDesc {
+    name:                   "ArgumentList",
+    allowable_subelements:  &[ARGUMENT_DESC],
+};
+
+const ARGUMENT_DESC: ElementDesc = ElementDesc {
+    name:                   "Argument",
     allowable_subelements:  &[],
 };
+
+const COMMAND_CONTAINER_DESC: ElementDesc = ElementDesc {
+    name:                   "CommandContainer",
+    allowable_subelements:  &[ENTRY_LIST_TC_DESC, BASE_CONTAINER_TC_DESC],
+};
+
+const ENTRY_LIST_TC_DESC: ElementDesc = ElementDesc {
+    name:                   "EntryList",
+    allowable_subelements:  &[ARGUMENT_REF_ENTRY_DESC],
+};                   
+
+const ARGUMENT_REF_ENTRY_DESC: ElementDesc = ElementDesc {
+    name:                   "ArgumentRefEntry",
+    allowable_subelements:  &[],
+};
+
+const BASE_CONTAINER_TC_DESC: ElementDesc = ElementDesc {
+    name:                   "BaseContainer",
+    allowable_subelements:  &[],
+};
+
+const LONG_DESCRIPTION_DESC: ElementDesc = ElementDesc {
+    name:                   "LongDescription",
+    allowable_subelements:  &[],
+};
+
+const BASE_META_COMMAND_DESC: ElementDesc = ElementDesc {
+    name:                   "BaseMetaCommand",
+    allowable_subelements:  &[ARGUMENT_ASSIGNMENT_LIST_DESC],
+};
+
+const ARGUMENT_ASSIGNMENT_LIST_DESC: ElementDesc = ElementDesc {
+    name:                   "ArgumentAssignmentList",
+    allowable_subelements:  &[ARGUMENT_ASSIGNMENT_DESC],
+};
+
+const ARGUMENT_ASSIGNMENT_DESC: ElementDesc = ElementDesc {
+    name:                   "ArgumentAssignment",
+    allowable_subelements:  &[],
+};
+
+/* FIXME: remove this
+const XXX: ElementDesc = ElementDesc {
+    name:                   "XXX",
+    allowable_subelements:  &[XXX],
+};
+*/
 
 #[derive(Debug)]
 pub struct XtceDocument {

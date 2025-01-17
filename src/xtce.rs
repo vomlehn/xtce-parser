@@ -1,4 +1,5 @@
-
+// FIXME: I think this goes away
+/*
 use std::collections::HashMap;
 use std::fmt;
 use std::fs::File;
@@ -758,4 +759,5 @@ impl fmt::Debug for Xtce {
         write!(f, "Debug not done for xtce")
     }
 }
+*/
 */

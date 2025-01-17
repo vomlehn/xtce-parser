@@ -20,7 +20,7 @@ use xml_document::XtceDocument;
 use xtce_parser_error::{XtceParserError};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let document = parse_file("test/test1.xtce".to_string());
+    let document = parse_file("test/test5.xtce".to_string());
 
     match &document {
         Err(e) => println!("Failed: {:?}", e),

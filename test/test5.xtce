@@ -1,128 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpaceSystem xmlns="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/space/xtce ../SpaceSystemV1.0.xsd" name="TrivialSat">
-    <TelemetryMetaData>
-        <ParameterTypeSet>
+<XTCE xmlns="http://www.omg.org/spec/XTCE/">
+    <SpaceSystem xmlns="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/space/xtce ../SpaceSystemV1.0.xsd" name="TrivialSat">
+        <TelemetryMetaData>
+            <ParameterTypeSet>
 
-            <FloatParameterType name="Battery1VoltageType">
-                <UnitSet/>
-                <IntegerDataEncoding/>
-                <DefaultCalibrator>
-                    <PolynomialCalibrator>
-                        <Term coefficient="8" exponent="1"/>
-                    </PolynomialCalibrator>
-                </DefaultCalibrator>
-            </FloatParameterType>
+                <FloatParameterType name="Battery1VoltageType">
+                    <UnitSet/>
+                    <IntegerDataEncoding/>
+                    <DefaultCalibrator>
+                        <PolynomialCalibrator>
+                            <Term coefficient="8" exponent="1"/>
+                        </PolynomialCalibrator>
+                    </DefaultCalibrator>
+                </FloatParameterType>
 
-            <EnumeratedParameterType name="BeaconStatusType">
-                <UnitSet/>
-                <IntegerDataEncoding/>
-                <EnumerationList>
-                    <Enumeration value="128" label="On"/>
-                    <Enumeration value="0" label="Off"/>
-                </EnumerationList>
-            </EnumeratedParameterType>
+                <EnumeratedParameterType name="BeaconStatusType">
+                    <UnitSet/>
+                    <IntegerDataEncoding/>
+                    <EnumerationList>
+                        <Enumeration value="128" label="On"/>
+                        <Enumeration value="0" label="Off"/>
+                    </EnumerationList>
+                </EnumeratedParameterType>
 
-            <BinaryParameterType name="minorFrameCtrType">
-                <UnitSet/>
-            </BinaryParameterType>
+                <BinaryParameterType name="minorFrameCtrType">
+                    <UnitSet/>
+                </BinaryParameterType>
 
-        </ParameterTypeSet>
+            </ParameterTypeSet>
 
-        <ParameterSet>
-            <Parameter name="BatteryVoltage" parameterTypeRef="BatteryVoltageType"/>
-            <Parameter name="BeaconStatus" parameterTypeRef="BeaconStatusType"/>
-            <Parameter name="minorFrameCtr" parameterTypeRef="minorFrameCtrType"/>
-        </ParameterSet>
+            <ParameterSet>
+                <Parameter name="BatteryVoltage" parameterTypeRef="BatteryVoltageType"/>
+                <Parameter name="BeaconStatus" parameterTypeRef="BeaconStatusType"/>
+                <Parameter name="minorFrameCtr" parameterTypeRef="minorFrameCtrType"/>
+            </ParameterSet>
 
-        <ContainerSet>
-            <SequenceContainer name="MinorFrame">
-                <EntryList>
-                    <ParameterRefEntry parameterRef="minorFrameCtr"/>
-                </EntryList>
-            </SequenceContainer>
+            <ContainerSet>
+                <SequenceContainer name="MinorFrame">
+                    <EntryList>
+                        <ParameterRefEntry parameterRef="minorFrameCtr"/>
+                    </EntryList>
+                </SequenceContainer>
 
-            <SequenceContainer name="MinorFrame0">
-                <EntryList>
-                    <ParameterRefEntry parameterRef="Battery1Voltage"/>
-                    <ParameterRefEntry parameterRef="BeaconStatus"/>
-                </EntryList>
-                <BaseContainer containerRef="MinorFrame">
-                <RestrictionCriteria>
-                    <Comparison parameterRef="minorFrameCtr" value="0x00"/>
-                </RestrictionCriteria>
-                </BaseContainer>
-            </SequenceContainer>
-
-            <SequenceContainer name="MinorFrame1">
-                <EntryList>
-                    <ParameterRefEntry parameterRef="BeaconStatus"/>
-                    <ParameterRefEntry parameterRef="Battery1Voltage"/>
-                </EntryList>
-                <BaseContainer containerRef="MinorFrame">
+                <SequenceContainer name="MinorFrame0">
+                    <EntryList>
+                        <ParameterRefEntry parameterRef="Battery1Voltage"/>
+                        <ParameterRefEntry parameterRef="BeaconStatus"/>
+                    </EntryList>
+                    <BaseContainer containerRef="MinorFrame">
                     <RestrictionCriteria>
-                        <Comparison parameterRef="minorFrameCtr" value="0x01"/>
+                        <Comparison parameterRef="minorFrameCtr" value="0x00"/>
                     </RestrictionCriteria>
-                </BaseContainer>
-            </SequenceContainer>
-
-        </ContainerSet>
-    </TelemetryMetaData>
-
-    <CommandMetaData>
-        <ArgumentTypeSet>
-            <BinaryArgumentType name="opCodeType">
-                <UnitSet/>
-            </BinaryArgumentType>
-
-            <EnumeratedArgumentType name="onOffType">
-                <UnitSet/>
-                <EnumerationList>
-                    <Enumeration value="1" label="on"/>
-                    <Enumeration value="0" label="off"/>
-                </EnumerationList>
-            </EnumeratedArgumentType>
-        </ArgumentTypeSet>
-
-        <MetaCommandSet>
-            <MetaCommand name="TrivialSatCmdType" abstract="true">
-                <ArgumentList>
-                    <Argument name="opCode" argumentTypeRef="opCodeType"/>
-                </ArgumentList>
-                <CommandContainer name="TrivialSatCommandContainerType">
-                    <EntryList>
-                        <ArgumentRefEntry argumentRef="opCode"/>
-                    </EntryList>
-                </CommandContainer>
-            </MetaCommand>
-
-            <MetaCommand name="BeaconPwr">
-                <LongDescription>Turn Beacon Power on or off</LongDescription>
-                <BaseMetaCommand metaCommandRef="TrivialSatCmdType">
-                    <ArgumentAssignmentList>
-                        <ArgumentAssignment argumentName="opCode" argumentValue="170"/>
-                    </ArgumentAssignmentList>
-                </BaseMetaCommand>
-                <ArgumentList>
-                    <Argument name="powerValue" argumentTypeRef="onOffType"/>
-                </ArgumentList>
-                <CommandContainer name="BeaconPwr">
-                    <EntryList>
-                        <ArgumentRefEntry argumentRef="powerValue"/>
-                    </EntryList>
-                    <BaseContainer containerRef="TrivialSatCmdContianerType">
                     </BaseContainer>
-                </CommandContainer>
-            </MetaCommand>
+                </SequenceContainer>
 
-            <MetaCommand name="BeaconPwrOn">
-                <LongDescription/>
-                <BaseMetaCommand metaCommandRef="BeaconPwr">
-                    <ArgumentAssignmentList>
-                        <ArgumentAssignment argumentName="powerValue" argumentValue="on"/>
-                    </ArgumentAssignmentList>
-                </BaseMetaCommand>
-            </MetaCommand>
+                <SequenceContainer name="MinorFrame1">
+                    <EntryList>
+                        <ParameterRefEntry parameterRef="BeaconStatus"/>
+                        <ParameterRefEntry parameterRef="Battery1Voltage"/>
+                    </EntryList>
+                    <BaseContainer containerRef="MinorFrame">
+                        <RestrictionCriteria>
+                            <Comparison parameterRef="minorFrameCtr" value="0x01"/>
+                        </RestrictionCriteria>
+                    </BaseContainer>
+                </SequenceContainer>
 
-        </MetaCommandSet>
-    </CommandMetaData>
-</SpaceSystem>
+            </ContainerSet>
+        </TelemetryMetaData>
+
+        <CommandMetaData>
+            <ArgumentTypeSet>
+                <BinaryArgumentType name="opCodeType">
+                    <UnitSet/>
+                </BinaryArgumentType>
+
+                <EnumeratedArgumentType name="onOffType">
+                    <UnitSet/>
+                    <EnumerationList>
+                        <Enumeration value="1" label="on"/>
+                        <Enumeration value="0" label="off"/>
+                    </EnumerationList>
+                </EnumeratedArgumentType>
+            </ArgumentTypeSet>
+
+            <MetaCommandSet>
+                <MetaCommand name="TrivialSatCmdType" abstract="true">
+                    <ArgumentList>
+                        <Argument name="opCode" argumentTypeRef="opCodeType"/>
+                    </ArgumentList>
+                    <CommandContainer name="TrivialSatCommandContainerType">
+                        <EntryList>
+                            <ArgumentRefEntry argumentRef="opCode"/>
+                        </EntryList>
+                    </CommandContainer>
+                </MetaCommand>
+
+                <MetaCommand name="BeaconPwr">
+                    <LongDescription>Turn Beacon Power on or off</LongDescription>
+                    <BaseMetaCommand metaCommandRef="TrivialSatCmdType">
+                        <ArgumentAssignmentList>
+                            <ArgumentAssignment argumentName="opCode" argumentValue="170"/>
+                        </ArgumentAssignmentList>
+                    </BaseMetaCommand>
+                    <ArgumentList>
+                        <Argument name="powerValue" argumentTypeRef="onOffType"/>
+                    </ArgumentList>
+                    <CommandContainer name="BeaconPwr">
+                        <EntryList>
+                            <ArgumentRefEntry argumentRef="powerValue"/>
+                        </EntryList>
+                        <BaseContainer containerRef="TrivialSatCmdContianerType">
+                        </BaseContainer>
+                    </CommandContainer>
+                </MetaCommand>
+
+                <MetaCommand name="BeaconPwrOn">
+                    <LongDescription/>
+                    <BaseMetaCommand metaCommandRef="BeaconPwr">
+                        <ArgumentAssignmentList>
+                            <ArgumentAssignment argumentName="powerValue" argumentValue="on"/>
+                        </ArgumentAssignmentList>
+                    </BaseMetaCommand>
+                </MetaCommand>
+
+            </MetaCommandSet>
+        </CommandMetaData>
+    </SpaceSystem>
+</XTCE>
