@@ -42,7 +42,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     opts.optflag("h", "help", "Print this help message");
     opts.optflag("x", "xtce", "Generate XTCE output");
-    opts.optflag("d", "xtcd-desc", "Generate XML descriptor output");
+    opts.optflag("d", "xtce-desc", "Generate XML descriptor output");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
