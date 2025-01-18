@@ -10,8 +10,8 @@ use xml::common::XmlVersion;
 use xml::name::OwnedName;
 use xml::namespace::Namespace;
 use xml::reader::XmlEvent;
+use xml_tree::parser::{LineNumber, Parser};
 
-use crate::parser::{LineNumber, Parser};
 use crate::xtce_parser_error::{XtceParserError};
 
 pub struct ElementDesc {
@@ -171,15 +171,15 @@ const COMMAND_META_DATA_DESC: ElementDesc = ElementDesc {
 };
 
 #[derive(Debug)]
-pub struct XtceDocument {
+pub struct XmlTree {
     version:        XmlVersion,
     encoding:       String,
     standalone:     Option<bool>,
     root:           Element,
 }
 
-impl XtceDocument {
-    pub fn new(path: String) -> Result<XtceDocument, XtceParserError> {
+impl XmlTree {
+    pub fn new(path: String) -> Result<XmlTree, XtceParserError> {
         let file = match File::open(path) {
             Err(e) => return Err(XtceParserError::XmlError(0, Box::new(e))),
             Ok(f) => f,
@@ -188,15 +188,15 @@ impl XtceDocument {
         Self::new_from_reader(buf_reader)
     }
 
-    pub fn new_from_reader<R: Read>(buf_reader: BufReader<R>) -> Result<XtceDocument, XtceParserError> {
+    pub fn new_from_reader<R: Read>(buf_reader: BufReader<R>) -> Result<XmlTree, XtceParserError> {
         let mut parser = Parser::<R>::new(buf_reader);
         let (lineno, version, encoding, standalone) =
             Self::parse_start_document(&mut parser)?;
 println!("Processing document");
-        let xml_document = Self::parse_end_document(&mut parser, &ROOT_DESC,
+        let xml_tree = Self::parse_end_document(&mut parser, &ROOT_DESC,
             (lineno, version, encoding, standalone));
 
-        xml_document
+        xml_tree
     }
 
     /*
@@ -245,7 +245,7 @@ println!("Skipping whitespace");
      */
     fn parse_end_document<R: Read>(parser: &mut Parser<R>, desc: &ElementDesc,
         info: (LineNumber, XmlVersion, String, Option<bool>)) ->
-        Result<XtceDocument, XtceParserError> {
+        Result<XmlTree, XtceParserError> {
 println!("parse_end_document: {:?}", desc.name);
 
         let mut subelements = HashMap::<String, Vec::<Element>>::new();
@@ -340,7 +340,7 @@ println!("{} subelements in type {}", root_vec.len(), start_name);
         };
 
 println!("root subelements finally {:?}", subelements.len());
-        Ok(XtceDocument {
+        Ok(XmlTree {
             version:    info.1,
             encoding:   info.2,
             standalone: info.3,
@@ -459,7 +459,7 @@ println!("Inserting to existing HashMap for {}", name);
     }
 }
 
-impl fmt::Display for XtceDocument {
+impl fmt::Display for XmlTree {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "<?xml {} {} {:?}>\n",
             self.version, self.encoding, self.standalone)?;

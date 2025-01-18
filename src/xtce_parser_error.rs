@@ -1,7 +1,5 @@
 use thiserror::Error;
-use xml::reader::XmlEvent;
-
-use crate::parser::{LineNumber};
+//use xml_tree::parser::{LineNumber};
 
 #[derive(Error, Debug)]
 pub enum XtceParserError {
@@ -16,56 +14,56 @@ pub enum XtceParserError {
         found: String,
     },
 */
-    #[error("Line {0}: Only one root element is allowed\n")]
-    OnlyOneRootElement(LineNumber),
+//    #[error("line {0}: Invalid Document format")]
+//    BadDocumentStart(LineNumber),
 
-    #[error("Line {0}: Element name {1} doesn't match closing name {2}")]
-    ElementNameMismatch(LineNumber, String, String),
+//    #[error("line {0}: Expected <SpaceSystem> element, not <{1}>")]
+//    BadXtceStart(LineNumber, String),
 
-    #[error("Line {0}: unexpected XML CDATA in input")]
-    UnexpectedCData(LineNumber),
+//    #[error("line {0}: Expected </SpaceSystem>, not: <{1}>")]
+//    BadXtceEnd(LineNumber, String),
 
-    #[error("Line {0}: unexpected character data in input")]
-    UnexpectedCharacters(LineNumber),
+//    #[error("Line {0}: Element name {1} doesn't match closing name {2}")]
+//    ElementNameMismatch(LineNumber, String, String),
 
-    #[error("No XTCE elements in input")]
-    NoXTCE(),
+//    #[error("Line {0}: General error: {1}")]
+//    GeneralError(LineNumber, Box<dyn std::error::Error>),
 
-    #[error("line {0}: Invalid Document format")]
-    BadDocumentStart(LineNumber),
+//    #[error("line {0}: Misplaced element end: {1}")]
+//    MisplacedElementEnd(LineNumber, String), 
 
-    #[error("line {0}: Unknown or misplaced element: <{1}>")]
-    UnknownElement(LineNumber, String),
+//    #[error("line {0}: Multiple SpaceSystem XTCE elements")]
+//    MultipleSpaceSystems(LineNumber), 
 
-    #[error("line {0}: Expected <SpaceSystem> element, not <{1}>")]
-    BadXtceStart(LineNumber, String),
+//    #[error("No XTCE elements in input")]
+//    NoXTCE(),
 
-    #[error("line {0}: Expected </SpaceSystem>, not: <{1}>")]
-    BadXtceEnd(LineNumber, String),
+//    #[error("Line {0}: Only one root element is allowed\n")]
+//    OnlyOneRootElement(LineNumber),
 
-    #[error("line {0}: Unexpected element termination")]
-    UnexpectedTermination(LineNumber),
+//    #[error("line {0}: StartDocument after StartDocument")]
+//    StartAfterStart(LineNumber), 
 
-    #[error("line {0}: StartDocument after StartDocument")]
-    StartAfterStart(LineNumber), 
+//    #[error("Line {0}: unexpected XML CDATA in input")]
+//    UnexpectedCData(LineNumber),
 
-    #[error("line {0}: Misplaced element end: {1}")]
-    MisplacedElementEnd(LineNumber, String), 
+//    #[error("Line {0}: unexpected character data in input")]
+//    UnexpectedCharacters(LineNumber),
 
-    #[error("line {0}: Multiple SpaceSystem XTCE elements")]
-    MultipleSpaceSystems(LineNumber), 
+//    #[error("line {0}: Unexpected element termination")]
+//    UnexpectedTermination(LineNumber),
 
-    #[error("Line {0}: General error: {1}")]
-    GeneralError(LineNumber, Box<dyn std::error::Error>),
+//    // FIXME: this is temporary and should eventually be deleted
+//    #[error("Line {0}: Unknown XTCE parsing error")]
+//    Unknown(LineNumber),
 
-    #[error("Unexpected XML error: {0:?}")]
-    UnexpectedXml(XmlEvent),
+//    #[error("line {0}: Unknown or misplaced element: <{1}>")]
+//    UnknownElement(LineNumber, String),
 
-    // FIXME: get line number from the XmlEvent
-    #[error("Line {0}: XML error: {1}")]
-    XmlError(LineNumber, Box<dyn std::error::Error>),
+//    #[error("Unexpected XML error: {0:?}")]
+//    UnexpectedXml(XmlEvent),
 
-    // FIXME: this is temporary and should eventually be deleted
-    #[error("Line {0}: Unknown XTCE parsing error")]
-    Unknown(LineNumber),
+//    // FIXME: get line number from the XmlEvent
+//    #[error("Line {0}: XML error: {1}")]
+//    XmlError(LineNumber, Box<dyn std::error::Error>),
 }

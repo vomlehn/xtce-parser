@@ -1,6 +1,6 @@
-use crate::xml_document::XtceDocument;
+use xml_tree::XmlTree;
 
-pub fn generate_xtce(document: &XtceDocument) {
+pub fn generate_xtce(document: &XmlTree) {
     println!("{}", document);
 }
 

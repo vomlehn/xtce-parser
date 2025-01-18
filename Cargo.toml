@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-xml = "0.8.20"
-thiserror = "2.0.9"
 getopts = "0.2"
+thiserror = "2.0.9"
+xml = "0.8.20"
+xml-tree = {path = "../xml-tree"}

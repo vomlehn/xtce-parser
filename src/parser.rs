@@ -1,3 +1,5 @@
+// FIXME: remove this file
+/*
 use std::fmt;
 
 use std::cell::RefCell;
@@ -102,3 +104,7 @@ impl<R: Read> Read for LinenoReader<R> {
         Ok(bytes_read)
     }
 }
+
+//    #[error("Line {0}: Only one root element is allowed\n")]
+//    OnlyOneRootElement(LineNumber),
+*/

@@ -4,9 +4,9 @@
  * FIXME: This is pretty crude and assumes its input is correct
  */
 
-use crate::xml_document::{Element, XtceDocument};
+use xml_tree::{Element, XmlTree};
 
-pub fn generate_c(document: &XtceDocument) {
+pub fn generate_c(document: &XmlTree) {
     const XML_DOCUMENT_H: &str = "_XML_DOCUMENT_H_";
     let mut last_was_big = false;
 
