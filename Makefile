@@ -9,7 +9,7 @@ build:
 
 .PHONY: run
 run:
-	cargo run $(TEE)
+	cargo run -- test/test5.xtce $(TEE)
 
 .PHONY: clean
 clean:

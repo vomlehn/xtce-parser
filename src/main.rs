@@ -1,3 +1,7 @@
+use getopts::{Options};
+use std::env;
+use std::process::exit;
+
 /*
  * Options:
  * --prefix Adds SpaceSystemType-derived names to everything
@@ -20,34 +24,56 @@ use gen_xtce::generate_xtce;
 use xml_document::XtceDocument;
 use xtce_parser_error::{XtceParserError};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let document = parse_file("test/test5.xtce".to_string());
+fn usage(program: &str, opts: Options) -> ! {
+    let brief = format!("Usage: {} [options] input-file", program);
+    print!("{}", opts.usage(&brief));
+    exit(1); 
+}
 
-    match &document {
-        Err(e) => println!("Failed: {:?}", e),
-        Ok(d) => generate_c(d),
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args: Vec<String> = env::args().collect();
+    let program = args[0].clone();
+    let mut opts = Options::new();
+
+    opts.optflag("h", "help", "Print this help message");
+    opts.optflag("x", "xtce", "Generate XTCE output");
+
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => m,
+        Err(f) => { 
+            println!("{}", f); 
+            usage(&program, opts);
+        }
+    };
+
+    if matches.opt_present("h") {
+        usage(&program, opts);
     }
-/*
-    
-    for param in parameters {
-        println!("{:?}", param);
+
+    let remaining_args: Vec<&str> = matches.free.iter().map(|s| s.as_str()).collect();
+    if remaining_args.len() != 1 {
+        usage(&program, opts);
     }
-*/
+
+    let input_file = remaining_args[0];
+
+    let document = parse_file(input_file.to_string());
+
+    let result = match &document {
+        Err(e) => {
+            println!("Failed: {:?}", e);
+            exit(1);
+        },
+        Ok(d) => if matches.opt_present("x") {
+                generate_xtce(d)
+        } else {
+                generate_c(d)
+        }
+    };
     
     Ok(())
 }
 
 fn parse_file(file_path: String) -> Result<XtceDocument, XtceParserError> {
-    // Similar setup as before...
-/*
-
-    let file = match File::open(file_path) {
-        Err(e) => return Err(XtceParserError::GeneralError(0, Box::new(e))),
-        Ok(file) => file,
-    };
-
-    let mut buf_reader = BufReader::new(file);
-*/
-
     XtceDocument::new(file_path)
 }

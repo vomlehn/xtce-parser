@@ -25,10 +25,8 @@ pub fn generate_c(document: &XtceDocument) {
     println!("#endif");
     println!();
 
-    for element_vec in document.root.subelements.values() {
-        for element in element_vec {
-            generate_c_element(&element, &mut last_was_big);
-        }
+    for element in &document.root.subelements{
+        generate_c_element(&element, &mut last_was_big);
     }
 
     println!();
@@ -40,10 +38,8 @@ fn generate_c_element(element: &Element, last_was_big: &mut bool) {
         "ArgumentTypeSet" => generate_argument_type_set(element, last_was_big),
         "ParameterTypeSet" => generate_parameter_type_set(element, last_was_big),
         _ => {
-            for element_vec in element.subelements.values () {
-                for elem in element_vec {
-                    generate_c_element(&elem, last_was_big);
-                }
+            for element in &element.subelements {
+                generate_c_element(&element, last_was_big);
             }
         }
     }
@@ -54,24 +50,22 @@ fn generate_argument_type_set(element: &Element, last_was_big: &mut bool) {
     println!("/* Telemetry parameter definitions */");
     println!();
 
-    for element_vec in element.subelements.values() {
-        for element in element_vec {
-            match element.name.local_name.as_str() {
-                "BinaryArgumentType" => {
-                    if *last_was_big {
-                        println!();
-                    }
-                    println!("typedef int32_t {};", tc_name(element));
-                    *last_was_big = false;
-                },
-                "EnumeratedArgumentType" => {
+    for element in &element.subelements {
+        match element.name.local_name.as_str() {
+            "BinaryArgumentType" => {
+                if *last_was_big {
                     println!();
-                    generate_enumerated_types(element);
-                    *last_was_big = true;
-                },
-                _ => {
-                    println!("// Unknown argument type {}", tc_name(element));
                 }
+                println!("typedef int32_t {};", tc_name(element));
+                *last_was_big = false;
+            },
+            "EnumeratedArgumentType" => {
+                println!();
+                generate_enumerated_types(element);
+                *last_was_big = true;
+            },
+            _ => {
+                println!("// Unknown argument type {}", tc_name(element));
             }
         }
     }
@@ -86,32 +80,29 @@ fn generate_parameter_type_set(element: &Element, last_was_big: &mut bool) {
     println!("/* Command argument definitions */");
     println!();
 
-    for element_vec in element.subelements.values() {
-        for element in element_vec {
-
-            match element.name.local_name.as_str() {
-                "BinaryParameterType" => {
-                    if *last_was_big {
-                        println!();
-                    }
-                    println!("typedef int32_t {};", tm_name(element));
-                    *last_was_big = false;
-                },
-                "FloatParameterType" => {
-                    if *last_was_big {
-                        println!();
-                    }
-                    println!("typedef float {};", tm_name(element));
-                    *last_was_big = false;
-                },
-                "EnumeratedParameterType" => {
+    for element in &element.subelements {
+        match element.name.local_name.as_str() {
+            "BinaryParameterType" => {
+                if *last_was_big {
                     println!();
-                    generate_enumerated_types(element);
-                    *last_was_big = true;
-                },
-                _ => {
-                    println!("// Unknown parameter type {}", tm_name(element));
                 }
+                println!("typedef int32_t {};", tm_name(element));
+                *last_was_big = false;
+            },
+            "FloatParameterType" => {
+                if *last_was_big {
+                    println!();
+                }
+                println!("typedef float {};", tm_name(element));
+                *last_was_big = false;
+            },
+            "EnumeratedParameterType" => {
+                println!();
+                generate_enumerated_types(element);
+                *last_was_big = true;
+            },
+            _ => {
+                println!("// Unknown parameter type {}", tm_name(element));
             }
         }
     }
@@ -138,18 +129,16 @@ fn generate_enumerated_types(element: &Element) {
 
     println!("typedef enum {} {{", enum_name);
 
-    for element_vec in element.subelements.values() {
-        for element in element_vec {
-            match element.name.local_name.as_str() {
-                "EnumerationList" => {
-                    generate_enumerated_elements(element);
-                },
-                "UnitSet" | "IntegerDataEncoding" => {
-                    // FIXME: Implement these
-                }
-                _ => {
-                    // FIXME: handle these errors
-                }
+    for element in &element.subelements {
+        match element.name.local_name.as_str() {
+            "EnumerationList" => {
+                generate_enumerated_elements(element);
+            },
+            "UnitSet" | "IntegerDataEncoding" => {
+                // FIXME: Implement these
+            }
+            _ => {
+                // FIXME: handle these errors
             }
         }
     }
@@ -158,18 +147,16 @@ fn generate_enumerated_types(element: &Element) {
 }
 
 fn generate_enumerated_elements(element: &Element) {
-    for element_vec in element.subelements.values() {
-        for element in element_vec {
-            match element.name.local_name.as_str() {
-                "Enumeration" => {
-                    generate_enumerated_element(element);
-                },
-                "UnitSet" | "IntegerDataEncoding" => {
-                    // FIXME: Implement these
-                },
-                _ => {
-                    // FIXME: handle these errors
-                }
+    for element in &element.subelements {
+        match element.name.local_name.as_str() {
+            "Enumeration" => {
+                generate_enumerated_element(element);
+            },
+            "UnitSet" | "IntegerDataEncoding" => {
+                // FIXME: Implement these
+            },
+            _ => {
+                // FIXME: handle these errors
             }
         }
     }

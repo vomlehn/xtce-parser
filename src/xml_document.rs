@@ -1,6 +1,3 @@
-use std::fmt::Display;
-
-use std::collections::{HashMap};
 use std::fmt;
 use std::fs::File;
 use std::io::{BufReader, Read};
@@ -57,7 +54,7 @@ pub struct Element {
     pub name:               OwnedName,
     attributes:             Vec<OwnedAttribute>,
     namespace:              Namespace,
-    pub subelements:        HashMap<String, Vec<Element>>,
+    pub subelements:        Vec<Element>,
     before_comments:        Vec<String>,
     after_comments:         Vec<String>,
 }
@@ -71,7 +68,7 @@ impl Element {
             name:               name,
             attributes:         attributes,
             namespace:          namespace,
-            subelements:        HashMap::<String, Vec<Element>>::new(),
+            subelements:        Vec::<Element>::new(),
             before_comments:    Vec::<String>::new(),
             after_comments:     Vec::<String>::new(),
         }
@@ -88,7 +85,7 @@ impl Element {
     }
 }
 
-impl Display for Element {
+impl fmt::Display for Element {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         const INDENT_STR: &str = "   ";
         let indent_string = INDENT_STR.to_string().repeat(self.depth);
@@ -103,10 +100,8 @@ impl Display for Element {
         } else {
             write!(f, "> (line {})\n", self.lineno)?;
 
-            for element_vec in self.subelements.values() {
-                for element in element_vec {
-                    element.fmt(f)?;
-                }
+            for element in &self.subelements {
+                element.fmt(f)?;
             }
 
             write!(f, "{}</{}>\n", indent_string, self.name.local_name)?;
@@ -432,7 +427,7 @@ impl XtceDocument {
         Result<XtceDocument, XtceParserError> {
 
         let mut start_name = "".to_string();
-        let mut subelements = HashMap::<String, Vec::<Element>>::new();
+        let mut subelements = Vec::<Element>::new();
 
         loop {
             let xml_element = parser.next();
@@ -459,7 +454,7 @@ impl XtceDocument {
                                     let new_desc = &desc.allowable_subelements[pos];
                                     let subelement = Self::parse_subelement(0, parser,
                                         attributes, namespace, &new_desc)?;
-                                    Self::push_subelement(&mut subelements, start_name.clone(),
+                                    Self::push_subelement(&mut subelements, 
                                         subelement);
                                     break;
                                 }
@@ -499,20 +494,7 @@ println!("Skipping processing_instruction");
             return Err(XtceParserError::OnlyOneRootElement(info.0));
         }
 
-        let root = match subelements.get(&start_name) {
-            None => return Err(XtceParserError::Unknown(0)),
-            Some(root_vec) => {
-                if root_vec.len() != 1 {
-                    return Err(XtceParserError::OnlyOneRootElement(info.0));
-                }
-
-                match root_vec.iter().next() {
-                    // FIXME: Internal error
-                    None => return Err(XtceParserError::Unknown(0)),
-                    Some(r) => r,
-                }
-            }
-        };
+        let root = &subelements[0];
 
         Ok(XtceDocument {
             version:    info.1,
@@ -526,7 +508,7 @@ println!("Skipping processing_instruction");
         attributes: Vec<OwnedAttribute>, namespace: Namespace,
         desc: &ElementDesc) ->
         Result<Element, XtceParserError> {
-        let mut subelements = HashMap::<String, Vec::<Element>>::new();
+        let mut subelements = Vec::<Element>::new();
 
         loop {
             let xml_element = parser.next();
@@ -554,7 +536,7 @@ println!("Skipping processing_instruction");
                                     let subelement = Self::parse_subelement(depth + 1, parser,
                                         attributes, namespace,
                                         &new_desc)?;
-                                    Self::push_subelement(&mut subelements, start_name.clone(),
+                                    Self::push_subelement(&mut subelements,
                                         subelement);
                                 }
                             }
@@ -599,18 +581,8 @@ println!("Skipping processing_instruction");
         }
     }
 
-    fn push_subelement(subelements: &mut HashMap<String, Vec<Element>>,
-        name: String, subelement: Element) {
-        match subelements.get_mut(&name) {
-            None => {
-                let mut v = Vec::<Element>::new();
-                v.push(subelement);
-                subelements.insert(name, v);
-            },
-            Some(v) => {
-                v.push(subelement)
-            }
-        };
+    fn push_subelement(subelements: &mut Vec<Element>, element: Element) {
+        subelements.push(element)
     }
 
 /*
@@ -622,7 +594,7 @@ println!("Skipping processing_instruction");
 */
 }
 
-impl Display for XtceDocument {
+impl fmt::Display for XtceDocument {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 println!("document:");
         write!(f, "<?xml {} {} {:?}>\n",
