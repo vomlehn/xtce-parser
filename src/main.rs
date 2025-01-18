@@ -13,8 +13,8 @@ mod gen_c;
 mod gen_xtce;
 mod parser;
 mod rust_data_types;
-mod space_system;
-mod space_system_converted;
+mod space_system_desc;
+mod space_system_converted_desc;
 mod xtce;
 mod xml_document;
 mod xtce_parser_error;
@@ -59,15 +59,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let document = parse_file(input_file.to_string());
 
-    let result = match &document {
+    match &document {
         Err(e) => {
             println!("Failed: {:?}", e);
             exit(1);
         },
-        Ok(d) => if matches.opt_present("x") {
-                generate_xtce(d)
-        } else {
-                generate_c(d)
+        Ok(d) => {
+            println!("=====================================================");
+
+            if matches.opt_present("x") {
+                    generate_xtce(d)
+            } else {
+                    generate_c(d)
+            }
         }
     };
     

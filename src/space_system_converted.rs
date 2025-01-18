@@ -2227,8 +2227,6 @@ pub struct ArgumentStringDataType { // abstract="true"
 }
 
 #[derive(Debug)]
-
-#[derive(Debug)]
 pub struct StringDataType { // abstract="true"
 <complexContent>
 <extension base="/*xtce:*/BaseDataType">
