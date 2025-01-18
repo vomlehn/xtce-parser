@@ -11,6 +11,15 @@ build:
 run:
 	cargo run -- test/test5.xtce $(TEE)
 
+.PHONY: test
+test:
+	@set -eu; set -x; \
+		c_file="$$(mktemp --suffix .c)"; \
+		o_file="$$(mktemp --suffix .o)"; \
+		cargo run -- test/test1.xtce >$$c_file; \
+		cc -c -o $$o_file $$c_file; \
+		rm -f $$c_file $$o_file
+
 .PHONY: clean
 clean:
 	cargo clean
