@@ -5,11 +5,13 @@ all:	build
 
 .PHONY: build
 build:
+	clear
 	cargo build $(TEE)
 
 .PHONY: run
 run:
-	cargo run -- test/test5.xtce $(TEE)
+	clear
+	cargo run -- test/test1.xtce $(TEE)
 
 .PHONY: test
 test:
